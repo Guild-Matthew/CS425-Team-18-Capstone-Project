@@ -1,59 +1,104 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UNR Lost and Found</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <!-- Header Section -->
-    <header>
-        <div class="logo">
-            <img src="https://www.unr.edu/_files/unr-logo.png" alt="UNR Logo">
-        </div>
-        <nav>
-            <ul>
-                <li><a href="#map">Map</a></li>
-                <li><a href="#report-lost">Report Lost Item</a></li>
-                <li><a href="#report-found">Report Found Item</a></li>
-                <li><a href="#my-items">My Items</a></li>
-            </ul>
-            <div class="search-bar">
-                <input type="text" placeholder="Search for items or buildings...">
-            </div>
-        </nav>
-    </header>
+/* Reset default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-    <!-- Main Content Section -->
-    <main>
-        <!-- Welcome Section -->
-        <section class="welcome">
-            <h1>UNR Lost and Found</h1>
-            <p>Find or report lost items on the UNR campus.</p>
-        </section>
+body {
+    font-family: Arial, sans-serif;
+    color: #333;
+}
 
-        <!-- Map Section -->
-        <section id="map" class="map-container">
-            <iframe 
-                src="https://maps.unr.edu/?id=2118#!bm/?ct/75169,78196,75181,75182?s/?sbc/"
-                width="100%" height="600px" style="border:0;" allowfullscreen>
-            </iframe>
-        </section>
+/* Header Styles */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #003366;
+    color: white;
+    padding: 10px 20px;
+}
 
-        <!-- Report Lost/Found Section -->
-        <section class="report-section">
-            <h2>Report Lost or Found Item</h2>
-            <div class="report-buttons">
-                <a href="#report-lost" class="button">Report Lost Item</a>
-                <a href="#report-found" class="button">Report Found Item</a>
-            </div>
-        </section>
-    </main>
+    header .logo img {
+        height: 40px;
+    }
 
-    <!-- Footer Section -->
-    <footer>
-        <p>&copy; 2024 University of Nevada, Reno. Lost and Found Service.</p>
-    </footer>
-</body>
-</html>
+nav ul {
+    list-style-type: none;
+    display: flex;
+    gap: 20px;
+}
+
+    nav ul li a {
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+.search-bar input {
+    padding: 5px 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+/* Welcome Section */
+.welcome {
+    background-color: #f2f2f2;
+    padding: 30px 20px;
+    text-align: center;
+}
+
+    .welcome h1 {
+        font-size: 2em;
+        color: #003366;
+    }
+
+    .welcome p {
+        font-size: 1.2em;
+        color: #555;
+    }
+
+/* Map Section */
+.map-container {
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+}
+
+/* Report Section */
+.report-section {
+    text-align: center;
+    margin: 30px 0;
+}
+
+    .report-section h2 {
+        font-size: 1.8em;
+        color: #003366;
+        margin-bottom: 20px;
+    }
+
+.report-buttons .button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 10px;
+    background-color: #003366;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+    .report-buttons .button:hover {
+        background-color: #005bb5;
+    }
+
+/* Footer Styles */
+footer {
+    background-color: #003366;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 0.9em;
+}
