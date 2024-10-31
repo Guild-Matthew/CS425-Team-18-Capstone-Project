@@ -1,4 +1,4 @@
-/* Reset default styles */
+/* Reset and Basic Body Styles */
 * {
     margin: 0;
     padding: 0;
@@ -7,39 +7,66 @@
 
 body {
     font-family: Arial, sans-serif;
-    color: #333;
-}
-
-/* Header Styles */
-header {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
-    background-color: #003366;
-    color: white;
-    padding: 10px 20px;
+    justify-content: center;
+    background-color: #f2f2f2;
+    color: #333;
+    min-height: 100vh;
 }
 
-    header .logo img {
-        height: 40px;
+/* Header Styling */
+header {
+    width: 100%;
+    background-color: #003366;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    color: white;
+}
+
+    header .logo {
+        display: flex;
+        align-items: center;
     }
 
-nav ul {
-    list-style-type: none;
+        header .logo img {
+            width: 150px; /* Adjust size if necessary */
+            height: auto;
+            display: block;
+        }
+
+/* Navigation Styling */
+nav {
     display: flex;
+    align-items: center;
     gap: 20px;
 }
 
-    nav ul li a {
-        color: white;
-        text-decoration: none;
-        font-weight: bold;
+    nav ul {
+        list-style-type: none;
+        display: flex;
+        gap: 20px;
     }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+            nav ul li a:hover {
+                color: #87cefa;
+            }
 
 .search-bar input {
     padding: 5px 10px;
     border-radius: 4px;
     border: 1px solid #ccc;
+    outline: none;
 }
 
 /* Welcome Section */
@@ -47,11 +74,13 @@ nav ul {
     background-color: #f2f2f2;
     padding: 30px 20px;
     text-align: center;
+    width: 100%;
 }
 
     .welcome h1 {
         font-size: 2em;
         color: #003366;
+        margin-bottom: 10px;
     }
 
     .welcome p {
@@ -64,12 +93,14 @@ nav ul {
     margin: 20px 0;
     display: flex;
     justify-content: center;
+    width: 100%;
 }
 
 /* Report Section */
 .report-section {
     text-align: center;
     margin: 30px 0;
+    width: 100%;
 }
 
     .report-section h2 {
@@ -101,4 +132,7 @@ footer {
     text-align: center;
     padding: 10px 0;
     font-size: 0.9em;
+    width: 100%;
+    position: relative;
+    bottom: 0;
 }
