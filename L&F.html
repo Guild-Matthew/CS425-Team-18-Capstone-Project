@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNR Lost and Found</title>
+    <link rel="stylesheet" href="L&F.css">
+</head>
+
+<body>
+    <!--Header section-->
+    <header>
+        <div class="container">
+            <div class="logo-group">
+                <img class="university-logo-large-img align-image-bottom" alt="University of Nevada, Reno " src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg" width="65" height="65">
+                <span class="logo-text-new align-text-middle">
+                    University of Nevada, Reno
+                </span>
+            </div>
+            <h1>Lost and Found</h1>
+            <nav>
+                <ul>
+                    <li><a href="#">Map</a></li>
+                    <li><a href="#">Report Found Item</a></li>
+                    <li><a href="#">Health and Safety</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <div class="container">
+        <!--Sidebar for sort and filter-->
+        <aside class="sidebar">
+            <h2>Sort & Filter</h2>
+            <!--Sort section-->
+            <div class="filter-section">
+                <label for="sort">Sort By:</label>
+                <select id="sort" onchange="sortItems()">
+                    <option value="date">Date Found</option>
+                    <option value="location">Location</option>
+                    <option value="itemType">Item Type</option>
+                </select>
+            </div>
+            <!--Filter section-->
+            <div class="filter-section">
+                <label for="filterType">Filter by Type:</label>
+                <select id="filterType" onchange="filterItems()">
+                    <option value="all">All</option>
+                    <option value="clothing">Clothing</option>
+                    <option value="Technology">Technology</option>
+                    <option value="misc">Miscellaneous</option>
+                </select>
+            </div>
+            <div class="filter-section">
+                <label for="filterBrand">Filter by Brand:</label>
+                <select id="filterBrand" onchange="filterItems()">
+                    <option value="all">All</option>
+                    <option value="adidas">Adidas</option>
+                    <option value="apple">Apple</option>
+                    <option value="hydroflask">Hydroflask</option>
+                    <option value="unknown">Unknown</option>
+                </select>
+            </div>
+        </aside>
+        
+        <!--Products section-->
+        <section id="products">
+            <h2>Found Items in Building: ___</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <div class="product">
+                    <img src="https://shoewash.ca/wp-content/uploads/2022/11/shutterstock_2022488300-1.jpg" alt="Shoes">
+                    <h3>Item type: Clothing</h3>
+                    <h3>Color: Black/White</h3>
+                    <h3>Brand: Adidas</h3>
+                    <h3>Size: 9, men's</h3>
+                    <h3>Location found: gym, 3rd floor</h3>
+                    <h3>Date found: 10/28/2024</h3>
+                    <h3>Other info: n/a</h3>
+                    <button onclick="claimItem('Shoes')">Claim this Item</button>
+                </div>
+                <div class="product">
+                    <img src="https://i.pcmag.com/imagery/reviews/07sLKbIwQXsPgm4DeqwfPaF-1.fit_scale.size_1028x578.v1625850151.jpg" alt="Apple pencil">
+                    <h3>Item type: Technology</h3>
+                    <h3>Brand: Apple</h3>
+                    <h3>Item: Apple Pencil</h3>
+                    <h3>Location found: AB 103</h3>
+                    <h3>Date found: 10/30/2024</h3>
+                    <h3>Other info: n/a</h3>
+                    <button onclick="claimItem('Apple pencil')">Claim this Item</button>
+                </div>
+                <div class="product">
+                    <img src="https://media.istockphoto.com/id/173025556/photo/old-wallet.jpg?s=612x612&w=0&k=20&c=HKPX5C_sZIS37fgZaZE6m7982hjioAhS1hUeoJp50vs=" alt="Wallet">
+                    <h3>Item type: Misc</h3>
+                    <h3>Brand: Unknown</h3>
+                    <h3>Item: Wallet</h3>
+                    <h3>Location found: MIKC, 5th floor</h3>
+                    <h3>Date found: 10/30/2024</h3>
+                    <h3>Other info: Cards inside have the name John Doe</h3>
+                    <button onclick="claimItem('Wallet')">Claim this Item</button>
+                </div>
+                <div class="product">
+                    <img src="https://cdn.shopify.com/s/files/1/0039/5660/4963/files/images_2_30bafcd4-1bf7-40e4-ad3a-cc714ecd31a1_480x480.jpg?v=1628993761" alt="Water Bottle">
+                    <h3>Item type: Misc</h3>
+                    <h3>Brand: Hydroflask</h3>
+                    <h3>Item: Water Bottle</h3>
+                    <h3>Location found: Outside of JCSU</h3>
+                    <h3>Date found: 10/31/2024</h3>
+                    <h3>Other info: n/a</h3>
+                    <button onclick="claimItem('Water Bottle')">Claim this Item</button>
+                </div>
+            </div>
+        </section>
+    </div>
+    <!--Footer section-->
+        <footer>
+            <p>&copy; 2024 University of Nevada, Reno. Lost and Found Service.</p>
+        </footer>
+</body>
+
+</html>
