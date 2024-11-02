@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNR Lost and Found</title>
+    <link rel="stylesheet" href="items.css">
+</head>
+
+<body>
+    <!--Header section-->
+    <header>
+        <div class="container">
+            <div class="logo-group">
+                <img class="university-logo-large-img align-image-bottom" alt="University of Nevada, Reno " src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg" width="65" height="65">
+                <span class="logo-text-new align-text-middle">
+                    University of Nevada, Reno
+                </span>
+            </div>
+            <h1>Lost and Found</h1>
+            <nav>
+                <ul>
+                    <li><a href="#">Map</a></li>
+                    <li><a href="#">Lost and Found</a></li>
+                    <li><a href="#">Health and Safety</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <section class="add-item-form">
+        <h2>Add a Found Item</h2>
+        <form id="addItemForm">
+            <!-- Image upload -->
+            <label for="itemImage">Upload Image:</label>
+            <input type="file" id="itemImage" name="itemImage" accept="image/*">
+    
+            <!-- Date found -->
+            <label for="dateFound">Date Found:</label>
+            <input type="date" id="dateFound" name="dateFound" required>
+    
+            <!-- Location -->
+            <label for="locationFound">Location Found:</label>
+            <input type="text" id="locationFound" name="locationFound" placeholder="Location" required>
+    
+            <!-- Item Type -->
+            <select id="itemType" name="itemType" required onchange="toggleClothingFields()">
+                <option value="" disabled selected>Select Item Type</option>
+                <option value="clothing">Clothing</option>
+                <option value="technology">Technology</option>
+                <option value="misc">Miscellaneous</option>
+            </select>
+            
+    
+            <!-- Brand -->
+            <label for="brand">Brand:</label>
+            <input type="text" id="brand" name="brand" placeholder="Brand" required>
+
+            <!-- Conditional Clothing Fields -->
+            <div id="clothingFields" style="display: none;">
+                <!-- Color -->
+                <label for="color">Color:</label>
+                <input type="text" id="color" name="color" placeholder="Color">
+
+                <!-- Size -->
+                <label for="size">Size:</label>
+                <input type="text" id="size" name="size" placeholder="Size (e.g., M, L, 10)">
+
+                <!-- Clothing Type -->
+                <label for="clothingType">Clothing Type:</label>
+                <select id="clothingType" name="clothingType">
+                    <option value="shoes">Shoes</option>
+                    <option value="shirt">Shirt</option>
+                    <option value="pants">Pants</option>
+                    <option value="jacket">Jacket</option>
+                    <option value="hat">Hat</option>
+                    <option value="accessory">Accessory</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <!-- Other Information -->
+            <label for="otherInfo">Other Info:</label>
+            <textarea id="otherInfo" name="otherInfo" placeholder="Additional details" rows="3"></textarea>
+    
+            <!-- Submit Button -->
+            <button type="submit">Add Item</button>
+        </form>
+    </section>
+    
+        <!--Footer section-->
+            <footer>
+                <p>&copy; 2024 University of Nevada, Reno. Lost and Found Service.</p>
+            </footer>
+            
+        <script src="items.js"></script>
+    </body>
+
+</html>
