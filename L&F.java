@@ -1,4 +1,8 @@
-/*
+//Claim item function
+function claimItem(name) {
+    alert(`You have claimed the item: ${name}`);
+}
+
 //Sorting logic based on `sortOption`
 function sortItems() {
     const sortOption = document.getElementById('sort').value;
@@ -11,4 +15,3 @@ function filterItems() {
     const filterBrand = document.getElementById('filterBrand').value;
     alert(`Filtering items by Type: ${filterType}, Brand: ${filterBrand}`);
 }
-*/
