@@ -76,7 +76,7 @@ header nav ul li a:hover {
     padding: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-right: 20px;
-    margin-top: -1400px;
+    margin-top: -450px;
 }
 
 .sidebar h2 {
@@ -97,54 +97,36 @@ header nav ul li a:hover {
 
 /* Product(items) Styles */
 #products {
-    flex: 1;
+    margin-bottom: 20px;
+}
+
+#products h2 {
+    text-align: left; /* Aligns the subheader to the left */
+    margin-bottom: 20px; /* Adds space between the subheader and the grid */
+}
+
+.product h3 span {
+    font-weight: normal; /* Set non-bold font weight */
 }
 
 .product {
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    transition: transform 0.3s ease;
+    background-color: #ffffff; /* White background for the box */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    padding: 20px; /* Space inside the box */
+    text-align: left; /* Align text to the left inside the box */
+    transition: transform 0.3s ease; /* Smooth hover effect */
 }
 
 .product:hover {
-    transform: translateY(-5px);
+    transform: translateY(-5px); /* Move up slightly */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
 }
 
-.product img {
-    width: 100%;
-    max-width: 200px;
-    height: auto;
-    margin-bottom: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.product h3 {
-    font-size: 1rem;
-    margin: 0.3rem 0;
-    color: #333333;
-}
-
-.product button {
-    background-color: #041E42;
-    color: #ffffff;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    outline: none;
-}
-
-.product button:hover {
-    background-color: #041E42;
+.product-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two equal columns */
+    gap: 20px; /* Space between items */
 }
 
 /* Footer Styles */
