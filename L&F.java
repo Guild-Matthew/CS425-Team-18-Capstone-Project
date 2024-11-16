@@ -1,8 +1,3 @@
-//Claim item function
-function claimItem(name) {
-    alert(`You have claimed the item: ${name}`);
-}
-
 //Sorting logic based on `sortOption`
 function sortItems() {
     const sortOption = document.getElementById('sort').value;
