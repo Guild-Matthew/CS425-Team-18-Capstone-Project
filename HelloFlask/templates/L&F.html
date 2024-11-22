@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNR Lost and Found</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/L&F.css') }}">
+</head>
+
+<body>
+    <!--Header section-->
+    <header>
+        <div class="container">
+            <div class="logo-group">
+                <img class="university-logo-large-img align-image-bottom" alt="University of Nevada, Reno " src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg" width="65" height="65">
+                <span class="logo-text-new align-text-middle">
+                    University of Nevada, Reno
+                </span>
+            </div>
+            <h1>Lost and Found</h1>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('main.home') }}">Map</a></li>
+                    <li><a href="{{ url_for('main.Reportitems', building=building) }}">Report Found Item</a></li>
+                    <li><a href="{{ url_for('main.Removeitems', building=building) }}">Remove an Item</a></li>
+                    <li><a href="{{ url_for('main.ClaimedItems', building=building) }}">Claimed Items</a></li>
+                    <li><a href="#">Health and Safety</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <!--Sidebar for sort and filter-->
+        <aside class="sidebar">
+            <h2>Sort & Filter</h2>
+            <div class="filter-section">
+                <label for="sort">Sort By:</label>
+                <select id="sort" onchange="sortItems()">
+                    <option value="date">Date Found: Oldest</option>
+                    <option value="date">Date Found: Newest</option>
+                </select>
+            </div>
+            <div class="filter-section">
+                <label for="filterType">Filter by Type:</label>
+                <select id="filterType" onchange="filterItems()">
+                    <option value="all">All</option>
+                    <option value="clothing">Clothing</option>
+                    <option value="technology">Technology</option>
+                    <option value="misc">Miscellaneous</option>
+                </select>
+            </div>
+        </aside>
+
+        <!--Products section-->
+        <section id="products">
+            <h2>Found Items in Building: {{ building }}</h2>
+            <div class="product-grid">
+                {% if items %}
+                {% for item in items %}
+                <div class="product">
+                    <h3><strong>Item type:</strong> <span>{{ item[0] }}</span></h3>
+                    <h3><strong>Location found:</strong> <span>{{ item[1] }}</span></h3>
+                    <h3><strong>Date found:</strong> <span>{{ item[3] }}</span></h3>
+                    <h3><strong>Description:</strong> <span>{{ item[2] }}</span></h3>
+                </div>
+                {% endfor %}
+                {% else %}
+                <p>No items found for the selected filter.</p>
+                {% endif %}
+            </div>
+        </section>
+    </div>
+    <!--Footer section-->
+    <footer>
+        <p>&copy; 2024 University of Nevada, Reno. Lost and Found Service.</p>
+    </footer>
+
+    <script>
+        function filterItems() {
+            // Get the selected filter type
+            const filterType = document.getElementById('filterType').value;
+
+            // Redirect to the L&F page with the filterType as a query parameter
+            window.location.href = `/L&F?filterType=${filterType}`;
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNR Lost and Found</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/addUser.css') }}">
+</head>
+
+<body>
+    <!--Header section-->
+    <header>
+        <div class="container">
+            <div class="logo-group">
+                <img class="university-logo-large-img align-image-bottom" alt="University of Nevada, Reno " src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg" width="65" height="65">
+                <span class="logo-text-new align-text-middle">
+                    University of Nevada, Reno
+                </span>
+            </div>
+            <h1>Manage Access</h1>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('main.home') }}">Map</a></li>
+                    <li><a href="#">Lost and Found</a></li>
+                    <li><a href="#">Health and Safety</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="add-item-form">
+        <h2>Add a User</h2>
+        <form id="addItemForm" action="{{ url_for('account.addUser') }}" method="POST">
+
+            <!-- Worker netID -->
+            <label for="netID">NetID for user to be given access</label>
+            <input type="text" id="netID" name="netID" placeholder="NetID" required>
+
+            <label for="email">UNR email for user to be given access</label>
+            <input type="text" id="email" name="email" placeholder="email" required>
+
+            <label for="NetID password">NetID password for user to be given access</label>
+            <input type="text" id="NetID password" name="NetID password" placeholder="NetID password" required>
+
+            <label for="building">Building for which user will have Lost and Found access</label>
+            <select id="building" name="building" required onchange="toggleClothingFields()">
+                <option value="" disabled selected>Select Building</option>
+                <option value="AB">AB</option>
+                <option value="DLM">DLM</option>
+                <option value="JCSU">JCSU</option>
+                <option value="WFC">WFC</option>
+            </select>
+            <!-- Submit Button -->
+            <button type="submit">Add User</button>
+        </form>
+    </section>
+
+    <!--Footer section-->
+    <footer>
+        <p>&copy; 2024 University of Nevada, Reno. Lost and Found Service.</p>
+    </footer>
+
+    <!--<script src="addUser.js"></script>-->
+</body>
+
+</html>

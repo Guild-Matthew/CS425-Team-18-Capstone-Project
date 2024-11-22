@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Item</title>
+</head>
+<body>
+    <h1>Add Item</h1>
+    <form method="post" action="{{ url_for('add_item') }}">
+        <label>Item Name:</label><input type="text" name="item_name" required><br>
+        <label>Item Description:</label><input type="text" name="item_description" required><br>
+        <label>Date Lost:</label><input type="date" name="date_lost" required><br>
+        <label>Building Code:</label><input type="text" name="building_code" required><br>
+        <input type="submit" value="Add Item">
+    </form>
+</body>
+</html>

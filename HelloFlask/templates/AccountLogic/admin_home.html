@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Global Styling */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: #333;
+        }
+
+        header {
+            background-color: #041E42;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+            header .logo-group {
+                display: flex;
+                align-items: center;
+            }
+
+                header .logo-group img {
+                    width: 50px;
+                    margin-right: 15px;
+                }
+
+                header .logo-group span {
+                    font-size: 1.5em;
+                    font-weight: bold;
+                }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            gap: 20px;
+        }
+
+            nav ul li a {
+                color: white;
+                text-decoration: none;
+                font-weight: bold;
+            }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            background-image: url('campus_image.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+            .hero-content h1 {
+                font-size: 3em;
+                margin: 0;
+            }
+
+            .hero-content p {
+                font-size: 1.2em;
+                margin-top: 10px;
+            }
+
+        .hero-buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .hero-button {
+            padding: 10px 20px;
+            background-color: #004080;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+            .hero-button:hover {
+                background-color: #003366;
+            }
+
+        /* Footer */
+        footer {
+            background-color: #041E42;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <div class="logo-group">
+            <img src="unr_logo.png" alt="University of Nevada, Reno Logo">
+            <span>University of Nevada, Reno - Lost and Found Admin</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#">Dashboard</a></li>
+                <li><a href="#">Manage Items</a></li>
+                <li><a href="#">Reports</a></li>
+                <li><a href="{{ url_for('account.logout') }}">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>Admin Dashboard</h1>
+            <p>Manage lost and found items, view reports, and oversee campus inventory.</p>
+            <div class="hero-buttons">
+                <a href="{{ url_for('main.Reportitems', building=building) }}" class="hero-button">Add New Item</a>
+                <a href="#" class="hero-button">View All Items</a>
+                <a href="#" class="hero-button">Generate Report</a>
+                <a href="{{ url_for('account.addUser') }}" class="hero-button">Validate Student Account</a>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2024 University of Nevada, Reno. Admin Dashboard.</p>
+    </footer>
+</body>
+</html>
