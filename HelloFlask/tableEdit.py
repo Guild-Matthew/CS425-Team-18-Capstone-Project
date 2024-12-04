@@ -34,10 +34,29 @@ def apply_changes():
     ALTER TABLE items
     DROP COLUMN itemName;
     """
+    # 2024-26-11: Added the building column to the users taable
+    """ALTER TABLE users
+                    ADD building VARCHAR(7);
+    """
+
+    """CREATE TABLE items (
+    id SERIAL PRIMARY KEY,
+    itemType VARCHAR(10) NOT NULL,
+    LocationFound VARCHAR(255),
+    itemDescription TEXT,
+    dateFound DATE NOT NULL,
+    LFlocation VARCHAR(50) NOT NULL,
+    FOREIGN KEY (LFlocation) REFERENCES building (buildingCode) ON DELETE CASCADE
+    );
+    """
+
+    #2024-03-12: Added an image column to the items table
+    """ALTER TABLE items
+    ADD COLUMN image_path VARCHAR(255);
+    """
     # Execute the SQL to apply the change
-    cursor.execute("""DELETE FROM users;
+    cursor.execute("""SELECT image_path FROM items WHERE LFlocation = 'SEM';
     """)
-    
     # Commit changes and close
     conn.commit()
     cursor.close()

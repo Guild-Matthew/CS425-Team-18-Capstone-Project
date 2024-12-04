@@ -32,7 +32,7 @@
 
     <section class="add-item-form">
         <h2>Add a Found Item</h2>
-        <form action="{{ url_for('main.Reportitems', building=building) }}" method="POST">
+        <form action="{{ url_for('main.Reportitems') }}" method="POST" enctype="multipart/form-data">
 
             <!-- Worker -->
             <label for="worker">Worker Submitting This Form:</label>
@@ -40,7 +40,12 @@
 
             <!-- Location of L&F-->
             <label for="location">Lost and Found location:</label>
-            <input type="text" id="location" name="location" placeholder="Lost and Found Location" required>
+            <select name="location" id="location">
+                <option value="" disabled selected>Select Lost and Found Building</option>
+                <option value="SEM">SEM</option>
+                <option value="DMSC">DMSC</option>
+                <option value="AB">AB</option>
+            </select>
 
             <!-- Date found -->
             <label for="dateFound">Date Found:</label>
@@ -62,6 +67,10 @@
             <!-- Other Information -->
             <label for="description">Description:</label>
             <textarea id="description" name="description" placeholder="Additional details" rows="3"></textarea>
+
+            <!--Photo of item-->
+            <label for="imagePhoto">Upload a photo of the item</label>
+            <input type="file" id="imagePhoto" name="imagePhoto" accept=".png, .jpg, .jpeg">
 
             <!-- Submit Button -->
             <button type="submit">Add Item</button>

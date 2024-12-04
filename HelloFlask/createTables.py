@@ -20,9 +20,11 @@ def create_tables():
     """
         CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
-        email TEXT UNIQUE NOT NULL, 
         username TEXT UNIQUE NOT NULL,
-        password TEXT NOT NULL
+        password TEXT NOT NULL,
+        email TEXT UNIQUE NOT NULL, 
+        role VARCHAR(20),
+        building VARCHAR(20)
     );
     """
 
@@ -49,18 +51,7 @@ def create_tables():
     );
     """
     # Define SQL queries for creating tables
-    create_table_queries = [    
-    """
-    CREATE TABLE IF NOT EXISTS claimedItems (
-    itemType VARCHAR(50),
-    LocationFound VARCHAR(100),
-    itemDescription VARCHAR(100),
-    dateFound DATE,
-    dateClaimed DATE,
-    LFlocation VARCHAR(10),
-    PRIMARY KEY (itemType, LocationFound, itemDescription)
-    );
-    """]
+    create_table_queries = []
 
     # Execute each query to create tables
     for query in create_table_queries:

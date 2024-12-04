@@ -29,11 +29,11 @@ function initMap() {
         .then(response => response.json())
         .then(data => {
             // Add markers dynamically from the fetched data
-            data.forEach(({ buildingCode, latitude, longitude }, i) => {
+            data.forEach(({ buildingCode, latitude, longitude, itemCount, claimedCount}) => {
                 const marker = new google.maps.Marker({
                     position: { lat: latitude, lng: longitude },
                     map,
-                    buildingCode: `${i + 1}. ${buildingCode}`,
+                    title: `Building ${buildingCode}\nLost Items: ${itemCount}\nClaimed Items: ${claimedCount}`, 
                 });
 
                 // Add a click listener for each marker

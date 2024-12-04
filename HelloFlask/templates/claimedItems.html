@@ -38,18 +38,18 @@
             <div class="filter-section">
                 <label for="sort">Sort By:</label>
                 <select id="sort" onchange="sortItems()">
-                    <option value="date">Date Claimed: Oldest</option>
-                    <option value="date">Date Claimed: Newest</option>
+                    <option value="oldest" {% if sort_order == 'oldest' %}selected{% endif %}>Date Claimed: Oldest</option>
+                    <option value="newest" {% if sort_order == 'newest' %}selected{% endif %}>Date Claimed: Newest</option>
                 </select>
             </div>
             <!--Filter section-->
             <div class="filter-section">
                 <label for="filterType">Filter by Type:</label>
-                <select id="filterType" onchange="filterItems()">
-                    <option value="all" {% if filterType =='all' %}selected{% endif %}>All</option>
-                    <option value="clothing" {% if filterType =='clothing' %}selected{% endif %}>Clothing</option>
-                    <option value="technology" {% if filterType =='technology' %}selected{% endif %}>Technology</option>
-                    <option value="misc" {% if filterType =='misc' %}selected{% endif %}>Miscellaneous</option>
+                <select id="filterType" onchange="filterItemsClaimed()">
+                    <option value="all" {% if filter_type == 'all' %}selected{% endif %}>All</option>
+                    <option value="clothing" {% if filter_type == 'clothing' %}selected{% endif %}>Clothing</option>
+                    <option value="technology" {% if filter_type == 'technology' %}selected{% endif %}>Technology</option>
+                    <option value="misc" {% if filter_type == 'misc' %}selected{% endif %}>Miscellaneous</option>
                 </select>
             </div>
         </aside>
@@ -79,6 +79,7 @@
     <footer>
         <p>&copy; 2024 University of Nevada, Reno. Lost and Found Service.</p>
     </footer>
+    <script src="{{ url_for('static', filename='js/claimedItems.js') }}"></script>
 </body>
 
 </html>

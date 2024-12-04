@@ -19,12 +19,12 @@ class Queries:
         self.cursor.close()
         self.conn.close()
 
-    def insert_item(self, itemType, LocationFound, itemDescription, dateFound, LFlocation): #*
+    def insert_item(self, itemType, LocationFound, itemDescription, dateFound, LFlocation,  image_path): #*
         query = """
-        INSERT INTO items (itemType, LocationFound, itemDescription, dateFound, LFlocation)
-        VALUES (%s, %s, %s, %s, %s)
+        INSERT INTO items (itemType, LocationFound, itemDescription, dateFound, LFlocation, image_path)
+        VALUES (%s, %s, %s, %s, %s, %s)
         """
-        self.cursor.execute(query, (itemType, LocationFound, itemDescription, dateFound, LFlocation))
+        self.cursor.execute(query, (itemType, LocationFound, itemDescription, dateFound, LFlocation,  image_path))
         self.conn.commit()
 
     def insert_Claimed_item(self, itemType, LocationFound, itemDescription, dateFound, dateClaimed, LFlocation):#*
@@ -36,57 +36,100 @@ class Queries:
         self.conn.commit()
 
 
-    def get_items(self, LFlocation):#*
-        self.cursor.execute("""
-        SELECT itemType, LocationFound, itemDescription, dateFound 
+    def get_items(self, LFlocation, order):#*
+        # Validate the order argument to ensure it's either ASC or DESC
+        if order not in ("ASC", "DESC"):
+            raise ValueError("Invalid order. Must be 'ASC' or 'DESC'.")
+
+       
+        query = f"""
+        SELECT itemType, LocationFound, itemDescription, dateFound, image_path
         FROM items 
         WHERE LFlocation = %s
-        """, (LFlocation,))  # Pass LFlocation as a tuple
+        ORDER BY dateFound {order}
+        """
+        self.cursor.execute(query, (LFlocation,))  # Pass LFlocation as a tuple
         return self.cursor.fetchall()  # Fetch all matching items
 
-    def get_items_by_type(self, item_type):#*
-        query = """
-        SELECT itemType, LocationFound, itemDescription, dateFound 
+    def get_items_by_type(self, item_type, building, order):#*
+        # Validate the order argument to ensure it's either ASC or DESC
+        if order not in ("ASC", "DESC"):
+            raise ValueError("Invalid order. Must be 'ASC' or 'DESC'.")
+
+        query = f"""
+        SELECT itemType, LocationFound, itemDescription, dateFound, image_path
         FROM items
-        WHERE itemType = %s
+        WHERE itemType = %s AND lflocation = %s
+        ORDER BY dateFound {order}
         """
-        self.cursor.execute(query, (item_type,))
+        self.cursor.execute(query, (item_type, building))
         return self.cursor.fetchall()
 
-    def get_Claimed_items(self, LFlocation): #*
-        self.cursor.execute("""
-        SELECT itemType, LocationFound, itemDescription, dateFound, dateClaimed 
-        FROM claimedItems 
-        WHERE LFlocation = %s
-        """,(LFlocation,))
-        return self.cursor.fetchall()  # Fetch all matching items
-
-    def get_Claimed_items_by_type(self): #*
-        self.cursor.execute("""
+    def get_Claimed_items(self, LFlocation, order): #*
+        query = f"""
         SELECT itemType, LocationFound, itemDescription, dateFound, dateClaimed  
         FROM claimedItems 
-        WHERE itemType = %s
-        """,)
+        WHERE lflocation = %s 
+        ORDER BY dateClaimed {order}
+        """
+        self.cursor.execute(query, (LFlocation,))
         return self.cursor.fetchall()  # Fetch all matching items
 
-    def createAccount(self, username, password, email, role): #*
-        query = """
-            INSERT INTO users (username, password, email, role)
-            VALUES (%s, %s, %s, %s)
+    def get_Claimed_items_by_type(self, LFlocation, item_type, order): #*
+        query = f"""
+        SELECT itemType, LocationFound, itemDescription, dateFound, dateClaimed  
+        FROM claimedItems 
+        WHERE lflocation = %s AND itemType = %s
+        ORDER BY dateClaimed {order}
         """
-        self.cursor.execute(query, (username, password, email, role))
+        self.cursor.execute(query, (LFlocation, item_type))
+        return self.cursor.fetchall()  # Fetch all matching items
+
+    def createAccount(self, username, password, email, role, building=None): #*
+        query = """
+            INSERT INTO users (username, password, email, role, building)
+            VALUES (%s, %s, %s, %s, %s)
+        """
+        self.cursor.execute(query, (username, password, email, role, building))
         self.conn.commit()
 
     def getUser(self, username, email): #*
         self.cursor.execute("""
-        SELECT id, username, password, role 
+        SELECT id, username, password, role, building 
         FROM users 
         WHERE username = %s OR email = %s
         """, (username, email))
         row = self.cursor.fetchone()
         if row:
-            return {"id": row[0], "username": row[1], "password": row[2], "role": row[3]}  # Convert to dictionary
+            return {"id": row[0], "username": row[1], "password": row[2], "role": row[3], "building": row[4]}  # Convert to dictionary
         return None
+
+
+    def getUserVoid(self, role): #*
+        self.cursor.execute("""
+        SELECT username, email, building
+        FROM users 
+        WHERE role = %s
+        """, (role,))
+        rows = self.cursor.fetchall()
+        return [{"username": row[0], "email": row[1], "building": row[2]} for row in rows]  
+
+    def getUserVoidFiltered(self, building, role): #*
+        self.cursor.execute("""
+        SELECT username, email
+        FROM users 
+        WHERE building = %s AND role = %s
+        """, (building, role,))
+        rows = self.cursor.fetchall()
+        return [{"username": row[0], "email": row[1]} for row in rows]  
+
+    def deleteUser(self, email, username):
+        query = """
+        DELETE FROM users
+        WHERE username = %s AND email = %s
+        """
+        self.cursor.execute(query, (username, email))
+        self.conn.commit()
 
     def deleteItem(self, itemType, LocationFound, itemDescription, dateFound):#*
         query = """
@@ -106,19 +149,24 @@ class Queries:
 
     def getBuildings(self):
         query = """
-        SELECT buildingCode, latitude, longitude FROM building
+        SELECT b.buildingCode, b.latitude, b.longitude, COUNT(i.id) as itemCount, COUNT(c.id) as claimedCount
+        FROM building b
+        LEFT JOIN items i ON b.buildingCode = i.LFlocation
+        LEFT JOIN claimedItems c ON b.buildingCode = c.LFlocation
+        GROUP BY b.buildingCode, b.latitude, b.longitude
         """
         self.cursor.execute(query)
         rows = self.cursor.fetchall()
         # Convert rows to a list of dictionaries
-        return [{'buildingCode': row[0], 'latitude': row[1], 'longitude': row[2]} for row in rows]
+        return [{'buildingCode': row[0], 'latitude': row[1], 'longitude': row[2], 'itemCount': row[3], 'claimedCount': row[4]} for row in rows]
+
+
 
 if __name__ == "__main__":
     # Create an instance of Queries
     db_queries = Queries()
     hashed_password = generate_password_hash('Dovakhin12#')
     # Fetch all items in the database
-    items = db_queries.getUser('cguilherme', 'cguilherme@unr.edu')
-    
+    items = db_queries.createAccount('gcassianoADM', hashed_password,'gcassianoADM@unr.edu', 'admin')
     # Close the database connection
     db_queries.close()

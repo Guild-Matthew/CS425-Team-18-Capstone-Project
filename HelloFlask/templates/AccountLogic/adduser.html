@@ -30,26 +30,30 @@
 
     <section class="add-item-form">
         <h2>Add a User</h2>
-        <form id="addItemForm" action="{{ url_for('account.addUser') }}" method="POST">
+        <form id="addItemForm" action="{{ url_for('account.addUser') }}" method="POST" enctype="multipart/form-data">
 
             <!-- Worker netID -->
             <label for="netID">NetID for user to be given access</label>
-            <input type="text" id="netID" name="netID" placeholder="NetID" required>
+            <input type="text" id="netID" name="netID" placeholder="NetID">
 
             <label for="email">UNR email for user to be given access</label>
-            <input type="text" id="email" name="email" placeholder="email" required>
+            <input type="text" id="email" name="email" placeholder="email">
 
             <label for="NetID password">NetID password for user to be given access</label>
-            <input type="text" id="NetID password" name="NetID password" placeholder="NetID password" required>
+            <input type="text" id="NetID password" name="NetID password" placeholder="NetID password">
 
             <label for="building">Building for which user will have Lost and Found access</label>
-            <select id="building" name="building" required onchange="toggleClothingFields()">
+            <select id="building" name="building" onchange="toggleClothingFields()">
                 <option value="" disabled selected>Select Building</option>
                 <option value="AB">AB</option>
                 <option value="DLM">DLM</option>
                 <option value="JCSU">JCSU</option>
                 <option value="WFC">WFC</option>
+                <option value="SEM">SEM</option>
             </select>
+            <!--Submit in batch-->
+            <label for="batchFile">Upload a .txt file for batch addition</label>
+            <input type="file" id="batchFile" name="batchFile" accept=".txt">
             <!-- Submit Button -->
             <button type="submit">Add User</button>
         </form>

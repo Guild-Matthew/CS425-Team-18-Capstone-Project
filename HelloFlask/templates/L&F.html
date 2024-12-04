@@ -37,32 +37,44 @@
             <div class="filter-section">
                 <label for="sort">Sort By:</label>
                 <select id="sort" onchange="sortItems()">
-                    <option value="date">Date Found: Oldest</option>
-                    <option value="date">Date Found: Newest</option>
+                    <option value="oldest" {% if sort_order == 'oldest' %}selected{% endif %}>Date Found: Oldest</option>
+                    <option value="newest" {% if sort_order == 'newest' %}selected{% endif %}>Date Found: Newest</option>
                 </select>
             </div>
+            <!--Filter section-->
             <div class="filter-section">
                 <label for="filterType">Filter by Type:</label>
                 <select id="filterType" onchange="filterItems()">
-                    <option value="all">All</option>
-                    <option value="clothing">Clothing</option>
-                    <option value="technology">Technology</option>
-                    <option value="misc">Miscellaneous</option>
+                    <option value="all" {% if filter_type == 'all' %}selected{% endif %}>All</option>
+                    <option value="clothing" {% if filter_type == 'clothing' %}selected{% endif %}>Clothing</option>
+                    <option value="technology" {% if filter_type == 'technology' %}selected{% endif %}>Technology</option>
+                    <option value="misc" {% if filter_type == 'misc' %}selected{% endif %}>Miscellaneous</option>
+
+
+
                 </select>
             </div>
         </aside>
 
         <!--Products section-->
         <section id="products">
+            <h2>Items will be kept until December 29th, 2024</h2>
             <h2>Found Items in Building: {{ building }}</h2>
             <div class="product-grid">
                 {% if items %}
                 {% for item in items %}
-                <div class="product">
+                <div class="product" onclick="toggleImage(this)">
                     <h3><strong>Item type:</strong> <span>{{ item[0] }}</span></h3>
                     <h3><strong>Location found:</strong> <span>{{ item[1] }}</span></h3>
                     <h3><strong>Date found:</strong> <span>{{ item[3] }}</span></h3>
                     <h3><strong>Description:</strong> <span>{{ item[2] }}</span></h3>
+                    <div class="image-container" style="display: none;">
+                        {% if item[4] %}
+                        <img src="{{ url_for('static', filename=item[4]) }}" alt="Photo of {{ item[0] }}" style="max-width: 200px; max-height: 200px;">
+                        {% else %}
+                        <p>No photo available</p>
+                        {% endif %}
+                    </div>
                 </div>
                 {% endfor %}
                 {% else %}
@@ -76,15 +88,7 @@
         <p>&copy; 2024 University of Nevada, Reno. Lost and Found Service.</p>
     </footer>
 
-    <script>
-        function filterItems() {
-            // Get the selected filter type
-            const filterType = document.getElementById('filterType').value;
-
-            // Redirect to the L&F page with the filterType as a query parameter
-            window.location.href = `/L&F?filterType=${filterType}`;
-        }
-    </script>
+    <script src="{{ url_for('static', filename='js/L&F.js') }}"></script>
 </body>
 
 </html>

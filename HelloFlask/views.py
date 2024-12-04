@@ -1,7 +1,8 @@
-from flask import render_template, request, redirect, url_for, Blueprint, jsonify, session
+from flask import render_template, request, redirect, url_for, Blueprint, jsonify, session, current_app
 from HelloFlask.queries import Queries
 from datetime import datetime 
-
+import os
+from werkzeug.utils import secure_filename
 # Create an instance of the Queries class for database operations
 db_queries = Queries()
 main_bp = Blueprint('main', __name__)
@@ -15,21 +16,6 @@ def get_buildings():
     buildings = db_queries.getBuildings()  # Query to fetch building data
     return jsonify(buildings)  # Return the building data as JSON
 
-@main_bp.route('/L&F', methods=['GET', 'POST'])
-def info():
-    # Get the filter value from the query string (default to 'all')
-    filter_type = request.args.get('filterType', 'all')
-    building = request.args.get('building')
-    # If "all" is selected, fetch all items; otherwise, filter by the selected type
-    if filter_type == 'all':
-        items = db_queries.get_items(building)  # Fetch all items
-    else:
-        items = db_queries.get_items_by_type(filter_type)  # Fetch filtered items
-
-    # Render the template with the filtered items and current filter
-    return render_template('L&F.html', items=items, filterType=filter_type,  building=building)
-
-
 
 @main_bp.route('/Items', methods=['GET', 'POST'])
 def Reportitems():
@@ -40,9 +26,28 @@ def Reportitems():
             itemType = request.form['itemType']
             description = request.form['description']
             location = request.form['location']
-            db_queries.insert_item(itemType, locationFound, description, dateFound, location)
 
-            # Redirect to avoid duplicate form submissions
+            # Use the application's root path to construct the upload folder path
+            upload_folder = os.path.join(current_app.root_path, 'static', 'uploads')
+            os.makedirs(upload_folder, exist_ok=True)
+
+            image_file = request.files.get('imagePhoto')
+            relative_path = None 
+
+            if image_file and image_file.filename:
+                # Sanitize the filename and save the image
+                filename = secure_filename(image_file.filename)
+                file_path = os.path.join(upload_folder, filename)
+                try:
+                    image_file.save(file_path)
+                    # Save the relative path for use in templates
+                    relative_path = os.path.join('uploads', image_file.filename).replace('\\', '/')
+                except Exception as e:
+                    print(f"Error saving file: {e}")
+
+            # Insert item into the database
+            db_queries.insert_item(itemType, locationFound, description, dateFound, location, relative_path)
+
             return redirect(url_for('main.Reportitems'))
 
         return render_template('/items.html')
@@ -55,7 +60,8 @@ def Reportitems():
 def Removeitems():
     if 'user_id' in session:
         # Handle POST request (when an item is being deleted)
-        building = request.args.get('building')
+        building = session.get('building')
+        #building = request.args.get('building')
         if request.method == 'POST':
             # Retrieve item details from the form
             item_type = request.form['itemType']
@@ -88,17 +94,37 @@ def Removeitems():
 
 @main_bp.route('/claimedItems', methods=['GET', 'POST'])
 def ClaimedItems():
-    building = request.args.get('building')
-    # Get the filter value from the query string (default to 'all')
-    filter_type = request.args.get('filterType', 'all')
-     
+    filter_type = request.args.get('filterType', 'all')  # Default to 'all'
+    building = request.args.get('building')  # Get the building parameter
+    sort_order = request.args.get('sort', 'oldest') # Get sorting order (default to oldest)
     # If "all" is selected, fetch all items; otherwise, filter by the selected type
-    if filter_type == 'all':
-        items = db_queries.get_Claimed_items(building)  # Fetch all items
-    else:
-        items = db_queries.get_Claimed_items_by_type(filter_type)  # Fetch filtered items
-    return render_template("claimedItems.html", items=items, filterType=filter_type, building=building)
+    order = "ASC" if sort_order == "oldest" else "DESC"
 
+    if filter_type == 'all':
+        items = db_queries.get_Claimed_items(building, order)  # Fetch all items
+    else:
+        items = db_queries.get_Claimed_items_by_type(building, filter_type, order)  # Fetch filtered items
+    return render_template("claimedItems.html", items=items, filter_type=filter_type, sort_order=sort_order, building=building)
+
+@main_bp.route('/L&F', methods=['GET'])
+def info():
+    filter_type = request.args.get('filterType', 'all')  # Default to 'all'
+    building = request.args.get('building')  # Get the building parameter
+    sort_order = request.args.get('sort', 'oldest') # Get sorting order (default to oldest)
+    # If "all" is selected, fetch all items; otherwise, filter by the selected type
+    order = "ASC" if sort_order == "oldest" else "DESC"
+    # Ensure building is provided
+    if not building:
+        return "Building parameter is required", 400
+
+    # Query items based on building and filter
+    if filter_type == 'all':
+        items = db_queries.get_items(building, order)
+    else:
+        items = db_queries.get_items_by_type(filter_type, building, order)
+
+    # Render the template with building and filtered items
+    return render_template('L&F.html', items=items, filter_type=filter_type, sort_order=sort_order, building=building)
 
 @main_bp.route('/RedirectDashboard')
 def RedirectDashboard():
@@ -114,5 +140,6 @@ def RedirectDashboard():
     else:
         # Redirect to the login page if not logged in
         return redirect(url_for('account.login'))
+
 
 
