@@ -1,11 +1,17 @@
 University of Nevada, Reno
+
 Computer Science and Engineering Department
+
 Team 18
+
 Matthew Guild, Shane Petree, Mary Cottier, Guilherme Cassiano
+
 Instructors: Vinh Le, Sara Davis
+
 External Advisors: Julee Demello (Assistant Director, Clinical Operations, University of Nevada, Reno School of Medicine), Kyle Dazey (Construction Project Coordinator II at University of Nevada, Reno)
 
 Capstone Project for CS 425
+
 Fall 2024 - Spring 2025
 
 Lost & Found Map
