@@ -1,0 +1,32 @@
+/* Container for the map */
+.map-container {
+    position: relative;
+    width: 800px; /* Adjust as needed */
+    height: 600px; /* Adjust as needed */
+    background-image: url("/static/images/hl2.png"); /* Path to your map image */
+    background-size: cover;
+    background-position: center;
+    margin: 0 auto;
+}
+
+/* Style for each marker */
+.marker {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: red;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/* Adjust marker positions */
+#marker1 {
+    top: 23%;
+    left: 26%;
+}
+/* Example coordinates */
+#marker2 {
+    top: 16%;
+    left: 37%;
+}
+/* Example coordinates */
