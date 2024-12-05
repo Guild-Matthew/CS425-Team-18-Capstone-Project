@@ -1,0 +1,179 @@
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    height: 100%;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url('../images/campus_image.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+/* Background Overlay for Readability */
+.background-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Adjust opacity as needed */
+    z-index: 1;
+}
+
+/* Centered Login Box */
+.login-container {
+    position: relative;
+    z-index: 2; /* Sits above the overlay */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 350px;
+    padding: 20px;
+}
+
+.login-box {
+    background-color: white;
+    padding: 30px;
+    width: 100%;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+}
+
+.logo {
+    width: 150px; /* Adjust size as needed */
+    margin-bottom: 10px;
+}
+
+h2 {
+    font-size: 1.5em;
+    color: #003366;
+    margin-bottom: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+input[type="text"],
+input[type="password"] {
+    padding: 10px;
+    font-size: 1em;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    width: 100%;
+    outline: none;
+    text-align: center;
+}
+
+    input[type="text"]:focus,
+    input[type="password"]:focus {
+        border-bottom: 1px solid #003366;
+    }
+
+
+button[type="submit"] {
+    padding: 10px;
+    font-size: 1em;
+    background-color: #003366;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    width: 100%;
+    cursor: pointer;
+}
+
+    button[type="submit"]:hover {
+        background-color: #005bb5;
+    }
+
+.help-link {
+    color: #003366;
+    font-size: 0.9em;
+    text-decoration: none;
+}
+
+    .help-link:hover {
+        text-decoration: underline;
+    }
+
+.signin-options {
+    margin-top: 20px;
+}
+
+.signin-option-btn {
+    background-color: white;
+    color: #003366;
+    border: 1px solid #ccc;
+    padding: 8px;
+    font-size: 0.9em;
+    cursor: pointer;
+    border-radius: 4px;
+    width: 100%;
+}
+
+    .signin-option-btn:hover {
+        background-color: #f2f2f2;
+    }
+
+
+#signupButton {
+    padding: 10px;
+    font-size: 1em;
+    background-color: #003366;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    width: 100%;
+    cursor: pointer;
+}
+
+    #signupButton:hover {
+        background-color: #005bb5;
+    }
+
+/* Style for the Create Account button (if not already styled) */
+button.btn {
+    padding: 10px;
+    font-size: 1em;
+    background-color: #003366;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    width: 100%;
+    cursor: pointer;
+}
+
+    button.btn:hover {
+        background-color: #005bb5;
+    }
+
+/* Style for the Already have an account? button */
+#loginButton {
+    padding: 10px;
+    font-size: 1em;
+    background-color: #ffffff;
+    color: #003366;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+    #loginButton:hover {
+        background-color: #f2f2f2;
+    }
