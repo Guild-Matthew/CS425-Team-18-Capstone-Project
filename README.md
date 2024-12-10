@@ -2,7 +2,7 @@
 <br>University of Nevada, Reno
 <br>Computer Science and Engineering Department
 <br>Team 18
-<br>Matthew Guild, Shane Petree, Mary Cottier, Guilherme Cassiano
+<br>Matthew Guild, Mary Cottier, Guilherme Cassiano, Shane Petree
 <br>Instructors: Vinh Le, Sara Davis
 <br>External Advisors: Julee Demello (Assistant Director, Clinical Operations, University of Nevada, Reno School of Medicine), Kyle Dazey (Construction Project Coordinator II at the University of Nevada, Reno)
 <br>Capstone Project for CS 425 & 426
