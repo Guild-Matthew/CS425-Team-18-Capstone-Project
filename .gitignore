@@ -363,3 +363,4 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /CapstoneProject/CapstoneProject.pyproj
+/CapstoneProject/HelloFlask/__pycache__
