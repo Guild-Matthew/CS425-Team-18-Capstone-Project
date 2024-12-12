@@ -316,6 +316,8 @@ paket-files/
 __pycache__/
 *.pyc
 /CapstoneProject/env
+/CapstoneProject/CapstoneProject.pyproj
+/HelloFlask/__pycache__
 
 # Cake - Uncomment if you are using it
 # tools/**
@@ -362,5 +364,4 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-/CapstoneProject/CapstoneProject.pyproj
-/CapstoneProject/HelloFlask/__pycache__
+
