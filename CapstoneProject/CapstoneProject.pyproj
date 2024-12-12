@@ -39,9 +39,6 @@
     <Compile Include="HelloFlask\tableEdit.py" />
     <Compile Include="HelloFlask\views.py" />
     <Compile Include="HelloFlask\__init__.py" />
-    <Compile Include="runserver.py">
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Health and Safety\HAS.css" />
