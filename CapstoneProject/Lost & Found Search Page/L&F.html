@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNR Lost and Found</title>
+    <link rel="stylesheet" href="L&F.css">
+</head>
+
+<body>
+    <!--Header section-->
+    <header>
+        <div class="container">
+            <div class="logo-group">
+                <img class="university-logo-large-img align-image-bottom" alt="University of Nevada, Reno " src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg" width="65" height="65">
+                <span class="logo-text-new align-text-middle">
+                    University of Nevada, Reno
+                </span>
+            </div>
+            <h1>Lost and Found</h1>
+            <nav>
+                <ul>
+                    <li><a href="#">Map</a></li>
+                    <li><a href="#">Report Found Item</a></li>
+                    <li><a href="#">Health and Safety</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <div class="container">
+        <!--Sidebar for sort and filter-->
+        <aside class="sidebar">
+            <h2>Sort & Filter</h2>
+            <!--Sort section-->
+            <div class="filter-section">
+                <label for="sort">Sort By:</label>
+                <select id="sort" onchange="sortItems()">
+                    <option value="date">Date Found: Oldest</option>
+                    <option value="date">Date Found: Newest</option>
+                </select>
+            </div>
+            <!--Filter section-->
+            <div class="filter-section">
+                <label for="filterType">Filter by Type:</label>
+                <select id="filterType" onchange="filterItems()">
+                    <option value="all">All</option>
+                    <option value="clothing">Clothing</option>
+                    <option value="Technology">Technology</option>
+                    <option value="misc">Miscellaneous</option>
+                </select>
+            </div>
+        </aside>
+        
+        <!--Products section-->
+        <section id="products">
+            <h2>Found Items in Building: ___</h2>
+            <div class="product-grid">
+                <div class="product">
+                    <h3>Item type: <span>Clothing</span></h3>
+                    <h3>Location found: <span>gym, 3rd floor</span></h3>
+                    <h3>Date found: <span>10/28/2024</span></h3>
+                    <h3>Description: <span>Black and white adidas shoes, men's size 9</span></h3>
+                </div> 
+                <div class="product">
+                    <h3>Item type: <span>Technology</span></h3>
+                    <h3>Location found: <span>AB 103</span></h3>
+                    <h3>Date found: <span>10/30/2024</span></h3>
+                    <h3>Description: <span>Apple pencil</span></h3>
+                </div> 
+                <div class="product">
+                    <h3>Item type: <span>Miscellaneous</span></h3>
+                    <h3>Location found: <span>MIKC, 5th floor study room</span></h3>
+                    <h3>Date found: <span>10/30/2024</span></h3>
+                    <h3>Description: <span>Wallet, cards inside have name John Doe</span></h3>
+                </div>   
+                <div class="product">
+                    <h3>Item type: <span>Miscellaneous</span></h3>
+                    <h3>Location found: <span>Outside of JCSU</span></h3>
+                    <h3>Date found: <span>11/1/2024</span></h3>
+                    <h3>Description: <span>Hydroflask water bottle</span></h3>
+                </div>    
+                <div class="product">
+                    <h3>Item type: <span>Clothing</span></h3>
+                    <h3>Location found: <span>DLM map room</span></h3>
+                    <h3>Date found: <span>11/7/2024</span></h3>
+                    <h3>Description: <span>UNR hoodie</span></h3>
+                </div>                          
+            </div>
+        </section>
+        
+    </div>
+    <!--Footer section-->
+        <footer>
+            <p>&copy; 2024 University of Nevada, Reno. Lost and Found Service.</p>
+        </footer>
+</body>
+
+</html>
