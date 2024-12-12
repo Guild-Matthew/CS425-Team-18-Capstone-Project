@@ -315,6 +315,7 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+/CapstoneProject/env
 
 # Cake - Uncomment if you are using it
 # tools/**
@@ -361,4 +362,3 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-/CapstoneProject/CapstoneProject.pyproj
