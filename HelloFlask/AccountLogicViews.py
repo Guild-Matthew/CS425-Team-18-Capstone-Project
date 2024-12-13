@@ -9,6 +9,7 @@ import tempfile
 db_queries = Queries()
 account_bp = Blueprint('account', __name__)
 
+# Route for the log in page
 @account_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -31,16 +32,19 @@ def login():
     # Render the login page if GET request or failed login
     return render_template('AccountLogic/login.html')
 
+# Route for the admin page
 @account_bp.route('/admdashboard', methods=['GET'])
 def admDashboard():
      # Render the admin dashboard
     return render_template("AccountLogic/admin_home.html")
-
+    
+# Route for the user page
 @account_bp.route('/userdashboard', methods=['GET'])
 def userDashboard():
      # Render the user dashboard
     return render_template("AccountLogic/user_home.html")
-
+    
+# Route for logging the user out 
 @account_bp.route('/logout')
 def logout():
     # Check if the user is logged in
@@ -52,6 +56,7 @@ def logout():
     session.clear()
     return redirect(url_for('main.home'))
 
+# Route for the add user page
 @account_bp.route('/adduser', methods=['GET', 'POST'])
 def addUser():
     if request.method == 'POST':
@@ -113,7 +118,7 @@ def addUser():
     return render_template("AccountLogic/adduser.html")
 
 
-
+# Route for the delete user account page
 @account_bp.route('/VoidStudent', methods=['GET', 'POST'])
 def voidUser():
     if request.method == 'POST':
@@ -129,7 +134,7 @@ def voidUser():
     else:
         users = db_queries.getUserVoidFiltered(filter_type_building, 'student')  # Filter users by type and building
     
-    # Pass 'users' and 'building' to the template
+
     return render_template("AccountLogic/voiduser.html", users=users, filter_type_building=filter_type_building)
 
 
