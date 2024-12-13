@@ -1,3 +1,5 @@
+# Implemented by Guilherme Domingues Cassiano 
+# This file doesnt have any actual functionality in the code itself, I made it to check if my tabvle schemas were right 
 import psycopg2
 
 def check_table_schema(table_name):
