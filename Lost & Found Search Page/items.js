@@ -1,3 +1,4 @@
+//Mary Cottier
 // script.js
 function toggleClothingFields() {
     const itemType = document.getElementById("itemType").value;

@@ -1,3 +1,4 @@
+// Matthew Guild
 document.addEventListener("DOMContentLoaded", function () {
     const loginButton = document.getElementById("loginButton");
     const signupButton = document.getElementById("signupButton");
