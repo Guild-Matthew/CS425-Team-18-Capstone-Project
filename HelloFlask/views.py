@@ -1,10 +1,11 @@
+# This file was implemented by Guilherme Domingues Cassiano 
+# A section by Shane Petree
 from flask import render_template, request, redirect, url_for, Blueprint, jsonify, session, current_app
 from HelloFlask.queries import Queries
 from datetime import datetime 
 import os
 from werkzeug.utils import secure_filename
 
-# START Cassiano
 # Create an instance of the Queries class for database operations
 db_queries = Queries()
 main_bp = Blueprint('main', __name__)
@@ -136,15 +137,13 @@ def RedirectDashboard():
         if role == 'admin':
         # Redirect to the admin dashboard if logged in as an admin
             return redirect(url_for('account.admDashboard'))
-    # END Cassiano
 
-    # START Shane
+    # START Shane Petree
         if role == 'super-admin':
             # Redirect to the super-admin dashboard if the user is a super-admin
             return redirect(url_for('account.superDashboard'))
-    # END Shane
+    # END Shane Petree
 
-        # Start Cassiano
         if role == 'user':
         # Redirect to the user dashboard if logged in as an user
             return redirect(url_for('account.userDashboard'))
@@ -152,7 +151,6 @@ def RedirectDashboard():
         # Redirect to the login page if not logged in
         return redirect(url_for('account.login'))
 
-# END Cassiano
 
 
 
