@@ -20,6 +20,7 @@
             <h1>Lost and Found</h1>
             <nav>
                 <ul>
+                    <!-- Implemented by Guilherme Domingues Cassiano -->
                     <li><a href="{{ url_for('main.home') }}">Map</a></li>
                     <li><a href="{{ url_for('main.info', building=building) }}">Lost and Found</a></li>
                     <li><a href="{{ url_for('main.ClaimedItems', building=building) }}">Claimed Items</a></li>
@@ -32,6 +33,7 @@
 
     <section class="add-item-form">
         <h2>Add a Found Item</h2>
+        <!-- Implemented by Guilherme Domingues Cassiano -->
         <form action="{{ url_for('main.Reportitems') }}" method="POST" enctype="multipart/form-data">
 
             <!-- Worker -->
