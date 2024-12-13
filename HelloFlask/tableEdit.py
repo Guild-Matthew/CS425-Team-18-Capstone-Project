@@ -1,6 +1,8 @@
+# File implemented by Guilherme Domingues Cassiano 
 import psycopg2
 from psycopg2 import sql
 
+#This file doesnt have any actual functionalities on the website, I just used it when I had to edit a table 
 def connect_db():
     conn = psycopg2.connect(
         dbname="TestDB",
