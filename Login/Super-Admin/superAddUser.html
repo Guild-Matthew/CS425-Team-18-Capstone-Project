@@ -1,0 +1,80 @@
+<!-- Shane Petree, based on Matther Guild's addUser.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNR Lost and Found</title>
+    <link rel="stylesheet" href="superAddUser.css">
+</head>
+
+<body>
+    <!--Header section-->
+    <header>
+        <div class="container">
+            <div class="logo-group">
+                <img class="university-logo-large-img align-image-bottom" alt="University of Nevada, Reno " src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg" width="65" height="65">
+                <span class="logo-text-new align-text-middle">
+                    University of Nevada, Reno
+                </span>
+            </div>
+            <h1>Manage Access</h1>
+            <nav>
+                <ul>
+                    <li><a href="#">Map</a></li>
+                    <li><a href="#">Lost and Found</a></li>
+                    <li><a href="#">Health and Safety</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="add-item-form">
+        <h2>Authorize Account</h2>
+        <form id="addItemForm">
+
+            <!-- Worker/Admin netID -->
+            <label for="netID">NetID for user to be given access: </label>
+            <input type="text" id="netID" name="netID" placeholder="NetID" required><br><br>
+
+            <label for="NSHEID">NSHEID for user to be given access: </label>
+            <input type="text" id="NSHEID" name="NSHEID" placeholder="NSHEID" required><br><br>
+
+            <label for="NetID password">NetID password for user to be given access: </label>
+            <input type="text" id="NetID password" name="NetID password" placeholder="NetID password" required><br><br>
+
+            <!-- Selecting the buildings for the account to have access to -->
+            <label for="building">Buildings for which user will have Lost and Found access:</label><br>
+            <input type="checkbox" id="AB" name="AB" value="AB">
+            <label for="AB"> AB</label><br>
+            <input type="checkbox" id="DLM" name="DLM" value="DLM">
+            <label for="DLM"> DLM</label><br>
+            <input type="checkbox" id="JCSU" name="JCSU" value="JCSU">
+            <label for="JCSU"> DJCSU</label><br>
+            <input type="checkbox" id="WFC" name="WFC" value="WFC">
+            <label for="WFC"> WFC</label><br><br>
+
+            <!-- Selecting the account type -->
+            <label for="role"> What privileges should this account have? </label>
+
+            <select id="role" name="role" required onchange="toggleClothingFields()">
+                <option value="" disabled selected>Select Role</option>
+                <option value="admin">admin</option>
+                <option value="user">user</option>
+                <!-- if we want to add super-admins this way -->
+                <!--<option value="super-admin">super-admin</option>-->
+            </select><br><br>
+
+            <!-- Submit Button -->
+            <button type="submit">Add Account</button>
+        </form>
+    </section>
+
+    <!--Footer section-->
+    <footer>
+        <p>&copy; 2024 University of Nevada, Reno. Lost and Found Service.</p>
+    </footer>
+
+</body>
+
+</html>
