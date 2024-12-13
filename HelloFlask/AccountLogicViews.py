@@ -1,3 +1,4 @@
+# This file was implemented by Guiilherme Domingues Cassiano
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from HelloFlask.queries import Queries  
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -15,7 +16,7 @@ def login():
         password = request.form['password']
         email = request.form['email']
         # Retrieve user information from the database
-        user = db_queries.getUser(username, email)  # Assume `get_user` retrieves user data
+        user = db_queries.getUser(username, email)  
 
         # Validate user and password
         if user and check_password_hash(user['password'], password):
@@ -32,10 +33,12 @@ def login():
 
 @account_bp.route('/admdashboard', methods=['GET'])
 def admDashboard():
+     # Render the admin dashboard
     return render_template("AccountLogic/admin_home.html")
 
 @account_bp.route('/userdashboard', methods=['GET'])
 def userDashboard():
+     # Render the user dashboard
     return render_template("AccountLogic/user_home.html")
 
 @account_bp.route('/logout')
@@ -55,7 +58,7 @@ def addUser():
         # Check for file upload
         file = request.files.get('batchFile')
         if file and file.filename.endswith('.txt'):
-            # Process batch file
+            # Process file
             with tempfile.NamedTemporaryFile(delete=False) as temp_file:
                 file.save(temp_file.name)
                 file_path = temp_file.name
@@ -78,7 +81,7 @@ def addUser():
             os.remove(file_path)
             return redirect(url_for('account.addUser'))
 
-        # Check for single-user form submission
+        # Check for submission using the form instead of using a file
         username = request.form.get('netID')
         password = request.form.get('NetID password')
         email = request.form.get('email')
@@ -89,7 +92,7 @@ def addUser():
             return render_template("AccountLogic/adduser.html", error=error_message)
 
         if all([username, password, email, building]):
-            # Validate and process single-user form submission
+            # Checks if email is a vaild @unr.edu email, if not it doesnt go to the database
             if not email.endswith('@unr.edu'):
                 error_message = "Invalid email domain. Please use an @unr.edu email."
                 return render_template("AccountLogic/adduser.html", error=error_message)
@@ -103,8 +106,7 @@ def addUser():
                 return "Error adding user", 500
 
             return redirect(url_for('account.addUser'))
-
-        # If neither file nor form is valid, show an error
+            
         error_message = 'Please provide a valid file or fill out the form completely.'
         return render_template("AccountLogic/adduser.html", error=error_message)
 
@@ -115,12 +117,10 @@ def addUser():
 @account_bp.route('/VoidStudent', methods=['GET', 'POST'])
 def voidUser():
     if request.method == 'POST':
-           # Retrieve item details from the form
+           # Retrieve user details for display 
            email = request.form['email']
            username = request.form['username']
-           # Call the delete query
            db_queries.deleteUser(email, username)
-           # Redirect back to the remove_item page to show the updated list
            return redirect(url_for('account.voidUser'))
     filter_type_building = request.args.get('filterType', 'all')  # Default to 'all'
 
