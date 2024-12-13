@@ -20,6 +20,7 @@
             <h1>Lost and Found</h1>
             <nav>
                 <ul>
+                    <!-- Implemented by Guilherme Domingues Cassiano -->
                     <li><a href="{{ url_for('main.home') }}">Map</a></li>
                     <li><a href="{{ url_for('main.Reportitems', building=building) }}">Report Found Item</a></li>
                     <li><a href="{{ url_for('main.Removeitems', building=building) }}">Remove an Item</a></li>
@@ -37,6 +38,7 @@
             <div class="filter-section">
                 <label for="sort">Sort By:</label>
                 <select id="sort" onchange="sortItems()">
+                    <!-- Implemented by Guilherme Domingues Cassiano -->
                     <option value="oldest" {% if sort_order == 'oldest' %}selected{% endif %}>Date Found: Oldest</option>
                     <option value="newest" {% if sort_order == 'newest' %}selected{% endif %}>Date Found: Newest</option>
                 </select>
@@ -45,6 +47,7 @@
             <div class="filter-section">
                 <label for="filterType">Filter by Type:</label>
                 <select id="filterType" onchange="filterItems()">
+                    <!-- Implemented by Guilherme Domingues Cassiano -->
                     <option value="all" {% if filter_type == 'all' %}selected{% endif %}>All</option>
                     <option value="clothing" {% if filter_type == 'clothing' %}selected{% endif %}>Clothing</option>
                     <option value="technology" {% if filter_type == 'technology' %}selected{% endif %}>Technology</option>
@@ -69,6 +72,7 @@
                     <h3><strong>Date found:</strong> <span>{{ item[3] }}</span></h3>
                     <h3><strong>Description:</strong> <span>{{ item[2] }}</span></h3>
                     <div class="image-container" style="display: none;">
+                        <!-- Implemented by Guilherme Domingues Cassiano -->
                         {% if item[4] %}
                         <img src="{{ url_for('static', filename=item[4]) }}" alt="Photo of {{ item[0] }}" style="max-width: 200px; max-height: 200px;">
                         {% else %}
