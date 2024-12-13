@@ -1,11 +1,10 @@
-<!-- Matthew Guild-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UNR Lost and Found</title>
-    <link rel="stylesheet" href="items.css">
+    <link rel="stylesheet" href="addUser.css">
 </head>
 
 <body>
@@ -36,21 +35,26 @@
             <!-- Worker netID -->
             <label for="netID">NetID for user to be given access</label>
             <input type="text" id="netID" name="netID" placeholder="NetID" required>
-            
+
             <label for="NSHEID">NSHEID for user to be given access</label>
             <input type="text" id="NSHEID" name="NSHEID" placeholder="NSHEID" required>
-            
+
             <label for="NetID password">NetID password for user to be given access</label>
             <input type="text" id="NetID password" name="NetID password" placeholder="NetID password" required>
-            
-            <label for="building">Building for which user will have Lost and Found access</label>
-            <select id="building" name="building" required onchange="toggleClothingFields()">
-                <option value="" disabled selected>Select Building</option>
-                <option value="AB">AB</option>
-                <option value="DLM">DLM</option>
-                <option value="JCSU">JCSU</option>
-                <option value="WFC">WFC</option>
-            </select>
+            <!-- END Cassiano -->
+
+            <!-- START Shane -->
+            <label for="building">Buildings for which user will have Lost and Found access</label><br>
+            <input type="checkbox" id="AB" name="AB" value="AB">
+            <label for="AB"> AB</label><br>
+            <input type="checkbox" id="DLM" name="DLM" value="DLM">
+            <label for="DLM"> DLM</label><br>
+            <input type="checkbox" id="JCSU" name="JCSU" value="JCSU">
+            <label for="JCSU"> DJCSU</label><br>
+            <input type="checkbox" id="WFC" name="WFC" value="WFC">
+            <label for="WFC"> WFC</label><br>
+            <!-- END Shane -->
+
             <!-- Submit Button -->
             <button type="submit">Add User</button>
         </form>
