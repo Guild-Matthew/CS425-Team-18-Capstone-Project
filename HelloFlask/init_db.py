@@ -4,9 +4,9 @@ from psycopg2 import sql
 def create_database():
     # Connect to the default 'postgres' database to perform admin tasks
     conn = psycopg2.connect(
-        dbname="postgres",     # Connect to the default postgres database
-        user="postgres",       # Change this to your actual PostgreSQL username
-        password="#aH6TR5fkcdx99",  # Change this to your actual password
+        dbname="postgres",     
+        user="postgres",       
+        password="#aH6TR5fkcdx99",  
         host="localhost",
         port="5432"
     )

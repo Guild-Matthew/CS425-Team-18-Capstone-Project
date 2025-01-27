@@ -12,6 +12,23 @@ def connect_db():
     conn.autocommit = True
     return conn
 
+def show_config_file():
+    try:
+        conn = connect_db()
+        cursor = conn.cursor()
+
+        # Execute the query to get the configuration file path
+        cursor.execute("SHOW config_file;")
+        config_file_path = cursor.fetchone()[0]  # Fetch the first (and only) row
+
+        print(f"PostgreSQL Configuration File Path: {config_file_path}")
+
+        # Close the cursor and connection
+        cursor.close()
+        conn.close()
+    except Exception as e:
+        print(f"An error occurred while fetching the config file path: {e}")
+
 def apply_changes():
     conn = connect_db()
     cursor = conn.cursor()
@@ -63,5 +80,10 @@ def apply_changes():
     conn.close()
     print("Database changes applied successfully.")
 
+# Main function
 if __name__ == "__main__":
+    # Call the function to show the PostgreSQL config file location
+    show_config_file()
+
+    # Apply database changes if needed
     apply_changes()

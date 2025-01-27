@@ -15,7 +15,7 @@ def login():
         password = request.form['password']
         email = request.form['email']
         # Retrieve user information from the database
-        user = db_queries.getUser(username, email)  # Assume `get_user` retrieves user data
+        user = db_queries.getUser(username, email)  
 
         # Validate user and password
         if user and check_password_hash(user['password'], password):
@@ -129,7 +129,7 @@ def voidUser():
     else:
         users = db_queries.getUserVoidFiltered(filter_type_building, 'student')  # Filter users by type and building
     
-    # Pass 'users' and 'building' to the template
+    # Pass users and building to the template
     return render_template("AccountLogic/voiduser.html", users=users, filter_type_building=filter_type_building)
 
 
