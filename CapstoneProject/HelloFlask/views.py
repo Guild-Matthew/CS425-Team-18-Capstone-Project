@@ -1,3 +1,6 @@
+# This file was implemented by Guilherme Domingues Cassiano 
+# A section by Shane Petree
+
 from flask import render_template, request, redirect, url_for, Blueprint, jsonify, session, current_app
 from HelloFlask.queries import Queries
 from datetime import datetime 
@@ -35,7 +38,6 @@ def Reportitems():
             relative_path = None 
 
             if image_file and image_file.filename:
-                # Sanitize the filename and save the image
                 filename = secure_filename(image_file.filename)
                 file_path = os.path.join(upload_folder, filename)
                 try:
@@ -62,6 +64,9 @@ def Removeitems():
         # Handle POST request (when an item is being deleted)
         building = session.get('building')
         #building = request.args.get('building')
+        sort_order = request.args.get('sort', 'oldest') # Get sorting order (default to oldest)
+           # If "all" is selected, fetch all items; otherwise, filter by the selected type
+        order = "ASC" if sort_order == "oldest" else "DESC"
         if request.method == 'POST':
             # Retrieve item details from the form
             item_type = request.form['itemType']
@@ -81,9 +86,9 @@ def Removeitems():
 
         # Fetch items based on the filter
         if filter_type == 'all':
-            items = db_queries.get_items(building)  # Fetch all items
+            items = db_queries.get_items(building,order )  # Fetch all items
         else:
-            items = db_queries.get_items_by_type(filter_type)  # Fetch filtered items
+            items = db_queries.get_items_by_type(filter_type, order)  # Fetch filtered items
 
         # Render the template with items and filterType
         return render_template('/remove_item.html', items=items, filterType=filter_type, building=building)
@@ -134,7 +139,14 @@ def RedirectDashboard():
         if role == 'admin':
         # Redirect to the admin dashboard if logged in as an admin
             return redirect(url_for('account.admDashboard'))
-        else:
+
+    # START Shane Petree
+        if role == 'superadmin':
+            # Redirect to the super-admin dashboard if the user is a super-admin
+            return redirect(url_for('account.superDashboard'))
+    # END Shane Petree
+
+        if role == 'user':
         # Redirect to the user dashboard if logged in as an user
             return redirect(url_for('account.userDashboard'))
     else:
