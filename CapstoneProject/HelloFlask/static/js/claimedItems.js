@@ -1,3 +1,4 @@
+//Mary Cottier
 function sortItems() {
     const sort = document.getElementById('sort').value;  // Get the selected sort value
     const filterType = document.getElementById('filterType').value;  // Get the current filter

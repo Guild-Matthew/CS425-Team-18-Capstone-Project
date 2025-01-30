@@ -1,3 +1,4 @@
+<!-- Mary Cottier -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,6 +21,7 @@
             <h1>Claimed Items</h1>
             <nav>
                 <ul>
+                    <!-- Implemented by Guilherme Domingues Cassiano -->
                     <li><a href="{{ url_for('main.home') }}">Map</a></li>
                     <li><a href="{{ url_for('main.Reportitems', building=building) }}">Report Found Item</a></li>
                     <li><a href="{{ url_for('main.info', building=building) }}">Lost and Found</a></li>
@@ -38,6 +40,7 @@
             <div class="filter-section">
                 <label for="sort">Sort By:</label>
                 <select id="sort" onchange="sortItems()">
+                    <!-- Implemented by Guilherme Domingues Cassiano -->
                     <option value="oldest" {% if sort_order == 'oldest' %}selected{% endif %}>Date Claimed: Oldest</option>
                     <option value="newest" {% if sort_order == 'newest' %}selected{% endif %}>Date Claimed: Newest</option>
                 </select>
@@ -46,6 +49,7 @@
             <div class="filter-section">
                 <label for="filterType">Filter by Type:</label>
                 <select id="filterType" onchange="filterItemsClaimed()">
+                    <!-- Implemented by Guilherme Domingues Cassiano -->
                     <option value="all" {% if filter_type == 'all' %}selected{% endif %}>All</option>
                     <option value="clothing" {% if filter_type == 'clothing' %}selected{% endif %}>Clothing</option>
                     <option value="technology" {% if filter_type == 'technology' %}selected{% endif %}>Technology</option>
@@ -58,6 +62,7 @@
         <section id="products">
             <h2>Found Items in Building: {{ building}}</h2>
             <div class="product-grid">
+                <!-- Implemented by Guilherme Domingues Cassiano -->
                 {% if items %}
                 {% for item in items %}
                 <div class="product">

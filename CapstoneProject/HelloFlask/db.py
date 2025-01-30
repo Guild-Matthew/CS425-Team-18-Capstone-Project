@@ -1,6 +1,7 @@
+#File implemented by Guilherme Domingues Cassiano
 import psycopg2
 from psycopg2 import sql
-from flask import g  # 'g' is Flask's global context for request-scoped variables
+from flask import g 
 from HelloFlask import app
 
 def get_db():

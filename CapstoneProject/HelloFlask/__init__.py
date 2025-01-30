@@ -1,3 +1,4 @@
+# This file was implemented by Guilherme Domingues Cassiano 
 from flask import Flask
 from HelloFlask.views import main_bp
 from HelloFlask.AccountLogicViews import account_bp
@@ -6,7 +7,6 @@ def create_app():
     app = Flask(__name__)
 
     app.secret_key = 'sMcP4D0JVI0i'
-    # Register blueprints
     app.register_blueprint(main_bp)
     app.register_blueprint(account_bp)
 

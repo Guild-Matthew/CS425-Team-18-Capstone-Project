@@ -1,3 +1,4 @@
+<!-- Matthew Guild -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,6 +21,7 @@
             <h1>Lost and Found</h1>
             <nav>
                 <ul>
+                    <!-- Implemented by Guilherme Domingues Cassiano -->
                     <li><a href="{{ url_for('main.home') }}">Map</a></li>
                     <li><a href="{{ url_for('main.Reportitems', building=building) }}">Report Found Item</a></li>
                     <li><a href="{{ url_for('main.info', building=building) }}">Lost and Found</a></li>
@@ -46,6 +48,7 @@
             <div class="filter-section">
                 <label for="filterType">Filter by Type:</label>
                 <select id="filterType" onchange="filterItems()">
+                    <!-- Implemented by Guilherme Domingues Cassiano -->
                     <option value="all" {% if filterType =='all' %}selected{% endif %}>All</option>
                     <option value="clothing" {% if filterType =='clothing' %}selected{% endif %}>Clothing</option>
                     <option value="technology" {% if filterType =='technology' %}selected{% endif %}>Technology</option>
@@ -61,6 +64,7 @@
                 {% if items %}
                 {% for item in items %}
                 <div class="product">
+                    <!-- Implemented by Guilherme Domingues Cassiano -->
                     <h3><strong>Item type:</strong> <span>{{ item[0] }}</span></h3>
                     <h3><strong>Location found:</strong> <span>{{ item[1] }}</span></h3>
                     <h3><strong>Date found:</strong> <span>{{ item[3] }}</span></h3>
@@ -90,7 +94,7 @@
         function filterItems() {
             // Get the selected filter type
             const filterType = document.getElementById('filterType').value;
-
+            //<!-- Implemented by Guilherme Domingues Cassiano -->
             // Redirect to the L&F page with the filterType as a query parameter
             window.location.href = `/L&F?filterType=${filterType}`;
         }

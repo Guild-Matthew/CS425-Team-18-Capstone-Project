@@ -1,3 +1,4 @@
+# File implemented by Guilherme Domingues Cassiano 
 import psycopg2
 from psycopg2 import sql
 
@@ -50,10 +51,9 @@ def create_tables():
     PRIMARY KEY (itemType, LocationFound, itemDescription)
     );
     """
-    # Define SQL queries for creating tables
+
     create_table_queries = []
 
-    # Execute each query to create tables
     for query in create_table_queries:
         cursor.execute(query)
     
