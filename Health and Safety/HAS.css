@@ -1,0 +1,141 @@
+/* Matthew Guild */
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Header */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #003366;
+    color: white;
+}
+
+    header .logo img {
+        height: 50px;
+    }
+
+    header nav a {
+        color: white;
+        margin: 0 10px;
+        text-decoration: none;
+    }
+
+    header .search-icon,
+    header .menu-icon {
+        font-size: 1.5em;
+        margin-left: 15px;
+    }
+
+/* Hero Section */
+.hero {
+    background-image: url('images/hero-image.jpg');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+    .hero h1 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+    }
+
+    .hero p {
+        font-size: 1.2em;
+        margin-bottom: 20px;
+    }
+
+    .hero .campus-image {
+        width: 100%;
+        max-width: 600px;
+        height: auto;
+        margin-top: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+/* Main Content */
+.main-content {
+    padding: 20px;
+}
+
+.navigation button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #003366;
+    color: white;
+    border: none;
+    margin: 5px 0;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.building-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.building-card {
+    width: calc(33.333% - 20px);
+    background-color: #f4f4f4;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    text-align: center;
+}
+
+    .building-card img {
+        width: 100%;
+        height: auto;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .building-card h3 {
+        margin: 10px 0;
+        font-size: 1.2em;
+    }
+
+    .building-card p {
+        padding: 0 10px;
+        font-size: 0.9em;
+        color: #555;
+    }
+
+    .building-card button {
+        margin: 10px 0;
+        background-color: #00509e;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+        border-radius: 3px;
+    }
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #003366;
+    color: white;
+    margin-top: 20px;
+}
+
+    footer a {
+        color: #b3c3e0;
+        text-decoration: none;
+        margin: 0 5px;
+    }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
