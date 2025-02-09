@@ -105,6 +105,7 @@
     <Content Include="Login\Claimed Items\claimedItems.html" />
     <Content Include="Login\login.css" />
     <Content Include="Login\login.html" />
+    <Content Include="Login\Super-Admin\addUser.css" />
     <Content Include="Login\Super-Admin\superAddUser.html" />
     <Content Include="Login\Super-Admin\super_home.html" />
     <Content Include="Login\user_home.html" />
