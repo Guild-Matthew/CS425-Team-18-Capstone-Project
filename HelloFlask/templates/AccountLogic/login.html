@@ -1,0 +1,54 @@
+<!-- Matthew Guild -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Language attribute -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <!-- Include the existing CSS file -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+</head>
+<body>
+    <!-- Dark Overlay -->
+    <div class="background-overlay"></div>
+
+    <!-- Login Container -->
+    <div class="login-container">
+        <div class="login-box">
+            <!-- Logo -->
+            <img src="{{ url_for('static', filename='images/unr_logo.png') }}" alt="University of Nevada, Reno Logo" class="logo">
+            <!-- Form with your functionalities -->
+            <form method="POST" action="{{ url_for('account.login') }}">
+                <!-- Email Input -->
+                <input type="text" id="email" name="email" placeholder="Email" required>
+
+                <!-- Username Input -->
+                <input type="text" id="NetId" name="NetId" placeholder="Username" required>
+
+                <!-- Password Input -->
+                <input type="password" id="password" name="password" placeholder="Password" required>
+
+                <!-- Help Link -->
+                <a href="#" class="help-link">Can't access your account?</a>
+
+                <!-- Submit Button -->
+                <button type="submit">Log In</button>
+            </form>
+            <!-- Flashed Messages -->
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <ul class="flashed-messages">
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+
+    <!-- Include your JavaScript file -->
+    <script src="{{ url_for('static', filename='js/AccountLogic.js') }}"></script>
+</body>
+</html>
