@@ -360,6 +360,7 @@ MigrationBackup/
 .ionide/
 
 # Fody - auto-generated XML schema
+<<<<<<< HEAD
 FodyWeavers.xsd
 
 # Environment and other VS and git file extensions
@@ -367,3 +368,6 @@ FodyWeavers.xsd
 .gitattributes
 .sln
 .pyproj
+=======
+FodyWeavers.xsd
+>>>>>>> Add project files.
