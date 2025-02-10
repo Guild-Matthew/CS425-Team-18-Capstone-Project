@@ -361,10 +361,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-
-# Environment and other VS and git file extensions
-/Capstone-Project/env
+/Capstone-Project.pyproj
+/Capstone-Project.sln
 /.gitattributes
-/.sln
-/.pyproj
-/Capstone-Project/Capstone-Project.pyproj
+/env
