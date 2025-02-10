@@ -41,6 +41,11 @@
   <ItemGroup>
     <Content Include="HelloFlask\.DS_Store" />
     <Content Include="HelloFlask\static\.DS_Store" />
+    <Content Include="HelloFlask\static\css\addUser.css" />
+    <Content Include="HelloFlask\static\css\claimedItems.css" />
+    <Content Include="HelloFlask\static\css\items.css" />
+    <Content Include="HelloFlask\static\css\L&amp;F.css" />
+    <Content Include="HelloFlask\static\css\login.css" />
     <Content Include="HelloFlask\static\css\removeitem.css" />
     <Content Include="HelloFlask\static\css\styles.css" />
     <Content Include="HelloFlask\static\images\campus_image.jpg" />
@@ -49,7 +54,9 @@
     <Content Include="HelloFlask\static\images\login.jpg" />
     <Content Include="HelloFlask\static\images\unr_logo.png" />
     <Content Include="HelloFlask\static\js\AccountLogic.js" />
+    <Content Include="HelloFlask\static\js\claimedItems.js" />
     <Content Include="HelloFlask\static\js\index.js" />
+    <Content Include="HelloFlask\static\js\L&amp;F.js" />
     <Content Include="HelloFlask\static\js\map.js" />
     <Content Include="HelloFlask\static\js\voiduser.js" />
     <Content Include="HelloFlask\static\uploads\blackgoodie.jpg" />
@@ -63,7 +70,11 @@
     <Content Include="HelloFlask\templates\AccountLogic\super_home.html" />
     <Content Include="HelloFlask\templates\AccountLogic\user_home.html" />
     <Content Include="HelloFlask\templates\AccountLogic\voiduser.html" />
+    <Content Include="HelloFlask\templates\add_item.html" />
+    <Content Include="HelloFlask\templates\claimedItems.html" />
     <Content Include="HelloFlask\templates\index.html" />
+    <Content Include="HelloFlask\templates\items.html" />
+    <Content Include="HelloFlask\templates\L&amp;F.html" />
     <Content Include="HelloFlask\templates\remove_item.html" />
     <Content Include="Main Page\cover.html" />
     <Content Include="Main Page\style.css" />
