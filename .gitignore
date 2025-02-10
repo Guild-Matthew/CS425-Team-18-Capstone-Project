@@ -364,7 +364,7 @@ FodyWeavers.xsd
 
 # Environment and other VS and git file extensions
 /Capstone-Project/env
-.gitattributes
-.sln
-.pyproj
+/.gitattributes
+/.sln
+/.pyproj
 /Capstone-Project/Capstone-Project.pyproj
