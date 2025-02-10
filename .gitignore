@@ -1,0 +1,13 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/env
+/HelloFlask/__pycache__
+/Capstone-Project.pyproj
+/Capstone-Project.pyproj.user
+/Capstone-Project.sln
+/.gitattributes
+/.DS_Store
+/obj/Any CPU/Debug
