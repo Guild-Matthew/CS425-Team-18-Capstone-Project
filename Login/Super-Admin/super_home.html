@@ -147,7 +147,7 @@
             <h1>Super-Admin Dashboard</h1>
             <p>Manage lost and found items, view reports, and oversee campus inventory.</p>
             <div class="hero-buttons">
-                <a href="#" class="hero-button">Add New Item</a>
+                <a href="{{ url_for('main.Reportitems', building=building) }}" class="hero-button">Add New Item</a>
                 <a href="#" class="hero-button">View All Items</a>
                 <a href="#" class="hero-button">Generate Report</a>
             </div>

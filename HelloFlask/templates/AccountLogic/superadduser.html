@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UNR Lost and Found</title>
-    <link rel="stylesheet" href="addUser.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/addUser.css') }}">
 </head>
 
 <body>
@@ -21,7 +21,8 @@
             <h1>Manage Access</h1>
             <nav>
                 <ul>
-                    <li><a href="#">Map</a></li>
+                    <li><a href="{{ url_for('main.RedirectDashboard') }}">Dashboard</a></li>
+                    <li><a href="{{ url_for('main.home') }}">Map</a></li>
                     <li><a href="#">Lost and Found</a></li>
                     <li><a href="#">Health and Safety</a></li>
                 </ul>
@@ -37,14 +38,14 @@
             <label for="netID">NetID for user to be given access: </label>
             <input type="text" id="netID" name="netID" placeholder="NetID" required><br><br>
 
-            <label for="NSHEID">NSHEID for user to be given access: </label>
-            <input type="text" id="NSHEID" name="NSHEID" placeholder="NSHEID" required><br><br>
+            <label for="NSHEID">UNR email for user to be given access: </label>
+            <input type="text" id="email" name="email" placeholder="email" required><br><br>
 
             <label for="NetID password">NetID password for user to be given access: </label>
             <input type="text" id="NetID password" name="NetID password" placeholder="NetID password" required><br><br>
 
             <!-- Selecting the buildings for the account to have access to -->
-            <label for="building">Buildings for which user will have Lost and Found access:</label><br>
+            <label for="building">Buildings for which the account will have Lost and Found access:</label><br>
             <input type="checkbox" id="AB" name="AB" value="AB">
             <label for="AB"> AB</label><br>
             <input type="checkbox" id="DLM" name="DLM" value="DLM">
