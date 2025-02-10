@@ -365,3 +365,6 @@ FodyWeavers.xsd
 /Capstone-Project.sln
 /.gitattributes
 /env
+/.gitignore
+/README.md
+/.gitignore
