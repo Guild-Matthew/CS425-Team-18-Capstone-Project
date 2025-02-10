@@ -21,6 +21,9 @@
             <h1>Manage Access</h1>
             <nav>
                 <ul>
+                    <!--Shane Petree-->
+                    <li><a href="{{ url_for('main.RedirectDashboard') }}">Dashboard</a></li>
+
                     <li><a href="{{ url_for('main.home') }}">Map</a></li>
                     <li><a href="#">Lost and Found</a></li>
                     <li><a href="#">Health and Safety</a></li>
@@ -35,13 +38,13 @@
 
             <!-- Worker netID -->
             <label for="netID">NetID for user to be given access</label>
-            <input type="text" id="netID" name="netID" placeholder="NetID">
+            <input type="text" id="netID" name="netID" placeholder="NetID"><br><br>
 
             <label for="email">UNR email for user to be given access</label>
-            <input type="text" id="email" name="email" placeholder="email">
+            <input type="text" id="email" name="email" placeholder="email"><br><br>
 
             <label for="NetID password">NetID password for user to be given access</label>
-            <input type="text" id="NetID password" name="NetID password" placeholder="NetID password">
+            <input type="text" id="NetID password" name="NetID password" placeholder="NetID password"><br><br>
 
             <label for="building">Building for which user will have Lost and Found access</label>
             <select id="building" name="building" onchange="toggleClothingFields()">
@@ -54,7 +57,7 @@
             </select>
             <!--Submit in batch-->
             <label for="batchFile">Upload a .txt file for batch addition</label>
-            <input type="file" id="batchFile" name="batchFile" accept=".txt">
+            <input type="file" id="batchFile" name="batchFile" accept=".txt"><br><br>
             <!-- Submit Button -->
             <button type="submit">Add User</button>
         </form>

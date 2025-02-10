@@ -1,4 +1,5 @@
 # This file was implemented by Guiilherme Domingues Cassiano
+# A section by Shane Petree
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from HelloFlask.queries import Queries  
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -32,6 +33,13 @@ def login():
     # Render the login page if GET request or failed login
     return render_template('AccountLogic/login.html')
 
+# Shane Petree
+# Route for the super-admin page
+@account_bp.route('/superdashboard', methods=['GET'])
+def superDashboard():
+     # Render the super-admin dashboard
+    return render_template("AccountLogic/super_home.html")
+
 # Route for the admin page
 @account_bp.route('/admdashboard', methods=['GET'])
 def admDashboard():
@@ -56,7 +64,72 @@ def logout():
     session.clear()
     return redirect(url_for('main.home'))
 
-# Route for the add user page
+# Shane Petree
+# Route for a super-admin's add account page
+@account_bp.route('/superadduser', methods=['GET', 'POST'])
+def superAddUser():
+    if request.method == 'POST':
+        # Check for file upload
+        file = request.files.get('batchFile')
+        if file and file.filename.endswith('.txt'):
+            # Process file
+            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+                file.save(temp_file.name)
+                file_path = temp_file.name
+
+            with open(file_path, 'r') as f:
+                for line in f:
+                    print(f"Processing line: {line.strip()}")
+                    parts = line.strip().split(',')
+                    if len(parts) == 5:
+                        netID, email, password, role, building = parts
+                        hashed_password = generate_password_hash(password)
+                        try:
+                            db_queries.createAccount(netID, hashed_password, email, role, building)
+                            print(f"User {netID} added successfully.")
+                        except Exception as e:
+                            print(f"Error adding user {netID}: {e}")
+                    else:
+                        print(f"Invalid line format: {line.strip()}")
+
+            os.remove(file_path)
+            return redirect(url_for('account.superaddUser'))
+
+        # Check for submission using the form instead of using a file
+        username = request.form.get('netID')
+        password = request.form.get('NetID password')
+        email = request.form.get('email')
+        role = request.form.get('role')
+        building = request.form.get('building')
+
+        # ^ building will need to be changed to a string or array if we are to allow users to access multiple buildings
+
+        if not any([file, username, password, email, role, building]):
+            error_message = 'Please fill out all fields on the form or upload a valid file.'
+            return render_template("AccountLogic/superadduser.html", error=error_message)
+
+        if all([username, password, email, role, building]):
+            # Checks if email is a vaild @unr.edu email, if not it doesnt go to the database
+            if not email.endswith('@unr.edu'):
+                error_message = "Invalid email domain. Please use an @unr.edu email."
+                return render_template("AccountLogic/superadduser.html", error=error_message)
+
+            hashed_password = generate_password_hash(password)
+            try:
+                db_queries.createAccount(username, hashed_password, email, role, building)
+                print(f"User {username} added successfully.")
+            except Exception as e:
+                print(f"Error adding user {username}: {e}")
+                return "Error adding user", 500
+
+            return redirect(url_for('account.superaddUser'))
+            
+        error_message = 'Please provide a valid file or fill out the form completely.'
+        return render_template("AccountLogic/superadduser.html", error=error_message)
+
+    return render_template("AccountLogic/superadduser.html")
+
+# Route for an admin's add user page
 @account_bp.route('/adduser', methods=['GET', 'POST'])
 def addUser():
     if request.method == 'POST':
@@ -91,6 +164,8 @@ def addUser():
         password = request.form.get('NetID password')
         email = request.form.get('email')
         building = request.form.get('building')
+
+        # ^ building will need to be changed to a string or array if we are to allow users to access multiple buildings
 
         if not any([file, username, password, email, building]):
             error_message = 'Please fill out all fields on the form or upload a valid file.'

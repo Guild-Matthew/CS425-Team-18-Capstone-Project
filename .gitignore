@@ -11,3 +11,4 @@
 /.gitattributes
 /.DS_Store
 /obj/Any CPU/Debug
+/HelloFlask/static/uploads

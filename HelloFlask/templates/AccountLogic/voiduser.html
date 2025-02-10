@@ -21,7 +21,10 @@
             <h1>Lost and Found</h1>
             <nav>
                 <ul>
+                    <!--Shane Petree 2 lines-->
+                    <li><a href="{{ url_for('main.RedirectDashboard') }}">Dashboard</a></li>
                     <li><a href="{{ url_for('main.home') }}">Map</a></li>
+
                     <li><a href="{{ url_for('main.Reportitems', building=building) }}">Report Found Item</a></li>
                     <li><a href="{{ url_for('main.Removeitems', building=building) }}">Remove an Item</a></li>
                     <li><a href="{{ url_for('main.ClaimedItems', building=building) }}">Claimed Items</a></li>

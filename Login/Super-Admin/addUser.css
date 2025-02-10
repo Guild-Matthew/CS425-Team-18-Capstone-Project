@@ -40,7 +40,7 @@ header {
 }
 
 .logo-group {
-    display: flex;
+    display:flex;
     align-items: center;
     gap: 15px;
 }
@@ -58,16 +58,16 @@ header nav ul {
     gap: 25px;
 }
 
-    header nav ul li a {
-        color: #ffffff;
-        text-decoration: none;
-        font-size: 1.2rem;
-        transition: color 0.3s ease;
-    }
+header nav ul li a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+}
 
-        header nav ul li a:hover {
-            color: #f3f4f6;
-        }
+header nav ul li a:hover {
+    color: #f3f4f6;
+}
 
 /* Add Item Form Styles */
 .add-user-form {
@@ -81,51 +81,51 @@ header nav ul {
     margin: 20px auto;
 }
 
-    .add-user-form h2 {
-        font-size: 1.8rem;
-        margin-bottom: 15px;
-        color: #041E42;
-    }
+.add-user-form h2 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    color: #041E42;
+}
 
-    .add-user-form label {
-        font-size: 1rem;
-        margin-top: 10px;
-        display: block;
-        color: #333;
-    }
+.add-user-form label {
+    font-size: 1rem;
+    margin-top: 10px;
+    display: block;
+    color: #333;
+}
 
-    .add-user-form input[type="text"],
-    .add-user-form input[type="date"],
-    .add-user-form select,
-    .add-user-form textarea {
-        width: 100%;
-        padding: 8px;
-        margin-top: 5px;
-        margin-bottom: 15px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-sizing: border-box;
-    }
+.add-user-form input[type="text"],
+.add-user-form input[type="date"],
+.add-user-form select,
+.add-user-form textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
 
-    .add-user-form input[type="file"] {
-        padding: 8px;
-        margin-bottom: 15px;
-        display: block;
-    }
+.add-user-form input[type="file"] {
+    padding: 8px;
+    margin-bottom: 15px;
+    display: block;
+}
 
-    .add-user-form button {
-        background-color: #041E42;
-        color: #ffffff;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 1rem;
-    }
+.add-user-form button {
+    background-color: #041E42;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+}
 
-        .add-user-form button:hover {
-            background-color: #003366;
-        }
+.add-user-form button:hover {
+    background-color: #003366;
+}
 
 /* Footer Styles */
 footer {

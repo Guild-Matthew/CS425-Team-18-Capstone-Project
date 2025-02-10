@@ -132,7 +132,10 @@
         </div>
         <nav>
             <ul>
-                <li><a href="#">Dashboard</a></li>
+                <!--Shane Petree 2 lines-->
+                <li><a href="{{ url_for('main.home') }}">Map</a></li>
+                <li><a href="{{ url_for('main.RedirectDashboard') }}">Dashboard</a></li>
+
                 <li><a href="#">Manage Items</a></li>
                 <li><a href="#">Reports</a></li>
                 <li><a href="{{ url_for('account.logout') }}">Logout</a></li>
@@ -151,7 +154,7 @@
                 <a href="#" class="hero-button">View All Items</a>
                 <a href="#" class="hero-button">Generate Report</a>
                 <a href="{{ url_for('account.addUser') }}" class="hero-button">Validate Student Account</a>
-                <a href="{{ url_for('account.voidUser') }}" class="hero-button">Void Student Account</a>
+                <a href="{{ url_for('account.voidUser') }}" class="hero-button">Deactivate Student Account</a>
             </div>
         </div>
     </section>
