@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNR Lost and Found</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/L&F.css') }}">
+</head>
+
+<body>
+    <!--Header section-->
+    <header>
+        <div class="container">
+            <div class="logo-group">
+                <img class="university-logo-large-img align-image-bottom" alt="University of Nevada, Reno " src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg" width="65" height="65">
+                <span class="logo-text-new align-text-middle">
+                    University of Nevada, Reno
+                </span>
+            </div>
+            <h1>Lost and Found</h1>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('main.home') }}">Map</a></li>
+                    <li><a href="{{ url_for('main.Reportitems', building=building) }}">Report Found Item</a></li>
+                    <li><a href="{{ url_for('main.Removeitems', building=building) }}">Remove an Item</a></li>
+                    <li><a href="{{ url_for('main.ClaimedItems', building=building) }}">Claimed Items</a></li>
+                    <li><a href="#">Health and Safety</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <!--Sidebar for sort and filter-->
+        <aside class="sidebar">
+            <h2>Sort & Filter</h2>
+            <div class="filter-section">
+                <label for="sort">Sort By:</label>
+                <select id="sort" onchange="sortItems()">
+                    <option value="oldest" {% if sort_order == 'oldest' %}selected{% endif %}>Date Found: Oldest</option>
+                    <option value="newest" {% if sort_order == 'newest' %}selected{% endif %}>Date Found: Newest</option>
+                </select>
+            </div>
+            <!--Filter section-->
+            <div class="filter-section">
+                <label for="filterType">Filter by Type:</label>
+                <select id="filterType" onchange="filterItems()">
+                    <option value="all" {% if filter_type == 'all' %}selected{% endif %}>All</option>
+                    <option value="clothing" {% if filter_type == 'clothing' %}selected{% endif %}>Clothing</option>
+                    <option value="technology" {% if filter_type == 'technology' %}selected{% endif %}>Technology</option>
+                    <option value="misc" {% if filter_type == 'misc' %}selected{% endif %}>Miscellaneous</option>
+
+
+
+                </select>
+            </div>
+        </aside>
+
+        <!--Products section-->
+        <section id="products">
+            <h2>Items will be kept until December 29th, 2024</h2>
+            <h2>Found Items in Building: {{ building }}</h2>
+            <div class="product-grid">
+                {% if items %}
+                {% for item in items %}
+                <div class="product" onclick="toggleImage(this)">
+                    <h3><strong>Item type:</strong> <span>{{ item[0] }}</span></h3>
+                    <h3><strong>Location found:</strong> <span>{{ item[1] }}</span></h3>
+                    <h3><strong>Date found:</strong> <span>{{ item[3] }}</span></h3>
+                    <h3><strong>Description:</strong> <span>{{ item[2] }}</span></h3>
+                    <div class="image-container" style="display: none;">
+                        {% if item[4] %}
+                        <img src="{{ url_for('static', filename=item[4]) }}" alt="Photo of {{ item[0] }}" style="max-width: 200px; max-height: 200px;">
+                        {% else %}
+                        <p>No photo available</p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <p>No items found for the selected filter.</p>
+                {% endif %}
+            </div>
+        </section>
+    </div>
+    <!--Footer section-->
+    <footer>
+        <p>&copy; 2024 University of Nevada, Reno. Lost and Found Service.</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/L&F.js') }}"></script>
+</body>
+
+</html>

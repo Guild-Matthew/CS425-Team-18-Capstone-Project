@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNR Lost and Found</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/items.css') }}">
+</head>
+
+<body>
+    <!--Header section-->
+    <header>
+        <div class="container">
+            <div class="logo-group">
+                <img class="university-logo-large-img align-image-bottom" alt="University of Nevada, Reno " src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg" width="65" height="65">
+                <span class="logo-text-new align-text-middle">
+                    University of Nevada, Reno
+                </span>
+            </div>
+            <h1>Lost and Found</h1>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('main.home') }}">Map</a></li>
+                    <li><a href="{{ url_for('main.info', building=building) }}">Lost and Found</a></li>
+                    <li><a href="{{ url_for('main.ClaimedItems', building=building) }}">Claimed Items</a></li>
+                    <li><a href="{{ url_for('main.Removeitems', building=building) }}">Remove an Item</a></li>
+                    <li><a href="#">Health and Safety</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="add-item-form">
+        <h2>Add a Found Item</h2>
+        <form action="{{ url_for('main.Reportitems') }}" method="POST" enctype="multipart/form-data">
+
+            <!-- Worker -->
+            <label for="worker">Worker Submitting This Form:</label>
+            <input type="text" id="worker" name="worker" placeholder="Your First and Last name" required>
+
+            <!-- Location of L&F-->
+            <label for="location">Lost and Found location:</label>
+            <select name="location" id="location">
+                <option value="" disabled selected>Select Lost and Found Building</option>
+                {% for item in buildings %}
+                <option>{{ item }}</option>
+                {% endfor %}
+            </select>
+
+           
+
+            <!-- Date found -->
+            <label for="dateFound">Date Found:</label>
+            <input type="date" id="dateFound" name="dateFound" required>
+
+            <!-- Location found -->
+            <label for="locationFound">Location Found:</label>
+            <input type="text" id="locationFound" name="locationFound" placeholder="Location" required>
+
+            <!-- Item Type -->
+            <label for="itemType">Item Type:</label>
+            <select id="itemType" name="itemType" required onchange="toggleClothingFields()">
+                <option value="" disabled selected>Select Item Type</option>
+                <option value="clothing">Clothing</option>
+                <option value="technology">Technology</option>
+                <option value="misc">Miscellaneous</option>
+            </select>
+
+            <!-- Other Information -->
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" placeholder="Additional details" rows="3"></textarea>
+
+            <!--Photo of item-->
+            <label for="imagePhoto">Upload a photo of the item</label>
+            <input type="file" id="imagePhoto" name="imagePhoto" accept=".png, .jpg, .jpeg">
+
+            <!-- Submit Button -->
+            <button type="submit">Add Item</button>
+        </form>
+    </section>
+
+    <!--Footer section-->
+    <footer>
+        <p>&copy; 2024 University of Nevada, Reno. Lost and Found Service.</p>
+    </footer>
+
+    <script src="items.js"></script>
+</body>
+
+</html>
