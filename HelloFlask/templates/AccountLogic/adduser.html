@@ -43,14 +43,12 @@
             <input type="text" id="NetID password" name="NetID password" placeholder="NetID password">
 
             <label for="building">Building for which user will have Lost and Found access</label>
-            <select id="building" name="building" onchange="toggleClothingFields()">
-                <option value="" disabled selected>Select Building</option>
-                <option value="AB">AB</option>
-                <option value="DLM">DLM</option>
-                <option value="JCSU">JCSU</option>
-                <option value="WFC">WFC</option>
-                <option value="SEM">SEM</option>
-            </select>
+            <div id="building-options">
+                <label><input type="checkbox" name="building" value="AB" onchange="toggleClothingFields()"> AB</label>
+                <label><input type="checkbox" name="building" value="DMSC" onchange="toggleClothingFields()"> DMSC</label>
+                <label><input type="checkbox" name="building" value="SEM" onchange="toggleClothingFields()"> SEM</label>
+                <label><input type="checkbox" name="building" value="WFC" onchange="toggleClothingFields()"> WFC</label>
+            </div>
             <!--Submit in batch-->
             <label for="batchFile">Upload a .txt file for batch addition</label>
             <input type="file" id="batchFile" name="batchFile" accept=".txt">

@@ -42,10 +42,12 @@
             <label for="location">Lost and Found location:</label>
             <select name="location" id="location">
                 <option value="" disabled selected>Select Lost and Found Building</option>
-                <option value="SEM">SEM</option>
-                <option value="DMSC">DMSC</option>
-                <option value="AB">AB</option>
+                {% for item in buildings %}
+                <option>{{ item }}</option>
+                {% endfor %}
             </select>
+
+           
 
             <!-- Date found -->
             <label for="dateFound">Date Found:</label>

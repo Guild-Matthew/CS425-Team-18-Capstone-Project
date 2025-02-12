@@ -38,25 +38,37 @@
             <div class="filter-section">
                 <label for="sort">Sort By:</label>
                 <select id="sort" onchange="sortItems()">
-                    <option value="oldest" {% if sort_order == 'oldest' %}selected{% endif %}>Date Claimed: Oldest</option>
-                    <option value="newest" {% if sort_order == 'newest' %}selected{% endif %}>Date Claimed: Newest</option>
+                    <option value="oldest" {% if sort_order=='oldest' %}selected{% endif %}>Date Found: Oldest</option>
+                    <option value="newest" {% if sort_order=='newest' %}selected{% endif %}>Date Found: Newest</option>
                 </select>
             </div>
             <!--Filter section-->
             <div class="filter-section">
                 <label for="filterType">Filter by Type:</label>
                 <select id="filterType" onchange="filterItemsClaimed()">
-                    <option value="all" {% if filter_type == 'all' %}selected{% endif %}>All</option>
-                    <option value="clothing" {% if filter_type == 'clothing' %}selected{% endif %}>Clothing</option>
-                    <option value="technology" {% if filter_type == 'technology' %}selected{% endif %}>Technology</option>
-                    <option value="misc" {% if filter_type == 'misc' %}selected{% endif %}>Miscellaneous</option>
+                    <option value="all" {% if filter_type=='all' %}selected{% endif %}>All</option>
+                    <option value="clothing" {% if filter_type=='clothing' %}selected{% endif %}>Clothing</option>
+                    <option value="technology" {% if filter_type=='technology' %}selected{% endif %}>Technology</option>
+                    <option value="misc" {% if filter_type=='misc' %}selected{% endif %}>Miscellaneous</option>
+                </select>
+            </div>
+            <!--Select Building-->
+            <div class="filter-section">
+                <label for="location">Lost and Found location:</label>
+                <select id="location" onchange="changeBuilding()">
+                    <option value="" disabled selected>Select Lost and Found Building</option>
+                    {% for building in buildings %}
+                    <option value="{{ building }}" {% if building==selected_building %}selected{% endif %}>
+                        {{ building }}
+                    </option>
+                    {% endfor %}
                 </select>
             </div>
         </aside>
 
         <!--Products section-->
         <section id="products">
-            <h2>Found Items in Building: {{ building}}</h2>
+            <h2>Found Items in Building: {{ selected_building}}</h2>
             <div class="product-grid">
                 {% if items %}
                 {% for item in items %}
