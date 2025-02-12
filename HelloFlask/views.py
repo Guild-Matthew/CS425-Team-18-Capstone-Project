@@ -16,10 +16,34 @@ def get_buildings():
     buildings = db_queries.getBuildings()  # Query to fetch building data
     return jsonify(buildings)  # Return the building data as JSON
 
+@main_bp.route('/L&F', methods=['GET'])
+def info():
+    filter_type = request.args.get('filterType', 'all')  # Default to 'all'
+    building = request.args.get('building')  # Get the building parameter
+    sort_order = request.args.get('sort', 'oldest') # Get sorting order (default to oldest)
+    # If "all" is selected, fetch all items; otherwise, filter by the selected type
+    order = "ASC" if sort_order == "oldest" else "DESC"
+    # Ensure building is provided
+    if not building:
+        return "Building parameter is required", 400
+
+    # Query items based on building and filter
+    if filter_type == 'all':
+        items = db_queries.get_items(building, order)
+    else:
+        items = db_queries.get_items_by_type(filter_type, building, order)
+
+    # Render the template with building and filtered items
+    return render_template('L&F.html', items=items, filter_type=filter_type, sort_order=sort_order, building=building)
 
 @main_bp.route('/Items', methods=['GET', 'POST'])
 def Reportitems():
     if 'user_id' in session:
+        username = session.get('username')
+        #print(username)
+        uid = db_queries.getUserId(username)
+        #print(uid)
+        buildings = db_queries.getBuildingsFromPermissions(uid)
         if request.method == 'POST':
             dateFound = request.form['dateFound']
             locationFound = request.form['locationFound']
@@ -46,10 +70,9 @@ def Reportitems():
 
             # Insert item into the database
             db_queries.insert_item(itemType, locationFound, description, dateFound, location, relative_path)
-
             return redirect(url_for('main.Reportitems'))
 
-        return render_template('/items.html')
+        return render_template('items.html', buildings=buildings)
     else:
         session['next_url'] = request.url
         return redirect(url_for('account.login'))
@@ -59,10 +82,17 @@ def Reportitems():
 def Removeitems():
     if 'user_id' in session:
         # Handle POST request (when an item is being deleted)
-        building = session.get('building')
-        #building = request.args.get('building')
+        username = session.get('username')
+        uid = db_queries.getUserId(username)
+        buildings = db_queries.getBuildingsFromPermissions(uid)
+        selected_building = request.args.get('building') #Get building from url arguments 
+        if selected_building is None or selected_building == '':
+            if buildings:#If its the users first time in the page default to first building access
+                selected_building = buildings[0]
+            else:
+                selected_building = None 
         sort_order = request.args.get('sort', 'oldest') # Get sorting order (default to oldest)
-           # If "all" is selected, fetch all items; otherwise, filter by the selected type
+        # If "all" is selected, fetch all items; otherwise, filter by the selected type
         order = "ASC" if sort_order == "oldest" else "DESC"
         if request.method == 'POST':
             # Retrieve item details from the form
@@ -72,23 +102,21 @@ def Removeitems():
             description = request.form['description']
             dateClaimed = datetime.now().strftime('%Y-%m-%d')
             # Call the delete query
-            db_queries.insert_Claimed_item(item_type, location_found, description, date_found, dateClaimed, building)
+            db_queries.insert_Claimed_item(item_type, location_found, description, date_found, dateClaimed, selected_building)
             db_queries.deleteItem(item_type, location_found, date_found, description)
             # Redirect back to the remove_item page to show the updated list
-            return redirect(url_for('main.Removeitems', building = building ))
-
+            return redirect(url_for('main.Removeitems', building=selected_building))
         # Handle GET request (render the items)
         # Get the filter value from the query string (default to 'all')
         filter_type = request.args.get('filterType', 'all')
-
         # Fetch items based on the filter
         if filter_type == 'all':
-            items = db_queries.get_items(building,order )  # Fetch all items
+            items = db_queries.get_items(selected_building,order )  # Fetch all items
         else:
-            items = db_queries.get_items_by_type(filter_type, order)  # Fetch filtered items
+            items = db_queries.get_items_by_type(filter_type, selected_building, order)  # Fetch filtered items
 
         # Render the template with items and filterType
-        return render_template('/remove_item.html', items=items, filterType=filter_type, building=building)
+        return render_template('/remove_item.html', items=items, sort_order=sort_order, filterType=filter_type, buildings=buildings, selected_building=selected_building)
     else:
         session['next_url'] = request.url
         return redirect(url_for('account.login'))
@@ -96,37 +124,31 @@ def Removeitems():
 
 @main_bp.route('/claimedItems', methods=['GET', 'POST'])
 def ClaimedItems():
-    filter_type = request.args.get('filterType', 'all')  # Default to 'all'
-    building = request.args.get('building')  # Get the building parameter
-    sort_order = request.args.get('sort', 'oldest') # Get sorting order (default to oldest)
-    # If "all" is selected, fetch all items; otherwise, filter by the selected type
-    order = "ASC" if sort_order == "oldest" else "DESC"
-
-    if filter_type == 'all':
-        items = db_queries.get_Claimed_items(building, order)  # Fetch all items
+    if 'user_id' in session:
+        # Handle POST request (when an item is being deleted)
+        username = session.get('username')
+        uid = db_queries.getUserId(username)
+        buildings = db_queries.getBuildingsFromPermissions(uid)
+        selected_building = request.args.get('building') #Get building from url arguments 
+        if selected_building is None or selected_building == '':
+            if buildings:#If its the users first time in the page default to first building access
+                selected_building = buildings[0]
+            else:
+                selected_building = None 
+        filter_type = request.args.get('filterType', 'all')  # Default to 'all'
+        sort_order = request.args.get('sort', 'oldest') # Get sorting order (default to oldest)
+        # If "all" is selected, fetch all items; otherwise, filter by the selected type
+        print(selected_building)
+        order = "ASC" if sort_order == "oldest" else "DESC"
+        if filter_type == 'all':
+            items = db_queries.get_Claimed_items(selected_building, order)  # Fetch all items
+        else:
+            items = db_queries.get_Claimed_items_by_type(selected_building, filter_type, order)  # Fetch filtered items
+        return render_template("claimedItems.html", items=items, sort_order=sort_order, filterType=filter_type, buildings=buildings, selected_building=selected_building)
     else:
-        items = db_queries.get_Claimed_items_by_type(building, filter_type, order)  # Fetch filtered items
-    return render_template("claimedItems.html", items=items, filter_type=filter_type, sort_order=sort_order, building=building)
+        session['next_url'] = request.url
+        return redirect(url_for('account.login'))
 
-@main_bp.route('/L&F', methods=['GET'])
-def info():
-    filter_type = request.args.get('filterType', 'all')  # Default to 'all'
-    building = request.args.get('building')  # Get the building parameter
-    sort_order = request.args.get('sort', 'oldest') # Get sorting order (default to oldest)
-    # If "all" is selected, fetch all items; otherwise, filter by the selected type
-    order = "ASC" if sort_order == "oldest" else "DESC"
-    # Ensure building is provided
-    if not building:
-        return "Building parameter is required", 400
-
-    # Query items based on building and filter
-    if filter_type == 'all':
-        items = db_queries.get_items(building, order)
-    else:
-        items = db_queries.get_items_by_type(filter_type, building, order)
-
-    # Render the template with building and filtered items
-    return render_template('L&F.html', items=items, filter_type=filter_type, sort_order=sort_order, building=building)
 
 @main_bp.route('/RedirectDashboard')
 def RedirectDashboard():

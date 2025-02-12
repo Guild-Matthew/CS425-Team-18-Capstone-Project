@@ -19,9 +19,10 @@ def login():
 
         # Validate user and password
         if user and check_password_hash(user['password'], password):
-            session['user_id'] = user['id']
-            session['role'] = user['role'] 
-            session['building'] = user.get('building')
+            session['user_id'] = user['uid']
+            session['role'] = user['role']
+            session['username'] = user['username']
+            #session['building'] = user.get('building')
             next_url = session.pop('next_url', None)
             return redirect(next_url or url_for('main.home'))
         else:
@@ -82,26 +83,30 @@ def addUser():
         username = request.form.get('netID')
         password = request.form.get('NetID password')
         email = request.form.get('email')
-        building = request.form.get('building')
+        buildings = request.form.getlist('building') 
 
-        if not any([file, username, password, email, building]):
+        if not any([file, username, password, email, buildings]):
             error_message = 'Please fill out all fields on the form or upload a valid file.'
             return render_template("AccountLogic/adduser.html", error=error_message)
 
-        if all([username, password, email, building]):
+        if all([username, password, email, buildings]):
             # Validate and process single-user form submission
             if not email.endswith('@unr.edu'):
                 error_message = "Invalid email domain. Please use an @unr.edu email."
                 return render_template("AccountLogic/adduser.html", error=error_message)
-
+            #hash user passowrd
             hashed_password = generate_password_hash(password)
-            try:
-                db_queries.createAccount(username, hashed_password, email, 'student', building)
-                print(f"User {username} added successfully.")
-            except Exception as e:
-                print(f"Error adding user {username}: {e}")
-                return "Error adding user", 500
-
+            #create account 
+            db_queries.createAccount(username, hashed_password, email, 'student')
+            #get user ID from netID
+            uid = db_queries.getUserId(username)
+            #create a permission for each bulding
+            for building in buildings:
+                bid = db_queries.getBuildingID(building)
+                db_queries.createPermissions(bid, uid)
+            
+            
+            print(f"User {username} added successfully.")
             return redirect(url_for('account.addUser'))
 
         # If neither file nor form is valid, show an error

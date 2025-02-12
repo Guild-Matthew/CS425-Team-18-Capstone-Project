@@ -85,34 +85,34 @@ class Queries:
         self.cursor.execute(query, (LFlocation, item_type))
         return self.cursor.fetchall()  # Fetch all matching items
 
-    def createAccount(self, username, password, email, role, building=None): #*
+    def createAccount(self, username, password, email, role): #*
         query = """
-            INSERT INTO users (username, password, email, role, building)
-            VALUES (%s, %s, %s, %s, %s)
+            INSERT INTO users (username, password, email, role)
+            VALUES (%s, %s, %s, %s)
         """
-        self.cursor.execute(query, (username, password, email, role, building))
+        self.cursor.execute(query, (username, password, email, role))
         self.conn.commit()
 
     def getUser(self, username, email): #*
         self.cursor.execute("""
-        SELECT id, username, password, role, building 
+        SELECT uid, username, password, role 
         FROM users 
         WHERE username = %s OR email = %s
         """, (username, email))
         row = self.cursor.fetchone()
         if row:
-            return {"id": row[0], "username": row[1], "password": row[2], "role": row[3], "building": row[4]}  # Convert to dictionary
+            return {"uid": row[0], "username": row[1], "password": row[2], "role": row[3]}  # Convert to dictionary
         return None
 
 
     def getUserVoid(self, role): #*
         self.cursor.execute("""
-        SELECT username, email, building
+        SELECT username, email
         FROM users 
         WHERE role = %s
         """, (role,))
         rows = self.cursor.fetchall()
-        return [{"username": row[0], "email": row[1], "building": row[2]} for row in rows]  
+        return [{"username": row[0], "email": row[1]} for row in rows]  
 
     def getUserVoidFiltered(self, building, role): #*
         self.cursor.execute("""
@@ -160,13 +160,59 @@ class Queries:
         # Convert rows to a list of dictionaries
         return [{'buildingCode': row[0], 'latitude': row[1], 'longitude': row[2], 'itemCount': row[3], 'claimedCount': row[4]} for row in rows]
 
+    def getBuildingsSubmitItem(self):
+        query = """
+        SELECT buildingcode FROM building
+        """
+        self.cursor.execute(query)
+        rows = self.cursor.fetchall()
+        return [row[0] for row in rows]
 
+    def getUserId(self, username):
+        self.cursor.execute("""
+        SELECT uid
+        FROM users
+        WHERE username = %s
+        """, (username,))
+        row = self.cursor.fetchone() 
+        return row[0] if row else None  
+
+    def getBuildingID(self, building):
+        self.cursor.execute("""
+        SELECT bid
+        FROM building
+        WHERE buildingcode = %s
+        """, (building,))
+        row = self.cursor.fetchone() 
+        return row[0] if row else None 
+
+    def createPermissions(self, bid, uid):
+        query = """
+            INSERT into Permissions (bid, uid)
+            VALUES (%s, %s)
+        """
+        self.cursor.execute(query, (bid, uid))
+        self.conn.commit()
+
+    def getBuildingsFromPermissions(self, uid):
+        self.cursor.execute("""
+        SELECT b.buildingcode
+        FROM Permissions p
+        JOIN building b ON p.bid = b.bid
+        WHERE p.uid = %s
+        """, (uid,))
+        rows = self.cursor.fetchall()
+        return [row[0] for row in rows]
 
 if __name__ == "__main__":
     # Create an instance of Queries
     db_queries = Queries()
-    hashed_password = generate_password_hash('Dovakhin12#')
-    # Fetch all items in the database
-    items = db_queries.createAccount('gcassianoADM', hashed_password,'gcassianoADM@unr.edu', 'admin')
+    
+    # Call the method and store the result
+    buildings = db_queries.getBuildingsFromPermissions('63')
+    
+    # Print the result
+    print(buildings)
+    
     # Close the database connection
     db_queries.close()
