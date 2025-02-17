@@ -1,0 +1,74 @@
+/* app.component.html */
+
+<div class="container">
+  <!-- Header -->
+  <header class="header">
+    <h1>Angular Test Project</h1>
+  </header>
+
+  <!-- Cards Section -->
+  <div class="card-container">
+    <div class="card" *ngFor="let card of cards">
+      <h2>{{ card.title }}</h2>
+      <p>{{ card.content }}</p>
+    </div>
+  </div>
+
+  <!-- Bottom Text -->
+  <footer class="footer">
+    <p>&copy; 2025 Test Project</p>
+  </footer>
+</div>
+
+/* app.component.ts */
+
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  cards = [
+    { title: 'Card 1', content: 'This is the first card.' },
+    { title: 'Card 2', content: 'This is the second card.' },
+    { title: 'Card 3', content: 'This is the third card.' }
+  ];
+}
+
+/* app.component.css */
+
+.container {
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+.header {
+  background-color: #007bff;
+  color: white;
+  padding: 15px;
+  font-size: 24px;
+}
+
+.card-container {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin: 20px;
+}
+
+.card {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+  width: 200px;
+}
+
+.footer {
+  background-color: #333;
+  color: white;
+  padding: 10px;
+  margin-top: 20px;
+}
