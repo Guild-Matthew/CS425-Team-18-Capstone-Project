@@ -1,0 +1,69 @@
+<header>
+  <div class="container">
+    <div class="logo-group">
+      <img
+        class="university-logo-large-img align-image-bottom"
+        alt="University of Nevada, Reno"
+        src="assets/images/unr_logo.png"
+        width="80"
+        height="80"
+      />
+      <span class="logo-text-new align-text-middle"> University of Nevada, Reno </span>
+    </div>
+    <h1>Manage Access</h1>
+    <nav>
+      <ul>
+        <li><a href="#">Map</a></li>
+        <li><a href="#">Lost and Found</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<section class="add-item-form">
+  <h2>Add a User</h2>
+  <form [formGroup]="addUserForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="firstName">First Name</label>
+      <input type="text" id="firstName" formControlName="firstName" placeholder="Enter First Name" required />
+    </div>
+
+    <div class="form-group">
+      <label for="lastName">Last Name</label>
+      <input type="text" id="lastName" formControlName="lastName" placeholder="Enter Last Name" required />
+    </div>
+
+    <div class="form-group">
+      <label for="netID">NetID for user</label>
+      <input type="text" id="netID" formControlName="netID" placeholder="Enter NetID" required />
+    </div>
+
+    <div class="form-group">
+      <label for="NSHEID">NSHEID for user</label>
+      <input type="text" id="NSHEID" formControlName="NSHEID" placeholder="Enter NSHEID" required />
+    </div>
+
+    <div class="form-group">
+      <label for="password">NetID password</label>
+      <input type="password" id="password" formControlName="password" placeholder="Enter password" required />
+    </div>
+
+    <label>Buildings for Lost and Found Access</label>
+    <div class="example-section">
+      <mat-checkbox
+        *ngFor="let building of buildings"
+        [formControlName]="building.id"
+        class="example-margin"
+      >
+        {{ building.name }}
+      </mat-checkbox>
+    </div>
+
+    <button type="submit" [disabled]="addUserForm.invalid">Add User</button>
+  </form>
+</section>
+
+<footer>
+  <p>&copy; 2024 University of Nevada, Reno. Lost and Found Service.</p>
+</footer>
