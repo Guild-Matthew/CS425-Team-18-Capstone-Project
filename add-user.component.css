@@ -1,0 +1,123 @@
+/* Ensure the entire page takes at least the full height */
+html, body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Main content should push the footer to the bottom */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Full-width header */
+header {
+  width: 100%;
+  background-color: #003366;
+  color: white;
+  padding: 15px 0;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Container inside the header */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Fix logo alignment */
+.university-logo-large-img {
+  height: 80px;
+  width: auto;
+  margin-right: 10px;
+}
+
+/* Navigation menu */
+nav ul {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+}
+
+nav ul li {
+  margin-right: 15px;
+}
+
+nav ul li a {
+  color: white;
+  text-decoration: none;
+}
+
+/* Center the form properly */
+.add-item-form {
+  flex: 1; /* Makes sure the form takes available space */
+  max-width: 500px;
+  margin: 30px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background: #f9f9f9;
+}
+
+/* Form groups for proper alignment */
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Ensure checkboxes align properly */
+.building-checkboxes {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+/* Submit button styles */
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #003366;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Footer stays at the bottom of the content, but not fixed */
+footer {
+  width: 100%;
+  background-color: #003366;
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+  margin-top: auto; /* Ensures footer stays at the bottom only when scrolling */
+}
