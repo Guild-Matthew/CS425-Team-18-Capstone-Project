@@ -1,0 +1,155 @@
+/* Matthew Guild*/
+
+/* Ensure full height and remove margins */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+  }
+  /* Header Styling */
+header {
+    background-color: #041E42;
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  /* Logo Group (Image + Text) */
+  .logo-group {
+    display: flex;
+    align-items: center;
+  }
+  
+  .logo-group img {
+    width: 50px;
+    height: auto;
+    margin-right: 15px;
+  }
+  
+  .logo-group span {
+    font-size: 1.5em;
+    font-weight: bold;
+    white-space: nowrap;
+  }
+  
+  /* Navigation Styling */
+  nav {
+    flex-grow: 1; /* Ensures nav stretches */
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 20px;
+  }
+  
+  nav ul li {
+    display: inline-block;
+  }
+  
+  nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.1em;
+    padding: 10px 15px;
+  }
+  
+  nav ul li a:hover {
+    text-decoration: underline;
+  }
+  
+  
+  /* Main content fills the screen */
+  .main-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Viewport height */
+  }
+  
+  /* Hero section takes full height minus the header/footer */
+  .hero {
+    flex-grow: 1; /* Fills remaining space */
+    position: relative;
+    background-image: url('/assets/images/campus_image.jpg'); /* Full-screen background */
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+    width: 100%;
+    height: calc(100vh - 150px); /* Adjust for header & footer */
+  }
+  
+  /* Overlay to darken image */
+  .hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  
+  /* Hero content stays centered */
+  .hero-content {
+    position: relative;
+    z-index: 2;
+  }
+  
+  /* Hero title & text */
+  .hero-content h1 {
+    font-size: 3em;
+    margin: 0;
+  }
+  
+  .hero-content p {
+    font-size: 1.2em;
+    margin-top: 10px;
+  }
+  
+  /* Buttons centered below text */
+  .hero-buttons {
+    margin-top: 20px;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+  }
+  
+  .hero-button {
+    padding: 12px 24px;
+    background-color: #004080;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  
+  .hero-button:hover {
+    background-color: #003366;
+  }
+  
+  /* Footer stays at the bottom */
+  footer {
+    width: 100%;
+    background-color: #041E42;
+    color: white;
+    text-align: center;
+    padding: 15px 0;
+    font-size: 0.9em;
+    position: relative;
+  }
+  

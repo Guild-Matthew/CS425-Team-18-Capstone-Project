@@ -1,0 +1,18 @@
+
+/* Matthew Guild*/
+<!-- Background Overlay -->
+<div class="background-overlay"></div>
+
+<!-- Login Box -->
+<div class="login-container">
+    <div class="login-box">
+        <img src="/assets/images/unr_logo.png" alt="University of Nevada, Reno Logo" class="logo">
+        <h2>Sign in</h2>
+        <form (submit)="onSubmit()">
+            <input type="text" [(ngModel)]="username" name="username" placeholder="NetID@unr.edu" required>
+            <a href="#" class="help-link">Can't access your account?</a>
+            <button type="submit">Next</button>
+        </form>
+        <button class="signin-option-btn">Sign-in options</button>
+    </div>
+</div>
