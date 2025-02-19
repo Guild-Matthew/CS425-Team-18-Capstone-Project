@@ -1,18 +1,36 @@
-
-/* Matthew Guild*/
-<!-- Background Overlay -->
-<div class="background-overlay"></div>
-
-<!-- Login Box -->
-<div class="login-container">
+//Matthew Guild
+<div class="fullscreen-container">
+  <div class="background-overlay"></div>
+  <div class="login-container">
     <div class="login-box">
-        <img src="/assets/images/unr_logo.png" alt="University of Nevada, Reno Logo" class="logo">
-        <h2>Sign in</h2>
-        <form (submit)="onSubmit()">
-            <input type="text" [(ngModel)]="username" name="username" placeholder="NetID@unr.edu" required>
-            <a href="#" class="help-link">Can't access your account?</a>
-            <button type="submit">Next</button>
-        </form>
+      <img src="/assets/unr_logo.png" alt="University of Nevada, Reno Logo" class="logo">
+      <h2>Sign in</h2>
+      <form>
+        <mat-form-field appearance="fill">
+          <mat-label>NetID*</mat-label>
+          <input matInput placeholder="Enter your NetID">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Select Role</mat-label>
+          <mat-select>
+            <mat-option value="student">Student</mat-option>
+            <mat-option value="staff">Staff</mat-option>
+            <mat-option value="visitor">Visitor</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Additional Comments</mat-label>
+          <textarea matInput placeholder="Optional comments..."></textarea>
+        </mat-form-field>
+
+        <a href="#" class="help-link">Can't access your account?</a>
+        <button type="submit">Next</button>
+      </form>
+      <div class="signin-options">
         <button class="signin-option-btn">Sign-in options</button>
+      </div>
     </div>
+  </div>
 </div>
