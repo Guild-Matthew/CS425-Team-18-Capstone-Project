@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNR Lost and Found</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/addUser.css') }}">
+</head>
+
+<body>
+    <!--Header section-->
+    <header>
+        <div class="container">
+            <div class="logo-group">
+                <img class="university-logo-large-img align-image-bottom" alt="University of Nevada, Reno " src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg" width="65" height="65">
+                <span class="logo-text-new align-text-middle">
+                    University of Nevada, Reno
+                </span>
+            </div>
+            <h1>Manage Access</h1>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('main.home') }}">Map</a></li>
+                    <li><a href="#">Lost and Found</a></li>
+                    <li><a href="#">Health and Safety</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="add-item-form">
+        <h2>Add a User</h2>
+        <form id="addItemForm" action="{{ url_for('main.addBuilding') }}" method="POST" enctype="multipart/form-data">
+
+            <!-- Building Information -->
+            <label for="Building Code">Enter the building code in the building code format (SEM,AB,DMSC etc)</label>
+            <input type="text" id="Building Code" name="Building Code" placeholder="Building Code">
+
+            <label for="Latitude">Latitude of building in the map</label>
+            <input type="text" id="Latitude" name="Latitude" placeholder="Latitude">
+
+            <label for="Longitude">Longitude of building in the map</label>
+            <input type="text" id="Longitude" name="Longitude" placeholder="Longitude">
+
+            <!-- Submit Button -->
+            <button type="submit">Add building</button>
+        </form>
+    </section>
+
+    <!--Footer section-->
+    <footer>
+        <p>&copy; 2024 University of Nevada, Reno. Lost and Found Service.</p>
+    </footer>
+
+    <!--<script src="addUser.js"></script>-->
+</body>
+
+</html>
+

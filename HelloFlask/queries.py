@@ -209,7 +209,8 @@ if __name__ == "__main__":
     db_queries = Queries()
     
     # Call the method and store the result
-    buildings = db_queries.getBuildingsFromPermissions('63')
+    hashed_password = generate_password_hash('Dovakhin12#')
+    buildings = db_queries.createAccount('gcassianoSUPERADMN', hashed_password, 'gcassianoSUPERADMIN@unr.edu', 'superadmin')
     
     # Print the result
     print(buildings)

@@ -39,6 +39,13 @@ def admDashboard():
 def userDashboard():
     return render_template("AccountLogic/user_home.html")
 
+# Shane Petree
+# Route for the super-admin page
+@account_bp.route('/superdashboard', methods=['GET'])
+def superDashboard():
+     # Render the super-admin dashboard
+    return render_template("AccountLogic/super_home.html")
+
 @account_bp.route('/logout')
 def logout():
     # Check if the user is logged in

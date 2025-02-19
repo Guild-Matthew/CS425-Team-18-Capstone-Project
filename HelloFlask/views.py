@@ -149,6 +149,24 @@ def ClaimedItems():
         session['next_url'] = request.url
         return redirect(url_for('account.login'))
 
+@main_bp.route('/addBuilding', methods=['GET', 'POST'])
+def addBuilding():
+    if 'user_id' in session:
+        if request.method == 'POST':
+            BuildingCode = request.form.get('Building Code')
+            Latitude = request.form.get('Latitude')
+            Longitude = request.form.get('Longitude')
+
+            if not any([BuildingCode, Latitude, Longitude]):
+                error_message = 'Please fill out all fields on the form or upload a valid file.'
+                return render_template("AccountLogic/addBuilding.html", error=error_message)
+
+            if all([BuildingCode, Latitude, Longitude]):
+                # Validate and process single-user form submission
+                #create a permission for each bulding
+                db_queries.createBuilding(BuildingCode, Latitude, Longitude)
+    return render_template("addBuilding.html")
+
 
 @main_bp.route('/RedirectDashboard')
 def RedirectDashboard():
@@ -158,7 +176,14 @@ def RedirectDashboard():
         if role == 'admin':
         # Redirect to the admin dashboard if logged in as an admin
             return redirect(url_for('account.admDashboard'))
-        else:
+
+    # START Shane Petree
+        if role == 'superadmin':
+            # Redirect to the super-admin dashboard if the user is a super-admin
+            return redirect(url_for('account.superDashboard'))
+    # END Shane Petree
+
+        if role == 'user':
         # Redirect to the user dashboard if logged in as an user
             return redirect(url_for('account.userDashboard'))
     else:

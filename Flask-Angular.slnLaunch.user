@@ -1,0 +1,12 @@
+[
+  {
+    "Name": "Novo Perfil",
+    "Projects": [
+      {
+        "Path": "Flask-Angular.pyproj",
+        "Action": "Start",
+        "DebugTarget": "Servidor Web (Google Chrome)"
+      }
+    ]
+  }
+]

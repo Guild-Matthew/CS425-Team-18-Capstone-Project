@@ -6,7 +6,7 @@
     <ProjectGuid>c2d18d23-a7a2-4f72-9a38-ed7edced7df4</ProjectGuid>
     <ProjectHome>.</ProjectHome>
     <ProjectTypeGuids>{789894c7-04a9-4a11-a6b5-3f4435165112};{1b580a1a-fdb3-4b32-83e1-6407eb2722e6};{349c5851-65df-11da-9384-00065b846f21};{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
-    <StartupFile>app.py</StartupFile>
+    <StartupFile>HelloFlask\runserver.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -68,8 +68,14 @@
     <Content Include="HelloFlask\templates\AccountLogic\admin_home.html" />
     <Content Include="HelloFlask\templates\AccountLogic\JavaScript.js" />
     <Content Include="HelloFlask\templates\AccountLogic\login.html" />
+    <Content Include="HelloFlask\templates\AccountLogic\super_home.html">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="HelloFlask\templates\AccountLogic\user_home.html" />
     <Content Include="HelloFlask\templates\AccountLogic\voiduser.html" />
+    <Content Include="HelloFlask\templates\addBuilding.html">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="HelloFlask\templates\add_item.html" />
     <Content Include="HelloFlask\templates\claimedItems.html" />
     <Content Include="HelloFlask\templates\index.html" />
