@@ -1,0 +1,13 @@
+﻿################################################################################
+# Este arquivo .gitignore foi criado automaticamente pelo Microsoft(R) Visual Studio.
+################################################################################
+
+
+
+
+/.vs
+/env
+/HelloFlask/__pycache__
+/Flask-Angular.pyproj.user
+/obj/Any CPU/Debug
+/Frontend/Frontend.esproj
