@@ -141,3 +141,11 @@ button[type="submit"]:hover {
 .signin-option-btn:hover {
   background-color: #f2f2f2;
 }
+  /* Footer stays at the bottom */
+  footer {
+    background-color: #041E42;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 0.9em;
+}

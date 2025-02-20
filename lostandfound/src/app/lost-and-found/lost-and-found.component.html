@@ -1,0 +1,87 @@
+<div class="lost-and-found">
+    <!-- Header Section -->
+    <header>
+        <div class="container">
+            <div class="logo-group">
+                <img class="university-logo-large-img align-image-bottom" alt="University of Nevada, Reno" 
+                     src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg" width="65" height="65">
+                <span class="logo-text-new align-text-middle">University of Nevada, Reno</span>
+            </div>
+            <h1>Lost and Found</h1>
+            <nav>
+                <ul>
+                    <li><a routerLink="/dashboard">Dashboard</a></li>
+                    <li><a routerLink="/map">Map</a></li>
+                    <li><a routerLink="/report">Report Found Item</a></li>
+                    <li><a routerLink="/remove">Remove an Item</a></li>
+                    <li><a routerLink="/claimed">Claimed Items</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <!-- Sidebar for Sort and Filter -->
+        <aside class="sidebar">
+            <h2>Sort & Filter</h2>
+            <div class="filter-section">
+                <label for="sort">Sort By:</label>
+                <select id="sort" (change)="onSortChange($event)">
+                    <option value="newest">Date Found: Most Recent</option>
+                    <option value="oldest">Date Found: Oldest</option>
+                </select>
+            </div>
+            
+            <div class="filter-section">
+                <label for="filterType">Filter by Type:</label>
+                <select id="filterType" (change)="onFilterChange($event)">
+                    <option value="all">All</option>
+                    <option value="clothing">Clothing and Accessories</option>
+                    <option value="electronics">Electronics/Technology</option>
+                    <option value="bags">Bags/Backpacks/Purses</option>
+                    <option value="id">ID's/Wallets/Personal Documents</option>
+                    <option value="medical">Medical/Health</option>
+                    <option value="other">Other/Misc</option>
+                </select>
+            </div>
+
+            <!-- Dynamically display subtypes based on the selected filter type -->
+            <div *ngIf="filterType === 'clothing'" class="clothing-filter">
+                <h3>Clothing and Accessories:</h3>
+                <label *ngFor="let subType of categories.clothing">
+                    <input type="checkbox" (change)="onSubtypeChange($event, 'clothing')" [value]="subType"> {{ subType }}
+                </label><br>
+            </div>
+
+            <div *ngIf="filterType === 'electronics'" class="electronics-filter">
+                <h3>Electronics/Technology:</h3>
+                <label *ngFor="let subType of categories.electronics">
+                    <input type="checkbox" (change)="onSubtypeChange($event, 'electronics')" [value]="subType"> {{ subType }}
+                </label><br>
+            </div>
+        </aside>
+
+        <!-- Products Section -->
+        <section id="products">
+            <h2>Items will be kept until December 29th, 2024</h2>
+            <h2>Found Items in Building: {{ building }}</h2>
+            <div class="product-grid">
+                <div *ngFor="let item of items" class="product" (click)="toggleImage(item)">
+                    <h3><strong>Item type:</strong> <span>{{ item.type }}</span></h3>
+                    <h3><strong>Location found:</strong> <span>{{ item.location }}</span></h3>
+                    <h3><strong>Date found:</strong> <span>{{ item.dateFound }}</span></h3>
+                    <h3><strong>Description:</strong> <span>{{ item.description }}</span></h3>
+                    <div class="image-container" *ngIf="item.imageVisible">
+                        <img [src]="item.imageUrl" alt="Photo of {{ item.type }}" style="max-width: 200px; max-height: 200px;">
+                    </div>
+                </div>
+                <p *ngIf="items.length === 0">No items found for the selected filter.</p>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2025 University of Nevada, Reno. Lost and Found Service.</p>
+    </footer>
+</div>
