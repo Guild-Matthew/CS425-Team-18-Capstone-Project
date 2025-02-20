@@ -22,7 +22,12 @@
     display: flex;
  }
  
- 
+ .logo-group img {
+    width: 65px;
+    height: auto;
+    margin-right: 15px;
+  }
+  
  /* header Styles */
  header {
     background-color: #041E42;

@@ -9,7 +9,7 @@ html, body {
   }
   /* Header Styling */
 header {
-    background-color: #041E42;
+    background-color:  #041E42;
     color: white;
     padding: 15px 30px;
     display: flex;
@@ -26,7 +26,7 @@ header {
   }
   
   .logo-group img {
-    width: 50px;
+    width: 65px;
     height: auto;
     margin-right: 15px;
   }
@@ -129,7 +129,7 @@ header {
   
   .hero-button {
     padding: 12px 24px;
-    background-color: #004080;
+    background-color: #041E42;
     color: white;
     border: none;
     border-radius: 5px;
@@ -139,7 +139,7 @@ header {
   }
   
   .hero-button:hover {
-    background-color: #003366;
+    background-color:  #041E42;
   }
   
   /* Footer stays at the bottom */

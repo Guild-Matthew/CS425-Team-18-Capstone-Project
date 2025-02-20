@@ -18,7 +18,7 @@ body {
 /* Full-width header */
 header {
   width: 100%;
-  background-color: #003366;
+  background-color:  #041E42;
   color: white;
   padding: 15px 0;
   text-align: center;
@@ -40,7 +40,7 @@ header {
 
 /* Fix logo alignment */
 .university-logo-large-img {
-  height: 80px;
+  height: 65px;
   width: auto;
   margin-right: 10px;
 }
@@ -102,7 +102,7 @@ input[type="password"] {
 button {
   width: 100%;
   padding: 10px;
-  background-color: #003366;
+  background-color: #041E42;
   color: white;
   border: none;
   cursor: pointer;
@@ -117,7 +117,7 @@ button:disabled {
 /* Footer stays at the bottom of the content, but not fixed */
 footer {
   width: 100%;
-  background-color: #003366;
+  background-color: #041E42;
   color: white;
   text-align: center;
   padding: 10px 0;
