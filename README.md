@@ -3,7 +3,7 @@
 <br>Computer Science and Engineering Department
 <br>Team 18
 <br>Matthew Guild, Mary Cottier, Guilherme Cassiano, Shane Petree
-<br>Instructors: Vinh Le, Sara Davis
+<br>Instructors: Vinh Le, Sara Davis, David Feil-Seifer
 <br>External Advisor: Kyle Dazey (Construction Project Coordinator II at the University of Nevada, Reno)
 <br>Capstone Project for CS 425 & 426
 <br>Fall 2024 - Spring 2025
