@@ -12,3 +12,5 @@
 /.DS_Store
 /obj/Any CPU/Debug
 /HelloFlask/static/uploads
+/AngularProject/node_modules
+/AngularProject/.angular
