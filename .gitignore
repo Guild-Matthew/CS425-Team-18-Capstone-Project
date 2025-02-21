@@ -12,5 +12,5 @@
 /.DS_Store
 /obj/Any CPU/Debug
 /HelloFlask/static/uploads
-/lostandfound/node_modules
-/lostandfound/.angular
+/AngularProject/node_modules
+/AngularProject/.angular

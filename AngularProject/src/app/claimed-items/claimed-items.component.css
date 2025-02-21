@@ -1,17 +1,15 @@
-/* Mary Cottier */
-/* Styling */
-* {
+/* General Styling */
+:host {
+    display: block;
     box-sizing: border-box;
-}
-
-body {
     font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
     background-color: #f3f4f6;
     color: #000000;
+    margin: 0;
+    padding: 0;
 }
 
+/* Container */
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -19,18 +17,17 @@ body {
     display: flex;
 }
 
-/* header Styles */
+/* Header */
 header {
     background-color: #041E42;
     color: #ffffff;
     padding: 20px 0;
     margin-bottom: 20px;
     width: 100%;
-    border-radius: 0px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.container {
+.header-container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
@@ -40,7 +37,7 @@ header {
 }
 
 .logo-group {
-    display:flex;
+    display: flex;
     align-items: center;
     gap: 15px;
 }
@@ -50,7 +47,7 @@ header h1 {
     margin: 0;
 }
 
-header nav ul {
+nav ul {
     list-style-type: none;
     padding: 0;
     margin: 0;
@@ -58,29 +55,30 @@ header nav ul {
     gap: 25px;
 }
 
-header nav ul li a {
+nav ul li a {
     color: #ffffff;
     text-decoration: none;
     font-size: 1.2rem;
     transition: color 0.3s ease;
 }
 
-header nav ul li a:hover {
+nav ul li a:hover {
     color: #f3f4f6;
 }
 
-/* Sidebar sort and filter styles */
+/* Main Content Layout */
 .main-content {
     display: flex;
     align-items: flex-start;
-    gap: 20px; /* Adds space between sidebar and products */
+    gap: 20px;
 }
 
+/* Sidebar */
 .sidebar {
-    flex: 0 0 250px; /* Fixes sidebar width */
-    position: sticky; /* Ensures it stays fixed when scrolling */
-    top: 0; /* Sticks to the top of the container */
-    height: auto; /* Adjusts height dynamically */
+    flex: 0 0 250px;
+    position: sticky;
+    top: 0;
+    height: auto;
     background-color: #ffffff;
     border-radius: 10px;
     padding: 20px;
@@ -89,7 +87,6 @@ header nav ul li a:hover {
     margin-left: 200px;
     margin-top: 60px;
 }
-
 
 .sidebar h2 {
     font-size: 1.5rem;
@@ -107,42 +104,42 @@ header nav ul li a:hover {
     margin-bottom: 10px;
 }
 
-/* Product(items) Styles */
+/* Product Display */
 #products {
     margin-bottom: 20px;
     margin-left: 200px;
 }
 
 #products h2 {
-    text-align: left; /* Aligns the subheader to the left */
-    margin-bottom: 20px; /* Adds space between the subheader and the grid */
+    text-align: left;
+    margin-bottom: 20px;
 }
 
 .product h3 span {
-    font-weight: normal; /* Set non-bold font weight */
+    font-weight: normal;
 }
 
 .product {
-    background-color: #ffffff; /* White background for the box */
-    border-radius: 10px; /* Rounded corners */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-    padding: 20px; /* Space inside the box */
-    text-align: left; /* Align text to the left inside the box */
-    transition: transform 0.3s ease; /* Smooth hover effect */
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: left;
+    transition: transform 0.3s ease;
 }
 
 .product:hover {
-    transform: translateY(-5px); /* Move up slightly */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .product-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* Two equal columns */
-    gap: 20px; /* Space between items */
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
 }
 
-/* Footer Styles */
+/* Footer */
 footer {
     background-color: #041E42;
     color: white;
