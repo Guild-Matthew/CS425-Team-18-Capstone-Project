@@ -1,0 +1,36 @@
+<header>
+    <div class="logo-group">
+      <img class="university-logo-large-img align-image-bottom" alt="University of Nevada, Reno" src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg" width="65" height="65">
+      <span class="logo-text-new align-text-middle">University of Nevada, Reno</span>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Report Lost Item</a></li>
+        <li><a href="#">View Found Items</a></li>
+        <li><a href="#">Help</a></li>
+        <li><a href="#">Logout</a></li>
+      </ul>
+    </nav>
+  </header>
+<div class="add-item-form">
+    <h2>Add Item</h2>
+    <form (submit)="onSubmit($event)">
+      <label for="item_name">Item Name:</label>
+      <input type="text" id="item_name" name="item_name" required>
+  
+      <label for="item_description">Item Description:</label>
+      <input type="text" id="item_description" name="item_description" required>
+  
+      <label for="date_lost">Date Lost:</label>
+      <input type="date" id="date_lost" name="date_lost" required>
+  
+      <label for="building_code">Building Code:</label>
+      <input type="text" id="building_code" name="building_code" required>
+  
+      <button type="submit">Add Item</button>
+    </form>
+  </div>
+  <footer>
+    <p>&copy; 2025 University of Nevada, Reno. Lost and Found Service.</p>
+</footer>
