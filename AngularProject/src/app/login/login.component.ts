@@ -7,6 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
+import { RouterLink } from '@angular/router'; // Shane Petree
 
 @Component({
   selector: 'app-login',
@@ -20,6 +21,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatInputModule,
     MatSelectModule,
     MatButtonModule,
+    RouterLink,
   ],
 })
 export class LoginComponent {

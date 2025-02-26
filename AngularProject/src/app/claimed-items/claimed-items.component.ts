@@ -1,10 +1,12 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-claimed-items',
+  imports: [CommonModule, RouterLink], // Shane Petree
   templateUrl: './claimed-items.component.html',
-  styleUrls: ['./claimed-items.component.css']
+  styleUrls: ['./claimed-items.component.css'],
 })
 export class ClaimedItemsComponent implements OnInit {
   building: string = 'Default Building';

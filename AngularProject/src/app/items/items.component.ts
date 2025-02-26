@@ -1,6 +1,7 @@
 
 import { Component } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
+import { RouterLink } from '@angular/router'; // Shane Petree
 
 
 @Component({
@@ -8,7 +9,7 @@ import { FormsModule, NgForm } from '@angular/forms';
  templateUrl: './items.component.html',
  styleUrls: ['./items.component.css'],
  standalone: true,
- imports: [FormsModule]
+ imports: [FormsModule, RouterLink]
 })
 export class ItemsComponent {
  item: any = {

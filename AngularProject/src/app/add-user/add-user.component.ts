@@ -4,11 +4,12 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { RouterLink } from '@angular/router'; // Shane Petree
 
 @Component({
   selector: 'app-add-user',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatCheckboxModule], // ✅ Import MatCheckboxModule
+  imports: [CommonModule, ReactiveFormsModule, MatCheckboxModule, RouterLink], // ✅ Import MatCheckboxModule
   templateUrl: './add-user.component.html',
   styleUrls: ['./add-user.component.css'],
 })
