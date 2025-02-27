@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common'; // ✅ Import CommonModule
+import { RouterLink } from '@angular/router'; // Shane Petree
 
 @Component({
   selector: 'app-add-item',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './add-item.component.html',
   styleUrls: ['./add-item.component.css']
   })

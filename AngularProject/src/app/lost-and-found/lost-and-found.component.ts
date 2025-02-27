@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-lost-and-found',
+  imports: [CommonModule, RouterLink], // Shane Petree
   templateUrl: './lost-and-found.component.html',
   styleUrls: ['./lost-and-found.component.css']
 })
