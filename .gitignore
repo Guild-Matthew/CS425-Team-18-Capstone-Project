@@ -411,3 +411,4 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+/FlaskBackend/HelloFlask/flask-connection.config.json
