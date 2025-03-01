@@ -7,4 +7,8 @@
     <!-- Folder where production build objects will be placed -->
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist\AngularFrontend\browser\</BuildOutputFolder>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="src\app\items\**" />
+    <TypeScriptConfiguration Remove="src\app\items\**" />
+  </ItemGroup>
 </Project>

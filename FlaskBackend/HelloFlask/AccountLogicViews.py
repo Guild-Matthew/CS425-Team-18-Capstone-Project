@@ -102,8 +102,6 @@ def superAddUser():
         role = request.form.get('role')
         building = request.form.get('building')
 
-        # ^ building will need to be changed to a string or array if we are to allow users to access multiple buildings
-
         if not any([file, username, password, email, role, building]):
             error_message = 'Please fill out all fields on the form or upload a valid file.'
             return render_template("AccountLogic/superadduser.html", error=error_message)
