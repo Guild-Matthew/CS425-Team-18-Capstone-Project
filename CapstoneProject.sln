@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "FlaskBackend", "FlaskBackend\FlaskBackend.pyproj", "{48FC1122-9ABF-4D4A-A8F8-D0CE090E8AD4}"
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "AngularFrontend", "AngularFrontend\AngularFrontend.esproj", "{9326C192-C233-2839-68AF-3AE0C39BE278}"
+	ProjectSection(ProjectDependencies) = postProject
+		{48FC1122-9ABF-4D4A-A8F8-D0CE090E8AD4} = {48FC1122-9ABF-4D4A-A8F8-D0CE090E8AD4}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
