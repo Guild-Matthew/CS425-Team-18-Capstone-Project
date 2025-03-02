@@ -1,42 +1,16 @@
-<!-- Implemented by Guilherme Domingues Cassiano -->
-<!-- Edited by Shane Petree -->
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>Restricted Area Map</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <!--<base href="/">-->
-  <style>
-    #map {
-      height: 900px;
-      width: 100%;
-    }
-  </style>
-</head>
-<body>
-  <nav>
-    <a routerLink="/">Home</a>
-    |
-    <a routerLink="/map">app-map</a>
-  </nav>
-  <router-outlet />
+<!-- This <nav> section shows all the ugly links you don't want to see at the top of every page. -->
+<!-- app-root is displayed at every page, and anything included above <router-outlet> is shown on every page. -->
+<!-- <nav>
+    <ul>
+      <li><a routerLink="/dashboard">Dashboard</a></li>
+      <li><a routerLink="/add-user">Add User</a></li>
+      <li><a routerLink="/items">Items</a></li>
+      <li><a routerLink="/login">Login</a></li>
+      <li><a routerLink="/lost-and-found">Lost and Found</a></li>
+      <li><a routerLink="/add-item">Add Item</a></li>
+      <li><a routerLink="/claimed-items">Claimed Items</a></li>
 
-  <!--{% if 'user_id' in session %}
-  <a href="{{}}">Logout</a>
-  {% else %}
-  <a href="{{}}">Login</a>
-  {% endif %}-->
-  <button id="dashboardButton" data-url="{}">Dashboard</button>
-  <div id="map"></div>
-  <!--Google Maps JavaScript API-->
-  <!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDpJ6Oa8-l0r8Pf16RjCsgDUbsvOPotAGU&callback=initMap" async defer></script>-->
-  <!--<section (getmaps)="getMaps()">-->
-  <!--</section>-->
-  <!--Link to JS files-->
-  <!--<script src="{{app\js\map.js}}"></script>
-  <script src="{{app\js\AccountLogic.js}}"></script>
-  <script src="{{app\js\index.js}}"></script>-->
-</body>
-</html>
+    </ul>
+  </nav> -->
+<!-- Main content -->
+<router-outlet></router-outlet>

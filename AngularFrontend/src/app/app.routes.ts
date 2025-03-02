@@ -1,5 +1,11 @@
 import { Routes } from '@angular/router';
 import { AppComponent } from './app.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { LoginComponent } from './pages/login/login.component';
+import { LostAndFoundComponent } from './pages/lost-and-found/lost-and-found.component';
+import { AddItemComponent } from './pages/add-item/add-item.component';
+import { ClaimedItemsComponent } from './pages/claimed-items/claimed-items.component';
+import { AddUserComponent } from './pages/add-user/add-user.component';
 //import { MapComponent } from './map/map.component';
 
 // adding components for each page
@@ -21,14 +27,22 @@ import { AppComponent } from './app.component';
 
 
 export const routes: Routes = [
-  {
-    path: 'app',
-    title: 'app-root',
-    component: AppComponent,
-  },
+  //{
+  //  path: 'app',
+  //  title: 'app-root',
+  //  component: AppComponent,
+  //},
   //{
   //  path: 'map',
   //  title: 'Map Page',
   //  component: MapComponent,
   //},
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  { path: 'dashboard', component: DashboardComponent },
+  { path: 'add-user', component: AddUserComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'lost-and-found', component: LostAndFoundComponent },
+  { path: 'add-item', component: AddItemComponent },
+  { path: 'claimed-items', component: ClaimedItemsComponent },
+  { path: '**', redirectTo: 'dashboard' } // Handles unknown paths
 ]

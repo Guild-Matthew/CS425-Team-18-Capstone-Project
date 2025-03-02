@@ -1,13 +1,41 @@
 <!-- Implemented by Guilherme Domingues Cassiano -->
+<!-- Edited by Shane Petree -->
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="utf-8">
   <title>Restricted Area Map</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <!--<base href="/">-->
+  <style>
+    #map {
+      height: 900px;
+      width: 100%;
+    }
+  </style>
 </head>
 <body>
-  <!--<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDpJ6Oa8-l0r8Pf16RjCsgDUbsvOPotAGU"></script>-->
+  <nav>
+    <a routerLink="/">Home</a>
+    |
+    <a routerLink="/map">app-map</a>
+  </nav>
 
-  <app-map></app-map>
-
+  <!--{% if 'user_id' in session %}
+  <a href="{{}}">Logout</a>
+  {% else %}
+  <a href="{{}}">Login</a>
+  {% endif %}-->
+  <button id="dashboardButton" data-url="{}">Dashboard</button>
+  <div id="map"></div>
+  <!--Google Maps JavaScript API-->
+  <!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDpJ6Oa8-l0r8Pf16RjCsgDUbsvOPotAGU&callback=initMap" async defer></script>-->
+  <!--<section (getmaps)="getMaps()">-->
+  <!--</section>-->
+  <!--Link to JS files-->
+  <!--<script src="{{app\js\map.js}}"></script>
+  <script src="{{app\js\AccountLogic.js}}"></script>
+  <script src="{{app\js\index.js}}"></script>-->
 </body>
 </html>

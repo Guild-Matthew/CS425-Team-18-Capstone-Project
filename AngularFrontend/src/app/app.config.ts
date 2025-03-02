@@ -1,19 +1,9 @@
-//import { ApplicationConfig } from '@angular/core';
-//import { provideRouter } from '@angular/router';
-
-//import { routes } from './app.routes';
-//import { provideClientHydration } from '@angular/platform-browser';
-
-//export const appConfig: ApplicationConfig = {
-//  providers: [provideRouter(routes), provideClientHydration()]
-//};
-
-
 import { ApplicationConfig, Injectable, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
-
+import { provideAnimations } from '@angular/platform-browser/animations';
 import { routes } from './app.routes';
 import { HttpClient, provideHttpClient, withFetch, withJsonpSupport } from '@angular/common/http';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -23,6 +13,8 @@ export const appConfig: ApplicationConfig = {
       withFetch(),
       withJsonpSupport()
     ),
+    provideAnimations(),
+    provideAnimationsAsync(),
   ]
 };
 
