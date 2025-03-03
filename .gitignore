@@ -366,7 +366,8 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-/FlaskBackend/env/
+/FlaskBackend/env
+/env
 /.gitattributes
 
 # from angular
@@ -410,4 +411,3 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
-

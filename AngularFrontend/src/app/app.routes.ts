@@ -12,11 +12,7 @@ import { AddUserComponent } from './pages/add-user/add-user.component';
 
 export const routes: Routes = [
   //{
-  //  path: 'app',
-  //  title: 'app-root',
-  //  component: AppComponent,
-  //},
-  //{
+  //task map page doesn't work yet
   //  path: 'map',
   //  title: 'Map Page',
   //  component: MapComponent,
