@@ -39,6 +39,7 @@
     <Compile Include="HelloFlask\__init__.py" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="DB Dumps\3-3-2025_TestDB_dump.sql" />
     <Content Include="HelloFlask\.DS_Store" />
     <Content Include="HelloFlask\flask-connection.config.json" />
     <Content Include="HelloFlask\static\.DS_Store" />
@@ -91,6 +92,7 @@
     <Folder Include="HelloFlask\templates\" />
     <Folder Include="HelloFlask\templates\AccountLogic\" />
     <Folder Include="Main Page\" />
+    <Folder Include="DB Dumps\" />
   </ItemGroup>
   <ItemGroup>
     <Interpreter Include="env\">
