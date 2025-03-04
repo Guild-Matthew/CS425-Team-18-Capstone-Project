@@ -1,4 +1,4 @@
-<!-- Mary Cottier -->
+<!-- Implemented by Guilherme Domingues Cassiano -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,7 +26,7 @@
 
                     <!-- Implemented by Guilherme Domingues Cassiano -->
                     <li><a href="{{ url_for('main.home') }}">Map</a></li>
-                    <li><a href="{{ url_for('main.Reportitems', building=building) }}">Report Found Item</a></li>
+                    <li><a href="{{ url_for('main.Reportitems', building=building) }}">Report Items</a></li>
                     <li><a href="{{ url_for('main.Removeitems', building=building) }}">Remove an Item</a></li>
                     <li><a href="{{ url_for('main.ClaimedItems', building=building) }}">Claimed Items</a></li>
                     <li><a href="#">Health and Safety</a></li>
@@ -43,8 +43,8 @@
                 <label for="sort">Sort By:</label>
                 <select id="sort" onchange="sortItems()">
                     <!-- Implemented by Guilherme Domingues Cassiano -->
-                    <option value="oldest" {% if sort_order == 'oldest' %}selected{% endif %}>Date Found: Oldest</option>
-                    <option value="newest" {% if sort_order == 'newest' %}selected{% endif %}>Date Found: Newest</option>
+                    <option value="oldest" {% if sort_order=='oldest' %}selected{% endif %}>Date Found: Oldest</option>
+                    <option value="newest" {% if sort_order=='newest' %}selected{% endif %}>Date Found: Newest</option>
                 </select>
             </div>
             <!--Filter section-->
@@ -52,10 +52,10 @@
                 <label for="filterType">Filter by Type:</label>
                 <select id="filterType" onchange="filterItems()">
                     <!-- Implemented by Guilherme Domingues Cassiano -->
-                    <option value="all" {% if filter_type == 'all' %}selected{% endif %}>All</option>
-                    <option value="clothing" {% if filter_type == 'clothing' %}selected{% endif %}>Clothing</option>
-                    <option value="technology" {% if filter_type == 'technology' %}selected{% endif %}>Technology</option>
-                    <option value="misc" {% if filter_type == 'misc' %}selected{% endif %}>Miscellaneous</option>
+                    <option value="all" {% if filter_type=='all' %}selected{% endif %}>All</option>
+                    <option value="clothing" {% if filter_type=='clothing' %}selected{% endif %}>Clothing</option>
+                    <option value="technology" {% if filter_type=='technology' %}selected{% endif %}>Technology</option>
+                    <option value="misc" {% if filter_type=='misc' %}selected{% endif %}>Miscellaneous</option>
 
 
 

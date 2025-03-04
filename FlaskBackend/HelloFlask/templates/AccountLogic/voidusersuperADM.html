@@ -20,7 +20,7 @@
             <h1>Lost and Found</h1>
             <nav>
                 <ul>
-                    <!--Shane Petree 2 lines-->
+                    <!--Shane Petree 1 line-->
                     <li><a href="{{ url_for('main.RedirectDashboard') }}">Dashboard</a></li>
                     <li><a href="{{ url_for('main.home') }}">Map</a></li>
                     <li><a href="{{ url_for('main.Reportitems', building=building) }}">Report Found Item</a></li>
@@ -57,7 +57,7 @@
                     <h3><strong>Email:</strong> <span>{{ user.email }}</span></h3>
                     <h3><strong>Active account status:</strong> <span>{{ user.active }}</span></h3>
                     <h3><strong> Account role:</strong> <span>{{ user.role }}</span></h3>
-                    <form action="{{ url_for('account.voidUser') }}" method="POST">
+                    <form action="{{ url_for('account.voidUserSuper') }}" method="POST">
                         <input type="hidden" name="username" value="{{ user.username }}">
                         <input type="hidden" name="email" value="{{ user.email }}">
                         <button type="submit" class="delete-btn">Delete</button>
@@ -75,7 +75,7 @@
         <p>&copy; 2024 University of Nevada, Reno. Lost and Found Service.</p>
     </footer>
 
-    <script src="{{ url_for('static', filename='js/voiduser.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/voiduserSuper.js') }}"></script>
 </body>
 
 </html>

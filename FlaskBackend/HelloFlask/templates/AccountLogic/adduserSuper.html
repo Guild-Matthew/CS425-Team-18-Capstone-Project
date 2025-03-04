@@ -1,4 +1,3 @@
-<!-- Matthew Guild, edited by Guilherme Cassiano -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,9 +20,8 @@
             <h1>Manage Access</h1>
             <nav>
                 <ul>
-                    <!--Shane Petree-->
+                    <!--Shane Petree 1 line-->
                     <li><a href="{{ url_for('main.RedirectDashboard') }}">Dashboard</a></li>
-
                     <li><a href="{{ url_for('main.home') }}">Map</a></li>
                     <li><a href="#">Lost and Found</a></li>
                     <li><a href="#">Health and Safety</a></li>
@@ -33,8 +31,8 @@
     </header>
 
     <section class="add-item-form">
-        <h2>Add a User</h2>
-        <form id="addItemForm" action="{{ url_for('account.addUser') }}" method="POST" enctype="multipart/form-data">
+        <h2>Validate an Account</h2>
+        <form id="addUserSuper" action="{{ url_for('account.addUserSuper') }}" method="POST" enctype="multipart/form-data">
 
             <!-- Worker netID -->
             <label for="netID">NetID for user to be given access</label>
@@ -43,10 +41,19 @@
             <label for="email">UNR email for user to be given access</label>
             <input type="text" id="email" name="email" placeholder="email"><br><br>
 
+            <aside class="sidebar">
+                <label for="role">Choose user role:</label>
+                <select id="role" name="role" onchange="updateHiddenRole()">
+                    <option value="student" {% if role=='student' %}selected{% endif %}>Role: student</option>
+                    <option value="admin" {% if role=='admin' %}selected{% endif %}>Role: admin</option>
+                </select>
+                <input type="hidden" id="hiddenRole" name="hidden_role" value="{{ role }}">
+            </aside><br>
+
             <label for="NetID password">NetID password for user to be given access</label>
             <input type="text" id="NetID password" name="NetID password" placeholder="NetID password"><br><br>
 
-            <label for="building">Buildings for which user will have Lost and Found access</label>
+            <label for="building">Building for which user will have Lost and Found access</label>
             <div id="building-options">
                 {% for building in buildingsDisplay %}
                 <label>
@@ -55,11 +62,13 @@
                 </label>
                 {% endfor %}
             </div><br>
+
+
             <!--Submit in batch-->
             <label for="batchFile">Upload a .txt file for batch addition</label>
             <input type="file" id="batchFile" name="batchFile" accept=".txt"><br><br>
             <!-- Submit Button -->
-            <button type="submit">Add User</button>
+            <button type="submit">Validate Account</button>
         </form>
     </section>
 
@@ -68,7 +77,7 @@
         <p>&copy; 2024 University of Nevada, Reno. Lost and Found Service.</p>
     </footer>
 
-    <!--<script src="addUser.js"></script>-->
+    <script src="addUserSuper.js"></script>
 </body>
 
 </html>

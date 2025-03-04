@@ -1,4 +1,4 @@
-//Mary Cottier
+// Mary Cottier
 function filterItems() {
     const filterType = document.getElementById('filterType').value;  // Get the selected filter type
     const sort = new URLSearchParams(window.location.search).get('sort') || 'oldest';  // Get the current sort value or default to "oldest"

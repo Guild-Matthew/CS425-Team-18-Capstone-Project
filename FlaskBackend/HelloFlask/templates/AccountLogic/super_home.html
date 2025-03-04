@@ -154,8 +154,11 @@
                 <a href="{{ url_for('main.Reportitems', building=building) }}" class="hero-button">Add New Item</a>
                 <a href="#" class="hero-button">View All Items</a>
                 <a href="#" class="hero-button">Generate Report</a>
-                <a href="{{ url_for('account.superAddUser') }}" class="hero-button">Validate Account</a>
-                <a href="{{ url_for('account.voidUser') }}" class="hero-button">Deactivate an Account</a>
+                <a href="{{ url_for('account.addUserSuper') }}" class="hero-button">Validate Account</a>
+                <a href="{{ url_for('account.voidUserSuper') }}" class="hero-button">Deactivate an Account</a>
+                <a href="{{ url_for('main.addBuilding') }}" class="hero-button">Add a building</a>
+                <a href="{{ url_for('main.EditBuilding') }}" class="hero-button">Edit a building</a>
+                <a href="{{ url_for('main.EditFloor') }}" class="hero-button">Edit a floor</a>
             </div>
         </div>
     </section>

@@ -1,4 +1,3 @@
-<!-- Matthew Guild -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -57,7 +56,9 @@
         /* Hero Section */
         .hero {
             position: relative;
-            background-image: url('campus_image.jpg');
+            /* Shane Petree 1 line*/
+            background-image: url('../images/campus_image.jpg');
+/*            background-image: src('../images/campus_image.jpg');*/
             background-size: cover;
             background-position: center;
             height: 60vh;
@@ -74,6 +75,7 @@
             left: 0;
             width: 100%;
             height: 100%;
+/*            background-image: url(../images/campus_image.jpg);*/
             background-color: rgba(0, 0, 0, 0.5);
             z-index: 1;
         }
@@ -148,7 +150,9 @@
 
     <!-- Hero Section -->
     <section class="hero">
-        <div class="hero-overlay"></div>
+        <div class="hero-overlay">
+        <!--Backgorund image should display here-->
+        </div>
         <div class="hero-content">
             <h1>Admin Dashboard</h1>
             <p>Manage lost and found items, view reports, and oversee campus inventory.</p>
@@ -158,6 +162,8 @@
                 <a href="#" class="hero-button">Generate Report</a>
                 <a href="{{ url_for('account.addUser') }}" class="hero-button">Validate Student Account</a>
                 <a href="{{ url_for('account.voidUser') }}" class="hero-button">Deactivate Student Account</a>
+                <a href="{{ url_for('main.EditBuilding') }}" class="hero-button">Edit building floors</a>
+                <a href="{{ url_for('main.EditFloor') }}" class="hero-button">Edit building rooms</a>
             </div>
         </div>
     </section>

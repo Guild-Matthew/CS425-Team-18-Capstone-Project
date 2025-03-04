@@ -1,4 +1,4 @@
-<!-- Mary Cottier -->
+<!-- Implemented by Guilherme Domingues Cassiano -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,9 +24,8 @@
                     <!--Shane Petree 1 line-->
                     <li><a href="{{ url_for('main.RedirectDashboard') }}">Dashboard</a></li>
 
-                    <!-- Implemented by Guilherme Domingues Cassiano -->
                     <li><a href="{{ url_for('main.home') }}">Map</a></li>
-                    <li><a href="{{ url_for('main.Reportitems', building=building) }}">Report Found Item</a></li>
+                    <li><a href="{{ url_for('main.Reportitems', building=building) }}">Report Items</a></li>
                     <li><a href="{{ url_for('main.info', building=building) }}">Lost and Found</a></li>
                     <li><a href="{{ url_for('main.Removeitems', building=building) }}">Remove an Item</a></li>
                     <li><a href="#">Health and Safety</a></li>
@@ -43,29 +42,38 @@
             <div class="filter-section">
                 <label for="sort">Sort By:</label>
                 <select id="sort" onchange="sortItems()">
-                    <!-- Implemented by Guilherme Domingues Cassiano -->
-                    <option value="oldest" {% if sort_order == 'oldest' %}selected{% endif %}>Date Claimed: Oldest</option>
-                    <option value="newest" {% if sort_order == 'newest' %}selected{% endif %}>Date Claimed: Newest</option>
+                    <option value="oldest" {% if sort_order == 'oldest' %}selected{% endif %}>Date Found: Oldest</option>
+                    <option value="newest" {% if sort_order == 'newest' %}selected{% endif %}>Date Found: Newest</option>
                 </select>
             </div>
             <!--Filter section-->
             <div class="filter-section">
                 <label for="filterType">Filter by Type:</label>
                 <select id="filterType" onchange="filterItemsClaimed()">
-                    <!-- Implemented by Guilherme Domingues Cassiano -->
-                    <option value="all" {% if filter_type == 'all' %}selected{% endif %}>All</option>
-                    <option value="clothing" {% if filter_type == 'clothing' %}selected{% endif %}>Clothing</option>
-                    <option value="technology" {% if filter_type == 'technology' %}selected{% endif %}>Technology</option>
-                    <option value="misc" {% if filter_type == 'misc' %}selected{% endif %}>Miscellaneous</option>
+                    <option value="all" {% if filter_type =='all' %}selected{% endif %}>All</option>
+                    <option value="clothing" {% if filter_type =='clothing' %}selected{% endif %}>Clothing</option>
+                    <option value="technology" {% if filter_type =='technology' %}selected{% endif %}>Technology</option>
+                    <option value="misc" {% if filter_type =='misc' %}selected{% endif %}>Miscellaneous</option>
+                </select>
+            </div>
+            <!--Select Building-->
+            <div class="filter-section">
+                <label for="location">Lost and Found location:</label>
+                <select id="location" onchange="changeBuilding()">
+                    <option value="" disabled selected>Select Lost and Found Building</option>
+                    {% for building in buildings %}
+                    <option value="{{ building }}" {% if building == selected_building %}selected{% endif %}>
+                        {{ building }}
+                    </option>
+                    {% endfor %}
                 </select>
             </div>
         </aside>
 
         <!--Products section-->
         <section id="products">
-            <h2>Found Items in Building: {{ building}}</h2>
+            <h2>Found Items in Building: {{ selected_building}}</h2>
             <div class="product-grid">
-                <!-- Implemented by Guilherme Domingues Cassiano -->
                 {% if items %}
                 {% for item in items %}
                 <div class="product">

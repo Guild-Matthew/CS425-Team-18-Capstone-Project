@@ -1,4 +1,4 @@
-# This file was implemented by Guilherme Domingues Cassiano 
+# Guilherme Cassiano
 import psycopg2
 from psycopg2 import sql
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -42,14 +42,16 @@ class Queries:
     def get_items(self, LFlocation, order):#*
         # Validate the order argument to ensure it's either ASC or DESC
         if order not in ("ASC", "DESC"):
-            raise ValueError("Invalid order. Must be 'ASC' or 'DESC'.")       
+            raise ValueError("Invalid order. Must be 'ASC' or 'DESC'.")
+
+       
         query = f"""
         SELECT itemType, LocationFound, itemDescription, dateFound, image_path
         FROM items 
         WHERE LFlocation = %s
         ORDER BY dateFound {order}
         """
-        self.cursor.execute(query, (LFlocation,))  
+        self.cursor.execute(query, (LFlocation,))  # Pass LFlocation as a tuple
         return self.cursor.fetchall()  # Fetch all matching items
 
     # Query to get filtered items from the "items" table
@@ -57,6 +59,7 @@ class Queries:
         # Validate the order argument to ensure it's either ASC or DESC
         if order not in ("ASC", "DESC"):
             raise ValueError("Invalid order. Must be 'ASC' or 'DESC'.")
+
         query = f"""
         SELECT itemType, LocationFound, itemDescription, dateFound, image_path
         FROM items
@@ -89,53 +92,84 @@ class Queries:
         return self.cursor.fetchall()  # Fetch all matching items
 
     # Query to create an account (admin or user)
-    def createAccount(self, username, password, email, role, building=None): #*
+    def createAccount(self, username, password, email, role): #*
         query = """
-            INSERT INTO users (username, password, email, role, building)
-            VALUES (%s, %s, %s, %s, %s)
+            INSERT INTO users (username, password, email, role)
+            VALUES (%s, %s, %s, %s)
         """
-        self.cursor.execute(query, (username, password, email, role, building))
+        self.cursor.execute(query, (username, password, email, role))
         self.conn.commit()
-        
+
     # Query to check if user exists when logging in 
     def getUser(self, username, email): #*
         self.cursor.execute("""
-        SELECT id, username, password, role, building 
+        SELECT uid, username, password, role 
         FROM users 
         WHERE username = %s OR email = %s
         """, (username, email))
         row = self.cursor.fetchone()
         if row:
-            return {"id": row[0], "username": row[1], "password": row[2], "role": row[3], "building": row[4]}  # Convert to dictionary
+            return {"uid": row[0], "username": row[1], "password": row[2], "role": row[3]}  # Convert to dictionary
         return None
 
-    # Query to get all users for the "void" user page (page where an admin can delete normal user accounts)
-    def getUserVoid(self, role): #*
-        self.cursor.execute("""
-        SELECT username, email, building
-        FROM users 
-        WHERE role = %s
-        """, (role,))
-        rows = self.cursor.fetchall()
-        return [{"username": row[0], "email": row[1], "building": row[2]} for row in rows]  
-
-    # Query to get all users for the "void" user page (page where an admin can delete normal user accounts) by the building they work  
-    def getUserVoidFiltered(self, building, role): #*
+    # Query to get all users for the "void" user page
+    def getUserVoid(self, role, active): #*
         self.cursor.execute("""
         SELECT username, email
         FROM users 
-        WHERE building = %s AND role = %s
-        """, (building, role,))
+        WHERE role = %s AND active = %s
+        """, (role,active,))
         rows = self.cursor.fetchall()
         return [{"username": row[0], "email": row[1]} for row in rows]  
 
-    # Query to remove an account 
+    def getUserVoidSuper(self, role, role2, active): #*
+        self.cursor.execute("""
+        SELECT username, email, active, role
+        FROM users 
+        WHERE role = %s AND role = %s OR role = %s
+        """, (role,role2,active,))
+        rows = self.cursor.fetchall()
+        return [{"username": row[0], "email": row[1], "active": row[2], "role": row[3]} for row in rows] 
+
+    def getUserVoidFiltered(self, uid_list, role, active):  
+        if not uid_list: 
+            return "none"  
+        placeholders = ', '.join(['%s'] * len(uid_list))  
+        query = f"""
+            SELECT username, email, active, role
+            FROM users 
+            WHERE uid IN ({placeholders}) AND role = %s AND active = %s
+        """
+        self.cursor.execute(query, tuple(uid_list) + (role,) + (active,))  
+        rows = self.cursor.fetchall()
+        if not rows: 
+            return "none"
+        return [{"username": row[0], "email": row[1], "active": row[2], "role": row[3]} for row in rows]
+
+    #task this function throws an error when changing the building in the dropdown on super admin deactivate account page
+    def getUserVoidFilteredSuper(self, uid_list, role, role2, active):  
+        if not uid_list: 
+            return "none"  
+        placeholders = ', '.join(['%s'] * len(uid_list))  #creates a list of %s based on how many accounts are in the uid_list 
+        query = f"""
+            SELECT username, email, active, role
+            FROM users 
+            WHERE uid IN ({placeholders}) AND active = %s
+        """
+        self.cursor.execute(query, tuple(uid_list) + (active,) + (role,) + (role2,) )  
+        rows = self.cursor.fetchall()
+        if not rows: 
+            return "none"
+        return [{"username": row[0], "email": row[1], "active": row[2], "role": row[3]} for row in rows] 
+ 
+    # Query to deactivate an account 
     def deleteUser(self, email, username):
         query = """
-        DELETE FROM users
-        WHERE username = %s AND email = %s
+        UPDATE users
+        SET active = FALSE
+        WHERE email = %s AND username = %s
         """
-        self.cursor.execute(query, (username, email))
+        self.cursor.execute(query, (email, username))  # Fix parameter order
         self.conn.commit()
 
     # Query to remove an item from the "items" table (removing an item from the L&F)
@@ -146,7 +180,7 @@ class Queries:
         """
         self.cursor.execute(query, (itemType, LocationFound, itemDescription, dateFound))
         self.conn.commit()
-        
+
     # Query to create a new building to be displayed on the map
     def createBuilding(self, buildingCode, latitude, longitude):#*
         query = """
@@ -167,12 +201,143 @@ class Queries:
         """
         self.cursor.execute(query)
         rows = self.cursor.fetchall()
+        # Convert rows to a list of dictionaries
         return [{'buildingCode': row[0], 'latitude': row[1], 'longitude': row[2], 'itemCount': row[3], 'claimedCount': row[4]} for row in rows]
 
+    def getBuildingsSubmitItem(self):
+        query = """
+        SELECT buildingcode FROM building
+        """
+        self.cursor.execute(query)
+        rows = self.cursor.fetchall()
+        return [row[0] for row in rows]
 
-# This function is not always called, I only use it when I have to call a specific query manually (add building, create admin role account etc)
+    def getUserId(self, username):
+        self.cursor.execute("""
+        SELECT uid
+        FROM users
+        WHERE username = %s
+        """, (username,))
+        row = self.cursor.fetchone() 
+        return row[0] if row else None  
+
+    def getBuildingID(self, building):
+        self.cursor.execute("""
+        SELECT bid
+        FROM building
+        WHERE buildingcode = %s
+        """, (building,))
+        row = self.cursor.fetchone() 
+        return row[0] if row else None 
+
+    def createPermissions(self, bid, uid):
+        query = """
+            INSERT into Permissions (bid, uid)
+            VALUES (%s, %s)
+        """
+        self.cursor.execute(query, (bid, uid))
+        self.conn.commit()
+
+    def getBuildingsFromPermissions(self, uid):
+        self.cursor.execute("""
+        SELECT b.buildingcode
+        FROM Permissions p
+        JOIN building b ON p.bid = b.bid
+        WHERE p.uid = %s
+        """, (uid,))
+        rows = self.cursor.fetchall()
+        return [row[0] for row in rows]
+
+    def getAllBuildings(self):
+        self.cursor.execute("""
+        SELECT buildingcode
+        FROM building
+        """)
+        rows = self.cursor.fetchall()
+        return [row[0] for row in rows] 
+
+    def addFloor(self, bid, floornumber):
+        query = """
+            INSERT INTO floors (bid, floornumber)
+            VALUES (%s, %s)
+        """
+        self.cursor.execute(query, (bid, floornumber))
+        self.conn.commit()
+
+    def removeFloor(self, bid, floorNumber):
+        query = """
+            DELETE FROM floors 
+            WHERE bid = %s AND floornumber = %s
+        """
+        self.cursor.execute(query, (bid, floorNumber))
+        self.conn.commit()
+
+    def getNumberofFloors(self, bid):
+        query = """
+            SELECT COUNT(bid)
+            FROM floors
+            WHERE bid = %s
+        """
+        self.cursor.execute(query, (bid,))
+        result = self.cursor.fetchone()  
+        return result[0] if result else 0  
+
+    def getFloors(self, bid):
+        query = """
+            SELECT floornumber
+            FROM floors
+            WHERE bid = %s
+        """
+        self.cursor.execute(query, (bid,))  
+        rows = self.cursor.fetchall() 
+        return [row[0] for row in rows] 
+
+    def getRooms(self, bid, floornumber):
+        query = """
+            SELECT roomnumber
+            FROM rooms
+            WHERE bid = %s AND floornumber = %s
+        """
+        self.cursor.execute(query, (bid,floornumber,))  
+        rows = self.cursor.fetchall() 
+        return [row[0] for row in rows] 
+
+    def addRoom(self,bid,roomnumber, floornumber):
+        query = """
+            INSERT INTO rooms (bid, roomnumber, floornumber)
+            VALUES (%s, %s, %s)
+        """
+        self.cursor.execute(query, (bid, roomnumber, floornumber))
+        self.conn.commit()
+
+    def removeRoom(self, bid, roomNumber):
+        query = """
+            DELETE FROM rooms 
+            WHERE bid = %s AND roomNumber = %s
+        """
+        self.cursor.execute(query, (bid, roomNumber))
+        self.conn.commit()
+
+    def getUsersFromPermissions(self, bid):
+        self.cursor.execute("""
+        SELECT uid
+        FROM Permissions
+        WHERE bid = %s
+        """, (bid,))
+        rows = self.cursor.fetchall()
+        return [row[0] for row in rows]
+
 if __name__ == "__main__":
+    # Create an instance of Queries
     db_queries = Queries()
+    
+    # Call the method and store the result
     hashed_password = generate_password_hash('Dovakhin12#')
-    items = db_queries.createAccount('gcassianoADM', hashed_password,'gcassianoADM@unr.edu', 'admin')
+    db_queries.addRoom(5, 202)
+   
+
+    
+    # Close the database connection
     db_queries.close()
+
+

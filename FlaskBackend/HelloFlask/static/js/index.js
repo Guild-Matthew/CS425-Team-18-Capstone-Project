@@ -1,4 +1,4 @@
-//Guilherme Cassiano
+// Guilherme Cassiano
 document.addEventListener("DOMContentLoaded", function () {
     const dashboardButton = document.getElementById("dashboardButton");
 

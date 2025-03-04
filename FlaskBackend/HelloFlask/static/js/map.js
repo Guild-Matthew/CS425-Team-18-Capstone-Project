@@ -1,8 +1,8 @@
-//Matthew GUild
+// Implemented by Guilherme Domingues Cassiano
 function initMap() {
     const restrictedBounds = new google.maps.LatLngBounds(
-        new google.maps.LatLng(39.537064704469685, -119.81803893571075),  // Southwest corner of NYC
-        new google.maps.LatLng(39.55024426280125, -119.81330216925673)   // Northeast corner of NYC
+        new google.maps.LatLng(39.537064704469685, -119.81803893571075), 
+        new google.maps.LatLng(39.55024426280125, -119.81330216925673)   
     );
 
     const mapStyles = [
@@ -39,7 +39,7 @@ function initMap() {
 
                 // Add a click listener for each marker
                 marker.addListener('click', function () {
-                    const building = encodeURIComponent(buildingCode);  // Safely encode the title for the URL
+                    const building = encodeURIComponent(buildingCode);  // Encode the title for the URL
                     window.location.href = `/L&F?building=${building}`;
                 });
             });

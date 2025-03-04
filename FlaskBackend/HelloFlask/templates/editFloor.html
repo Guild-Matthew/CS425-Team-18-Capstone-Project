@@ -1,0 +1,106 @@
+<!-- Implemented by Guilherme Domingues Cassiano -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNR Lost and Found</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/L&F.css') }}">
+</head>
+
+<body>
+    <!--Header section-->
+    <header>
+        <div class="container">
+            <div class="logo-group">
+                <img class="university-logo-large-img align-image-bottom" alt="University of Nevada, Reno " src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg" width="65" height="65">
+                <span class="logo-text-new align-text-middle">
+                    University of Nevada, Reno
+                </span>
+            </div>
+            <h1>Lost and Found</h1>
+            <!-- Display selected building message -->
+            <nav>
+                <ul>
+                    <!--Shane Petree 1 line-->
+                    <li><a href="{{ url_for('main.RedirectDashboard') }}">Dashboard</a></li>
+
+                    <li><a href="{{ url_for('main.home') }}">Map</a></li>
+                    <li><a href="{{ url_for('main.Reportitems', building=building) }}">Report Items</a></li>
+                    <li><a href="{{ url_for('main.Removeitems', building=building) }}">Remove an Item</a></li>
+                    <li><a href="{{ url_for('main.ClaimedItems', building=building) }}">Claimed Items</a></li>
+                    <li><a href="#">Health and Safety</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <!--Sidebar for sort and filter-->
+        <aside class="sidebar">
+            <label for="location-sidebar">Building being Edited:</label>
+            <select id="location-sidebar" onchange="changeBuilding()">
+                <option value="" disabled selected>Select Lost and Found Building</option>
+                {% for building in buildings %}
+                <option value="{{ building }}" {% if building==selected_building %}selected{% endif %}>
+                    {{ building }}
+                </option>
+                {% endfor %}
+            </select>
+        </aside>
+
+        <aside class="sidebar">
+            <label for="floor-sidebar">Floor being Edited:</label>
+            <select id="floor-sidebar" onchange="changeFloor()">
+                <option value="" disabled selected>Select Building Floor</option>
+                {% for floor in floors %}
+                <option value="{{ floor }}" {% if floor==selected_floor %}selected{% endif %}>
+                    {{ floor }}
+                </option>
+                {% endfor %}
+            </select>
+        </aside>
+
+        <!--Products section-->
+        <section id="products">
+            <!-- Add Floor Button at the Top -->
+            <form method="POST" action="{{ url_for('main.EditFloor') }}">
+                <div class="floor-buttons">
+                    <button type="submit" name="action" value="add_room">Add room</button>
+                </div>
+                <label for="roomNumber">Number of room being added:</label>
+                <input type="number" id="roomNumber" name="roomNumber" required>
+                <input type="hidden" name="selected_building" value="{{ selected_building }}">
+                <input type="hidden" name="selected_floor" value="{{ selected_floor }}">
+            </form>
+
+            <!-- Display Floors -->
+            <h2>rooms in Building: {{ selected_building }}</h2>
+            <div class="product-grid">
+                {% if rooms %}
+                {% for room in rooms %}
+                <div class="product">
+                    <h3><strong>Room Number:</strong> <span>{{ room }}</span></h3>
+                    <!-- Remove Floor Button Inside Each Card -->
+                    <form method="POST" action="{{ url_for('main.EditFloor') }}">
+                        <input type="hidden" name="selected_building" value="{{ selected_building }}">
+                        <input type="hidden" name="room_number" value="{{ room }}">
+                        <button type="submit" name="action" value="remove_room">Remove Room</button>
+                    </form>
+                </div>
+                {% endfor %}
+                {% else %}
+                <p>No floors found for the selected building.</p>
+                {% endif %}
+            </div>
+        </section>
+    </div>
+
+    <!--Footer section-->
+    <footer>
+        <p>&copy; 2024 University of Nevada, Reno. Lost and Found Service.</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/editFloor.js') }}"></script>
+</body>
+</html>
