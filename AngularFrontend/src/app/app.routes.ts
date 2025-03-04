@@ -20,9 +20,10 @@ export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   { path: 'dashboard', component: DashboardComponent },
 
-  //task there is not a way to get to add-user yet through the UI
+  //task there is not a way to get to add-user or login yet through the UI
   { path: 'add-user', component: AddUserComponent },
   { path: 'login', component: LoginComponent },
+
   { path: 'lost-and-found', component: LostAndFoundComponent },
   { path: 'add-item', component: AddItemComponent },
   { path: 'claimed-items', component: ClaimedItemsComponent },

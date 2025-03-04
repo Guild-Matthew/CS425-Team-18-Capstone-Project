@@ -1,4 +1,4 @@
-<!-- Implemented by Guilherme Domingues Cassiano -->
+<!-- Mary Cottier -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,6 +24,7 @@
                     <!--Shane Petree 1 line-->
                     <li><a href="{{ url_for('main.RedirectDashboard') }}">Dashboard</a></li>
 
+                    <!-- Implemented by Guilherme Domingues Cassiano -->
                     <li><a href="{{ url_for('main.home') }}">Map</a></li>
                     <li><a href="{{ url_for('main.Reportitems', building=building) }}">Report Items</a></li>
                     <li><a href="{{ url_for('main.info', building=building) }}">Lost and Found</a></li>
@@ -42,7 +43,7 @@
             <div class="filter-section">
                 <label for="sort">Sort By:</label>
                 <select id="sort" onchange="sortItems()">
-                    <option value="oldest" {% if sort_order == 'oldest' %}selected{% endif %}>Date Found: Oldest</option>
+                    <!-- Implemented by Guilherme Domingues Cassiano -->
                     <option value="newest" {% if sort_order == 'newest' %}selected{% endif %}>Date Found: Newest</option>
                 </select>
             </div>
@@ -50,7 +51,7 @@
             <div class="filter-section">
                 <label for="filterType">Filter by Type:</label>
                 <select id="filterType" onchange="filterItemsClaimed()">
-                    <option value="all" {% if filter_type =='all' %}selected{% endif %}>All</option>
+                    <!-- Implemented by Guilherme Domingues Cassiano -->
                     <option value="clothing" {% if filter_type =='clothing' %}selected{% endif %}>Clothing</option>
                     <option value="technology" {% if filter_type =='technology' %}selected{% endif %}>Technology</option>
                     <option value="misc" {% if filter_type =='misc' %}selected{% endif %}>Miscellaneous</option>
@@ -74,6 +75,7 @@
         <section id="products">
             <h2>Found Items in Building: {{ selected_building}}</h2>
             <div class="product-grid">
+                <!-- Implemented by Guilherme Domingues Cassiano -->
                 {% if items %}
                 {% for item in items %}
                 <div class="product">

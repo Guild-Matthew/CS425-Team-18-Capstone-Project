@@ -77,20 +77,22 @@ header {
   }
   
   /* Hero section takes full height minus the header/footer */
-  .hero {
-    flex-grow: 1; /* Fills remaining space */
-    position: relative;
-    background-image: url('/assets/images/campus_image.jpg'); /* Full-screen background */
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    text-align: center;
-    width: 100%;
-    height: calc(100vh - 150px); /* Adjust for header & footer */
-  }
+.hero {
+  flex-grow: 1; /* Fills remaining space */
+  position: relative;
+  /*background-image: url('/assets/images/campus_image.jpg');*/ /* doesn't work in VS IDE */
+  /* Shane Petree */
+  background-image: url(../../../assets/campus_image.jpg);
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-align: center;
+  width: 100%;
+  height: calc(100vh - 150px); /* Adjust for header & footer */
+}
   
   /* Overlay to darken image */
   .hero-overlay {

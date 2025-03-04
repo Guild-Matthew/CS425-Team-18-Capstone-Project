@@ -19,4 +19,7 @@ if __name__ == '__main__':
     except ValueError:
         PORT = 5555
 
+    # write the host address and port number to the config file
+    write_config(HOST, PORT)
+
     app.run(HOST, PORT)

@@ -1,4 +1,4 @@
-<!-- Implemented by Guilherme Domingues Cassiano -->
+<!-- Mary Cottier -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,6 +24,7 @@
                     <!--Shane Petree 1 line-->
                     <li><a href="{{ url_for('main.RedirectDashboard') }}">Dashboard</a></li>
 
+                    <!-- Implemented by Guilherme Domingues Cassiano -->
                     <li><a href="{{ url_for('main.home') }}">Map</a></li>
                     <li><a href="{{ url_for('main.info', building=building) }}">Lost and Found</a></li>
                     <li><a href="{{ url_for('main.ClaimedItems', building=building) }}">Claimed Items</a></li>
@@ -36,6 +37,7 @@
 
     <section class="add-item-form">
         <h2>Add a Found Item</h2>
+        <!-- Implemented by Guilherme Domingues Cassiano -->
         <form action="{{ url_for('main.Reportitems') }}" method="POST" enctype="multipart/form-data">
 
             <!-- Worker -->
@@ -50,8 +52,6 @@
                 <option>{{ item }}</option>
                 {% endfor %}
             </select>
-
-
 
             <!-- Date found -->
             <label for="dateFound">Date Found:</label>
