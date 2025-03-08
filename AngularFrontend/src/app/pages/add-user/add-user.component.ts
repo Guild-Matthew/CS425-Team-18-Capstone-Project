@@ -1,10 +1,10 @@
-/* Matthew Guild*/
+// Matthew Guild and Shane Petree
 
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { RouterLink } from '@angular/router'; // Shane Petree
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-add-user',

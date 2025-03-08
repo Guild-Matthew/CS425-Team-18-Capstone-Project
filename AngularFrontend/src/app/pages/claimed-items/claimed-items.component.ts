@@ -1,10 +1,10 @@
+// Someone and Shane Petree
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-claimed-items',
-  // Shane Petree
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './claimed-items.component.html',

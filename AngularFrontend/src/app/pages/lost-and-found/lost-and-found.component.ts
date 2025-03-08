@@ -1,10 +1,10 @@
+// Someone and Shane Petree
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-lost-and-found',
-  // Shane Petree
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './lost-and-found.component.html',

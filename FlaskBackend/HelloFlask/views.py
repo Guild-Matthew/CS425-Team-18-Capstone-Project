@@ -37,6 +37,9 @@ def info():
 
     # Render the template with building and filtered items
     return render_template('L&F.html', items=items, filter_type=filter_type, sort_order=sort_order, building=building)
+    
+    # return the query as json data
+    # return jsonify(items)
 
 @main_bp.route('/Items', methods=['GET', 'POST'])
 def Reportitems():

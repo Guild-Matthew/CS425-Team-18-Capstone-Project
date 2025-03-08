@@ -1,9 +1,14 @@
+// Shane Petree
+
 import { ApplicationConfig, Injectable, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { routes } from './app.routes';
 import { HttpClient, provideHttpClient, withFetch, withJsonpSupport } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { ReactiveFormsModule } from '@angular/forms';
+
+export const flask_URL = 'http://localhost:52363/';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -15,13 +20,14 @@ export const appConfig: ApplicationConfig = {
     ),
     provideAnimations(),
     provideAnimationsAsync(),
+    ReactiveFormsModule,
   ]
 };
 
 @Injectable({ providedIn: 'root' })
 export class ConfigService {
-  constructor(private http: HttpClient) {
-    // This service can now make HTTP requests via `this.http`.
-  }
+  //constructor(private http: HttpClient) {
+  //  // This service can now make HTTP requests via `this.http`.
+  //}
 
 }

@@ -1,7 +1,7 @@
-/* Matthew Guild*/
+// Matthew Guild and Shane Petree
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router'; // Shane Petree
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',

@@ -12,6 +12,8 @@
 //  title = 'AngularFrontend';
 //}
 
+// Shane Petree
+
 import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 //import { ConfigService } from './app.config';

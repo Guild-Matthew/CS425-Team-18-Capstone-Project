@@ -1,6 +1,6 @@
 # This file was implemented by Guiilherme Domingues Cassiano
 # A section by Shane Petree
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session
+from flask import Blueprint, jsonify, render_template, request, redirect, url_for, flash, session
 from HelloFlask.queries import Queries  
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
@@ -28,11 +28,16 @@ def login():
             #session['building'] = user.get('building')
             next_url = session.pop('next_url', None)
             return redirect(next_url or url_for('main.home'))
+
+            # return the login info as json
+            return jsonify()
         else:
             flash("Invalid username or password.")
 
     # Render the login page if GET request or failed login
     return render_template('AccountLogic/login.html')
+
+    
 
 @account_bp.route('/admdashboard', methods=['GET'])
 def admDashboard():

@@ -1,23 +1,32 @@
-
+<!--Matthew Guild and Shane Petree-->
 <div class="fullscreen-container">
   <div class="background-overlay"></div>
   <div class="login-container">
     <div class="login-box">
       <img class="university-logo-large-img align-image-bottom" alt="University of Nevada, Reno" src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg" width="65" height="65">
       <h1>Sign in</h1>
-      <form>
+
+      <!--This form is made using the formGroup element in the .ts file-->
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <!--? We could get rid of NetID and just login with email and pasword. I'll leave this for now-->
         <mat-form-field appearance="fill">
-          <mat-label>NetID*</mat-label>
-          <input matInput placeholder="Enter your NetID">
+          <mat-label>NetID</mat-label>
+          <input matInput placeholder="NetID" formControlName="NetID" required/>
+        </mat-form-field>
+
+        <!--Shane Petree-->
+        <mat-form-field appearance ="fill">
+          <mat-label>Email</mat-label>
+          <input matInput placeholder="Email" formControlName="email" required/>
         </mat-form-field>
 
         <mat-form-field appearance="fill">
           <mat-label>Password</mat-label>
-          <input matInput placeholder="Enter your password">
+          <input matInput placeholder="Enter your password" formControlName="password" required/>
         </mat-form-field>
 
         <a routerLink="#" class="help-link">Can't access your account?</a>
-        <button type="submit">Next</button>
+        <button type="submit">Log In</button>
       </form>
       <div class="signin-options">
         <button class="signin-option-btn">Sign-in options</button>

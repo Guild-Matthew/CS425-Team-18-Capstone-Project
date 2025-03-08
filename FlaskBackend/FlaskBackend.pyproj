@@ -18,6 +18,7 @@
     <RootNamespace>FlaskBackend</RootNamespace>
     <InterpreterId>MSBuild|env|$(MSBuildProjectFullPath)</InterpreterId>
     <SuppressEnvironmentCreationPrompt>True</SuppressEnvironmentCreationPrompt>
+    <WebBrowserPort>52363</WebBrowserPort>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -44,7 +45,6 @@
     <Content Include="DB Dumps\3-3-2025_TestDB_dump.sql" />
     <Content Include="DB Dumps\TestDB-dump-tested-3-3-2025.backup" />
     <Content Include="HelloFlask\.DS_Store" />
-    <Content Include="HelloFlask\flask-connection.config.json" />
     <Content Include="HelloFlask\static\.DS_Store" />
     <Content Include="HelloFlask\static\css\addUser.css" />
     <Content Include="HelloFlask\static\css\claimedItems.css" />
