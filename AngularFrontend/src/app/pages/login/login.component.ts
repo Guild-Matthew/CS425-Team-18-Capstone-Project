@@ -62,8 +62,8 @@ export class LoginComponent implements OnInit{
 
 		const headers = { 'Content-Type': 'application/json' };
 
-    // Mary's original request
 		//this.http.post('http://localhost:52363/login', loginData, { headers }).subscribe(
+			//(response: any) => {
 		//this.http.post(flask_URL + '/login', loginData, { headers }).subscribe(
 
 		this.http.post('http://localhost:52363/login', loginData, {observe: 'response'}).subscribe(
