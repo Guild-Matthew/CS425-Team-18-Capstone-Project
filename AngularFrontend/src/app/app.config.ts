@@ -8,26 +8,26 @@ import { HttpClient, provideHttpClient, withFetch, withJsonpSupport } from '@ang
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { ReactiveFormsModule } from '@angular/forms';
 
-export const flask_URL = 'http://localhost:52363/';
+export const flask_URL = 'http://localhost:52363';
 
 export const appConfig: ApplicationConfig = {
-  providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes),
-    provideHttpClient(
-      withFetch(),
-      withJsonpSupport()
-    ),
-    provideAnimations(),
-    provideAnimationsAsync(),
-    ReactiveFormsModule,
-  ]
+	providers: [
+		provideZoneChangeDetection({ eventCoalescing: true }),
+		provideRouter(routes),
+		provideHttpClient(
+			withFetch(),
+			withJsonpSupport()
+		),
+		provideAnimations(),
+		provideAnimationsAsync(),
+		ReactiveFormsModule,
+	]
 };
 
 @Injectable({ providedIn: 'root' })
 export class ConfigService {
-  //constructor(private http: HttpClient) {
-  //  // This service can now make HTTP requests via `this.http`.
-  //}
+	//constructor(private http: HttpClient) {
+	//  // This service can now make HTTP requests via `this.http`.
+	//}
 
 }

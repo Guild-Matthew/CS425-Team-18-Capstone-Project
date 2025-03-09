@@ -3,8 +3,12 @@ from flask import Flask
 from HelloFlask.views import main_bp
 from HelloFlask.AccountLogicViews import account_bp
 from HelloFlask.queries import Queries
+from flask_cors import CORS
+
 def create_app():
     app = Flask(__name__)
+    # we may want to restrict origins in the future
+    CORS(app, resources={r"/*": {"origins": "*"}})
 
     app.secret_key = 'sMcP4D0JVI0i'
     app.register_blueprint(main_bp)

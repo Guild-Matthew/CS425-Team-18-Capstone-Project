@@ -101,16 +101,18 @@ class Queries:
         self.conn.commit()
 
     # Query to check if user exists when logging in 
-    def getUser(self, username, email): #*
+    def getUser(self, username): # Only use username, remove email
         self.cursor.execute("""
         SELECT uid, username, password, role 
         FROM users 
-        WHERE username = %s OR email = %s
-        """, (username, email))
+        WHERE username = %s
+        """, (username))
         row = self.cursor.fetchone()
         if row:
-            return {"uid": row[0], "username": row[1], "password": row[2], "role": row[3]}  # Convert to dictionary
+              # Convert rows to a list of dictionaries
+            return {"uid": row[0], "username": row[1], "password": row[2], "role": row[3], "active": row[4]}
         return None
+
 
     # Query to get all users for the "void" user page
     def getUserVoid(self, role, active): #*
@@ -121,6 +123,7 @@ class Queries:
         """, (role,active,))
         rows = self.cursor.fetchall()
         return [{"username": row[0], "email": row[1]} for row in rows]  
+
 
     def getUserVoidSuper(self, role, role2, active): #*
         self.cursor.execute("""
