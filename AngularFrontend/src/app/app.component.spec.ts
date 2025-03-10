@@ -1,5 +1,3 @@
-// Shane Petree
-
 import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 
@@ -16,16 +14,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have the 'Frontend' title`, () => {
+  it(`should have the 'AnguarFrontend' title`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('Frontend');
+    expect(app.title).toEqual('AnguarFrontend');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, Frontend');
+    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, AnguarFrontend');
   });
 });

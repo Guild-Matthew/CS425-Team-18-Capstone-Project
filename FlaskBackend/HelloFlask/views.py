@@ -9,8 +9,12 @@ from werkzeug.utils import secure_filename
 db_queries = Queries()
 main_bp = Blueprint('main', __name__)
 
+
 @main_bp.route('/', methods=['GET'])
 def home():
+    # Shane Petree
+    # Clear the session on startup, so the user is logged out when they open the app
+    session.clear()
     return render_template("index.html")
 
 @main_bp.route('/api/buildings', methods=['GET'])

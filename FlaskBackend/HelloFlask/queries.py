@@ -42,9 +42,7 @@ class Queries:
     def get_items(self, LFlocation, order):#*
         # Validate the order argument to ensure it's either ASC or DESC
         if order not in ("ASC", "DESC"):
-            raise ValueError("Invalid order. Must be 'ASC' or 'DESC'.")
-
-       
+            raise ValueError("Invalid order. Must be 'ASC' or 'DESC'.")    
         query = f"""
         SELECT itemType, LocationFound, itemDescription, dateFound, image_path
         FROM items 
@@ -103,14 +101,14 @@ class Queries:
     # Query to check if user exists when logging in 
     def getUser(self, username): # Only use username, remove email
         self.cursor.execute("""
-        SELECT uid, username, password, role 
+        SELECT uid, username, password, role, active 
         FROM users 
         WHERE username = %s
-        """, (username))
+        """, (username,))
         row = self.cursor.fetchone()
         if row:
-              # Convert rows to a list of dictionaries
-            return {"uid": row[0], "username": row[1], "password": row[2], "role": row[3], "active": row[4]}
+            # Convert rows to a list of dictionaries
+            return {"uid": row[0], "username": row[1], "password": row[2], "role": row[3], "active": row[4]}  
         return None
 
 
@@ -129,10 +127,11 @@ class Queries:
         self.cursor.execute("""
         SELECT username, email, active, role
         FROM users 
-        WHERE role = %s AND role = %s OR role = %s
-        """, (role,role2,active,))
+        WHERE active = %s AND role = %s OR role = %s
+        """, (active,role,role2,))
         rows = self.cursor.fetchall()
         return [{"username": row[0], "email": row[1], "active": row[2], "role": row[3]} for row in rows] 
+
 
     def getUserVoidFiltered(self, uid_list, role, active):  
         if not uid_list: 
@@ -172,7 +171,7 @@ class Queries:
         SET active = FALSE
         WHERE email = %s AND username = %s
         """
-        self.cursor.execute(query, (email, username))  # Fix parameter order
+        self.cursor.execute(query, (email, username))  
         self.conn.commit()
 
     # Query to remove an item from the "items" table (removing an item from the L&F)
@@ -335,7 +334,7 @@ if __name__ == "__main__":
     db_queries = Queries()
     
     # Call the method and store the result
-    hashed_password = generate_password_hash('Dovakhin12#')
+    
     db_queries.addRoom(5, 202)
    
 

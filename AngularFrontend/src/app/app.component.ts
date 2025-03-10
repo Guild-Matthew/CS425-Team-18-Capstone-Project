@@ -1,34 +1,17 @@
-// Shane Petree
-
-import { Component, inject } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-//import { ConfigService } from './app.config';
-import { HttpClient } from '@angular/common/http';
+//Mary Cottier, Matthew Guild, Shane Petree
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { LoginComponent } from './pages/login/login.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css',
+  template: `<app-login></app-login>`,
   standalone: true,
+  imports: [CommonModule, RouterModule],
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  title = 'Frontend';
-
-  //// create a http client
-  //private http = inject(HttpClient);
-
-  //async getMaps() {
-  //  this.http.get("https://maps.googleapis.com/maps/api/js?key=AIzaSyDpJ6Oa8-l0r8Pf16RjCsgDUbsvOPotAGU&callback=initMap");
-  //  return this.http;
-  //}
-  //request() {
-  //  return this.http.request();
-  //}
-
-  //googleMaps = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDpJ6Oa8-l0r8Pf16RjCsgDUbsvOPotAGU&callback=initMap";
-  //http.get<json>()
-  //function getMap(): JSON{
-
-  //}
+  title = 'AnguarFrontend';
 }

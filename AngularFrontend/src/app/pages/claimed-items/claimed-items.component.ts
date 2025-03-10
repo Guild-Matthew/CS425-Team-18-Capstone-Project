@@ -1,4 +1,4 @@
-// Someone and Shane Petree
+//Mary Cottier, Shane Petree
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';

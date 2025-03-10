@@ -1,47 +1,49 @@
-// Someone and Shane Petree
+//Mary Cottier, Shane Petree
 import { Component } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router'; // Shane Petree
 
 @Component({
-  selector: 'app-add-item',
-  templateUrl: './add-item.component.html',
-  styleUrls: ['./add-item.component.css'],
-  standalone: true,
-  imports: [FormsModule, RouterLink]
+ selector: 'app-add-item',
+ templateUrl: './add-item.component.html',
+styleUrls: ['./add-item.component.css'],
+ standalone: true,
+ imports: [FormsModule, RouterLink]
 })
 export class AddItemComponent {
-  item: any = {
-    worker: '',
-    location: '',
-    dateFound: '',
-    locationFound: '',
-    itemType: '',
-    description: '',
-    imagePhoto: null
-  };
-
-  onSubmit(form?: NgForm) {
-    if (form && form.valid) {
-      console.log('Form Submitted:', this.item);
-      // Logic to send data to a backend API can be implemented here
-      alert('Item successfully added!');
-      form.resetForm();
-    }
-  }
+ item: any = {
+	 worker: '',
+	 location: '',
+	 dateFound: '',
+	 locationFound: '',
+	 itemType: '',
+	 description: '',
+	 imagePhoto: null
+ };
 
 
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.item.imagePhoto = file;
-      console.log('File selected:', file.name);
-    }
-  }
+ onSubmit(form?: NgForm) {
+	 if (form && form.valid) {
+		 console.log('Form Submitted:', this.item);
+		 // Logic to send data to a backend API can be implemented here
+		 alert('Item successfully added!');
+		 form.resetForm();
+	 }
+ }
 
 
-  toggleClothingFields() {
-    console.log('Item type changed to:', this.item.itemType);
-    // Additional logic for specific item types can be added here
-  }
+ onFileSelected(event: any) {
+	 const file = event.target.files[0];
+	 if (file) {
+		 this.item.imagePhoto = file;
+		 console.log('File selected:', file.name);
+	 }
+ }
+
+
+ toggleClothingFields() {
+	 console.log('Item type changed to:', this.item.itemType);
+	 // Additional logic for specific item types can be added here
+ }
 }
+

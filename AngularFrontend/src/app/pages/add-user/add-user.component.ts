@@ -1,4 +1,4 @@
-// Matthew Guild and Shane Petree
+// Matthew Guild, Shane Petree
 
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';

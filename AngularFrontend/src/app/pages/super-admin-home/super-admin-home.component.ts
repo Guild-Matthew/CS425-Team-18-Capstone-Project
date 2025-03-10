@@ -4,10 +4,10 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-admin-home',
+  selector: 'app-super-admin-home',
   standalone: true,
   imports: [CommonModule, RouterLink],
-  templateUrl: './admin-home.component.html',
-  styleUrls: ['./admin-home.component.css']
+  templateUrl: './super-admin-home.component.html',
+  styleUrls: ['./super-admin-home.component.css']
 })
-export class AdminHomeComponent {}
+export class SuperAdminHomeComponent {}

@@ -1,4 +1,4 @@
-<!--Someone and Shane Petree-->
+<!--Mary Cottier, Shane Petree-->
 <div class="lost-and-found">
     <!-- Header Section -->
     <header>
@@ -14,9 +14,11 @@
                     <li><a routerLink="/dashboard">Dashboard</a></li>
                     <li><a routerLink="/map">Map</a></li>
                     <!-- Shane Petree -->
-                    <li><a routerLink="/add-item">Report an Item</a></li>
+                    <li><a routerLink="/add-item">Report Found Item</a></li>
                     <li><a routerLink="/remove-items">Remove an Item</a></li>
                     <li><a routerLink="/claimed-items">Claimed Items</a></li>
+
+                    <li><a routerLink="/login">Logout</a></li>
                 </ul>
             </nav>
         </div>
@@ -47,21 +49,20 @@
                 </select>
             </div>
 
-            <!--task This section throws errors-->
             <!-- Dynamically display subtypes based on the selected filter type -->
-            <!--<div *ngIf="filterType === 'clothing'" class="clothing-filter">
-              <h3>Clothing and Accessories:</h3>
-              <label *ngFor="let subType of categories.clothing">
-              <input type="checkbox" (change)="onSubtypeChange($event, 'clothing')" [value]="subType"> {{ subType }}
-              </label><br>
-            </div>
+            <!-- <div *ngIf="filterType === 'clothing'" class="clothing-filter">
+                <h3>Clothing and Accessories:</h3>
+                <label *ngFor="let subType of categories.clothing">
+                    <input type="checkbox" (change)="onSubtypeChange($event, 'clothing')" [value]="subType"> {{ subType }}
+                </label><br>
+            </div> -->
 
-            <div *ngIf="filterType === 'electronics'" class="electronics-filter">
-              <h3>Electronics/Technology:</h3>
-              <label *ngFor="let subType of categories.electronics">
-                <input type="checkbox" (change)="onSubtypeChange($event, 'electronics')" [value]="subType"> {{ subType }}
-              </label><br>
-            </div>-->
+            <!-- <div *ngIf="filterType === 'electronics'" class="electronics-filter">
+                <h3>Electronics/Technology:</h3>
+                <label *ngFor="let subType of categories.electronics">
+                    <input type="checkbox" (change)="onSubtypeChange($event, 'electronics')" [value]="subType"> {{ subType }}
+                </label><br>
+            </div> -->
         </aside>
 
         <!-- Products Section -->
