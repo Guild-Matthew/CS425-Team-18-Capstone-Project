@@ -11,7 +11,6 @@ import { AddUserComponent } from './pages/add-user/add-user.component';
 //task map page doesn't work yet
 //import { MapComponent } from './map/map.component';
 
-
 export const routes: Routes = [
   //{
   //task map page doesn't work yet

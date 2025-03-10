@@ -26,8 +26,8 @@ export const appConfig: ApplicationConfig = {
 
 @Injectable({ providedIn: 'root' })
 export class ConfigService {
-	//constructor(private http: HttpClient) {
-	//  // This service can now make HTTP requests via `this.http`.
-	//}
+	constructor(private http: HttpClient) {
+	  // This service can now make HTTP requests via `this.http`.
+	}
 
 }

@@ -26,7 +26,6 @@ import { flask_URL } from '../../app.config';
 		MatButtonModule,
 		RouterLink,
 		ReactiveFormsModule,
-		Observable,
 	],
 })
 
@@ -62,11 +61,11 @@ export class LoginComponent implements OnInit{
 
 		const headers = { 'Content-Type': 'application/json' };
 
-		//this.http.post('http://localhost:52363/login', loginData, { headers }).subscribe(
+		this.http.post('http://localhost:52363/login', JSON.stringify(this.loginForm), {observe: 'response' }).subscribe(
 			//(response: any) => {
 		//this.http.post(flask_URL + '/login', loginData, { headers }).subscribe(
 
-		this.http.post('http://localhost:52363/login', loginData, {observe: 'response'}).subscribe(
+		//this.http.post('http://localhost:52363/login', loginData, {observe: 'response'}).subscribe(
 			(response: any) => {
 				console.log("Backend Response:", response);  // Check what the backend returns
 				if (response.success) {
