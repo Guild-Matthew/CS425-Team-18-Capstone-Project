@@ -80,7 +80,6 @@ header {
   .hero {
     flex-grow: 1; /* Fills remaining space */
     position: relative;
-    /* Shane Petree */
     background-image: url(../../../assets/campus_image.jpg);
     background-size: cover;
     background-position: center;

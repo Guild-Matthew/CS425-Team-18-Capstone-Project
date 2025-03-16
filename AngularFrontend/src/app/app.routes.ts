@@ -9,6 +9,7 @@ import { AddItemComponent } from './pages/add-item/add-item.component';
 import { ClaimedItemsComponent } from './pages/claimed-items/claimed-items.component';
 import { AdminHomeComponent } from './pages/admin-home/admin-home.component';
 import { SuperAdminHomeComponent } from './pages/super-admin-home/super-admin-home.component';
+import { MapComponent } from './pages/map/map.component';
 
 export const routes: Routes = [
   { path: 'admin-home', component: AdminHomeComponent },
@@ -21,6 +22,7 @@ export const routes: Routes = [
   { path: 'lost-and-found', component: LostAndFoundComponent },
   { path: 'add-item', component: AddItemComponent },
   { path: 'claimed-items', component: ClaimedItemsComponent },
+  { path: 'map', component: MapComponent },
   //task this would be better if it was an error:404 page
   { path: '**', redirectTo: 'login' } // Handles unknown paths
 ];
