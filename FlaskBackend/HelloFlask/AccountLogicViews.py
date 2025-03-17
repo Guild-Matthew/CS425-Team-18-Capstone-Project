@@ -57,6 +57,8 @@ def logout():
 @account_bp.route('/adduser', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def addUser():
+    print("Session before authorization:", dict(session))
+
     print("Session details:", session)
 
     # Check if the session has a valid user and that the role is 'admin'
