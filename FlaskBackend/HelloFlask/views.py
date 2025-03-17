@@ -140,30 +140,33 @@ def remove_items():
     }
     return jsonify(response)
 
-
-
 @main_bp.route('/claimedItems', methods=['GET', 'POST'])
+@cross_origin(supports_credentials=True)
 def ClaimedItems():
+        user_id = request.args.get('user_id')  
+        role = request.args.get('role')
+        if not user_id:
+            return jsonify({"error": "Unauthorized - Missing User ID"}), 401
 
-        # Handle POST request (when an item is being deleted)
-        username = session.get('username')
-        uid = db_queries.getUserId(username)
-        buildings = db_queries.getBuildingsFromPermissions(uid)
-        selected_building = request.args.get('building') #Get building from url arguments 
-        if selected_building is None or selected_building == '':
-            if buildings:#If its the users first time in the page default to first building access
-                selected_building = buildings[0]
-            else:
-                selected_building = None 
-        filter_type = request.args.get('filterType', 'all')  # Default to 'all'
-        sort_order = request.args.get('sort', 'oldest') # Get sorting order (default to oldest)
-        # If "all" is selected, fetch all items; otherwise, filter by the selected type
+        buildings = db_queries.getBuildingsFromPermissions(user_id)
+        selected_building = request.args.get('building', buildings[0] if buildings else None)
+        sort_order = request.args.get('sort', 'oldest')
         order = "ASC" if sort_order == "oldest" else "DESC"
+        filter_type = request.args.get('filterType', 'all')
+
         if filter_type == 'all':
-            items = db_queries.get_Claimed_items(selected_building, order)  # Fetch all items
+            items = db_queries.get_Claimed_items(selected_building, order)
         else:
-            items = db_queries.get_Claimed_items_by_type(selected_building, filter_type, order)  # Fetch filtered items
-        return jsonify(items)
+            items = db_queries.get_Claimed_items_by_type(filter_type, selected_building, order)
+
+        response = {
+        "items": [{"type": item[0], "location": item[1], "description": item[2], "dateFound": item[3], "lfLocation": selected_building} for item in items],
+        "sort_order": sort_order,
+        "filterType": filter_type,
+        "buildings": buildings,
+        "selected_building": selected_building
+        }
+        return jsonify(response)
 
 @main_bp.route('/addBuilding', methods=['GET', 'POST'])
 def addBuilding():

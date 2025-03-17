@@ -1,4 +1,4 @@
-<!--Mary Cottier, Shane Petree-->
+<!--Mary Cottier, Shane Petree, Guilherme Cassiano-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -35,27 +35,34 @@
 
     <div class="main-content">
         <!-- Sidebar for Sort and Filter -->
-        <aside class="sidebar">
-            <h2>Sort & Filter</h2>
-            <!-- Sort section -->
-            <div class="filter-section">
-                <label for="sort">Sort By:</label>
-                <select id="sort" (change)="sortItems($event)">
-                    <option value="oldest" [selected]="sortOrder === 'oldest'">Date Claimed: Oldest</option>
-                    <option value="newest" [selected]="sortOrder === 'newest'">Date Claimed: Newest</option>
-                </select>
-            </div>
-            <!-- Filter section -->
-            <div class="filter-section">
-                <label for="filterType">Filter by Type:</label>
-                <select id="filterType" (change)="filterItems($event)">
-                    <option value="all" [selected]="filterType === 'all'">All</option>
-                    <option value="clothing" [selected]="filterType === 'clothing'">Clothing</option>
-                    <option value="technology" [selected]="filterType === 'technology'">Technology</option>
-                    <option value="misc" [selected]="filterType === 'misc'">Miscellaneous</option>
-                </select>
-            </div>
-        </aside>
+      <aside class="sidebar">
+        <h2>Sort & Filter</h2>
+        <!-- Sort section -->
+        <div class="filter-section">
+          <label for="sort">Sort By:</label>
+          <select id="sort" (change)="onSortChange($event)">
+            <option value="oldest" [selected]="sortOrder === 'oldest'">Date Claimed: Oldest</option>
+            <option value="newest" [selected]="sortOrder === 'newest'">Date Claimed: Newest</option>
+          </select>
+        </div>
+        <!-- Filter section -->
+        <div class="filter-section">
+          <label for="filterType">Filter by Type:</label>
+          <select id="filterType" (change)="onFilterChange($event)">
+            <option value="all" [selected]="filterType === 'all'">All</option>
+            <option value="clothing" [selected]="filterType === 'clothing'">Clothing</option>
+            <option value="technology" [selected]="filterType === 'technology'">Technology</option>
+            <option value="misc" [selected]="filterType === 'misc'">Miscellaneous</option>
+          </select>
+        </div>
+        <!--Building Section-->
+        <div class="filter-section">
+          <label for="building">Lost and Found Location:</label>
+          <select id="building" [(ngModel)]="building" (change)="fetchItems()">
+            <option *ngFor="let b of buildings" [value]="b">{{ b }}</option>
+          </select>
+        </div>
+      </aside>
 
         <!-- Products Section -->
         <section id="products">

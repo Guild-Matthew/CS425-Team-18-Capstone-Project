@@ -1,48 +1,71 @@
-//Mary Cottier, Shane Petree
-import { CommonModule } from '@angular/common';
+//Mary Cottier, Shane Petree, Guilherme Cassiano
 import { Component, OnInit } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { flask_URL } from '../../app.config';
+import { CommonModule } from '@angular/common';
+import { RouterLink, ActivatedRoute } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-claimed-items',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, HttpClientModule, FormsModule],
   templateUrl: './claimed-items.component.html',
   styleUrls: ['./claimed-items.component.css'],
 })
 export class ClaimedItemsComponent implements OnInit {
-  building: string = 'Default Building';
-  sortOrder: string = 'newest';
+  sortOrder: string = 'oldest';
   filterType: string = 'all';
+  building: string = '';
   items: any[] = [];
+  buildings: string[] = [];
 
-  constructor(private router: Router) {}
+  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
-    this.loadItems();
+    this.route.queryParams.subscribe(params => {
+      this.building = params['building'] || '';
+      this.fetchItems();
+    });
   }
 
-  loadItems(): void {
-    // Mock data for testing
-    this.items = [
-      { type: 'Clothing', location: 'Library', dateFound: '2025-01-10', dateClaimed: '2025-01-15', description: 'Blue Jacket' },
-      { type: 'Technology', location: 'Cafeteria', dateFound: '2025-02-01', dateClaimed: '2025-02-10', description: 'Laptop Charger' },
-      { type: 'Miscellaneous', location: 'Gym', dateFound: '2025-03-05', dateClaimed: '2025-03-07', description: 'Water Bottle' }
-    ];
+  fetchItems(): void {
+    const userId = localStorage.getItem('user_id');
+    const role = localStorage.getItem('role');
+
+    if (!userId) {
+      console.error("No user ID found. Redirecting to login.");
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    if (!this.building) {
+      this.building = "Please select a building";
+    }
+
+    const url = `${flask_URL}/remove_item?user_id=${userId}&role=${role}&building=${this.building}&filterType=${this.filterType}&sort=${this.sortOrder}`;
+
+    console.log("Fetching items from:", url);
+
+    this.http.get<any>(url, { withCredentials: true }).subscribe(
+      data => {
+        console.log("Data received:", data);
+        this.items = data.items;
+        this.buildings = data.buildings;
+      },
+      error => console.error("Error fetching items:", error)
+    );
+  }
+  onSortChange(event: any): void {
+    this.sortOrder = event.target.value;
+    this.fetchItems();
   }
 
-  sortItems(event: Event): void {
-    this.sortOrder = (event.target as HTMLSelectElement).value;
-    this.applyFilters();
+  onFilterChange(event: any): void {
+    this.filterType = event.target.value;
+    this.fetchItems();
   }
+ }
 
-  filterItems(event: Event): void {
-    this.filterType = (event.target as HTMLSelectElement).value;
-    this.applyFilters();
-  }
-
-  applyFilters(): void {
-    let url = `/claimedItems?filterType=${this.filterType}&sort=${this.sortOrder}&building=${this.building}`;
-    this.router.navigateByUrl(url);
-  }
-}
