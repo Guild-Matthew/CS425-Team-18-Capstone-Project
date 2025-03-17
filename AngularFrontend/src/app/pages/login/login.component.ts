@@ -43,17 +43,28 @@ export class LoginComponent {
     // Shane Petree 1 line, updated flask URL in http request
     this.http.post(flask_URL + '/login', loginData, { headers }).subscribe(
       (response: any) => {
+
         if (response.success) {
-          localStorage.setItem('user', JSON.stringify(response.user));
-          if (response.user.role === 'admin') {
+
+          localStorage.setItem('user_id', response.user_id);
+          localStorage.setItem('role', response.role);
+
+          if (response.role === 'admin') {
             this.router.navigate(['/admin-home']);
-          } else if(response.user.role === 'superadmin'){
+          }
+          else if (response.role === 'superadmin') {
             this.router.navigate(['/super-admin-home']);
-          }else{
+          }
+          else if (response.role === 'student') {
             this.router.navigate(['/dashboard']);
           }
+        } else {
+          console.error(" Login failed: No success flag in response.");
         }
       },
+      (error) => {
+        console.error(" Login failed:", error);
+      }
     );
   }
 }  

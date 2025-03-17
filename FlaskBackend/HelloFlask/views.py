@@ -1,10 +1,11 @@
 # This file was implemented by Guilherme Domingues Cassiano
 # A section by Shane Petree
-from flask import render_template, request, redirect, url_for, Blueprint, jsonify, session, current_app
+from flask import render_template, request, redirect, url_for, Blueprint, jsonify, session, current_app, Flask
 from HelloFlask.queries import Queries
 from datetime import datetime 
 import os
 from werkzeug.utils import secure_filename
+from flask_cors import cross_origin
 # Create an instance of the Queries class for database operations
 db_queries = Queries()
 main_bp = Blueprint('main', __name__)
@@ -40,7 +41,7 @@ def info():
         items = db_queries.get_items_by_type(filter_type, building, order)
 
     # Render the template with building and filtered items
-    return render_template('L&F.html', items=items, filter_type=filter_type, sort_order=sort_order, building=building)
+    return jsonify(items)
     
     # return the query as json data
     # return jsonify(items)
@@ -88,52 +89,62 @@ def Reportitems():
 
 
 @main_bp.route('/remove_item', methods=['GET', 'POST'])
-def Removeitems():
-    if 'user_id' in session:
-        # Handle POST request (when an item is being deleted)
-        username = session.get('username')
-        uid = db_queries.getUserId(username)
-        buildings = db_queries.getBuildingsFromPermissions(uid)
-        selected_building = request.args.get('building') #Get building from url arguments 
-        if selected_building is None or selected_building == '':
-            if buildings:#If its the users first time in the page default to first building access
-                selected_building = buildings[0]
-            else:
-                selected_building = None 
-        sort_order = request.args.get('sort', 'oldest') # Get sorting order (default to oldest)
-        # If "all" is selected, fetch all items; otherwise, filter by the selected type
-        order = "ASC" if sort_order == "oldest" else "DESC"
-        if request.method == 'POST':
-            # Retrieve item details from the form
-            item_type = request.form['itemType']
-            location_found = request.form['locationFound']
-            date_found = request.form['dateFound']
-            description = request.form['description']
-            dateClaimed = datetime.now().strftime('%Y-%m-%d')
-            # Call the delete query
-            db_queries.insert_Claimed_item(item_type, location_found, description, date_found, dateClaimed, selected_building)
-            db_queries.deleteItem(item_type, location_found, date_found, description)
-            # Redirect back to the remove_item page to show the updated list
-            return redirect(url_for('main.Removeitems', building=selected_building))
-        # Handle GET request (render the items)
-        # Get the filter value from the query string (default to 'all')
-        filter_type = request.args.get('filterType', 'all')
-        # Fetch items based on the filter
-        if filter_type == 'all':
-            items = db_queries.get_items(selected_building,order )  # Fetch all items
-        else:
-            items = db_queries.get_items_by_type(filter_type, selected_building, order)  # Fetch filtered items
+@cross_origin(supports_credentials=True)
+def remove_items():
+    if request.method == 'POST': 
+        data = request.get_json() 
+        user_id = data.get('user_id')
+        role = data.get('role')
 
-        # Render the template with items and filterType
-        return render_template('/remove_item.html', items=items, sort_order=sort_order, filterType=filter_type, buildings=buildings, selected_building=selected_building)
+        if not user_id:
+            return jsonify({"error": "Unauthorized - Missing User ID"}), 401
+
+        item_type = data.get('itemType')
+        location_found = data.get('locationFound')
+        date_found = data.get('dateFound')
+        description = data.get('description')
+        dateClaimed = datetime.now().strftime('%Y-%m-%d')
+        lostAndFindLocation = data.get('lfLocation')
+
+        if not all([item_type, location_found, date_found, description]):
+            return jsonify({"error": "Missing fields"}), 400
+
+        db_queries.insert_Claimed_item(item_type, location_found, description, date_found, dateClaimed, lostAndFindLocation)
+        db_queries.deleteItem(item_type, location_found, date_found, description)
+
+        return jsonify({"message": "Item removed successfully"}), 200
+
+    user_id = request.args.get('user_id')  
+    role = request.args.get('role')
+
+    if not user_id:
+        return jsonify({"error": "Unauthorized - Missing User ID"}), 401
+
+    buildings = db_queries.getBuildingsFromPermissions(user_id)
+    selected_building = request.args.get('building', buildings[0] if buildings else None)
+    sort_order = request.args.get('sort', 'oldest')
+    order = "ASC" if sort_order == "oldest" else "DESC"
+    filter_type = request.args.get('filterType', 'all')
+
+    if filter_type == 'all':
+        items = db_queries.get_items(selected_building, order)
     else:
-        session['next_url'] = request.url
-        return redirect(url_for('account.login'))
+        items = db_queries.get_items_by_type(filter_type, selected_building, order)
+
+    response = {
+        "items": [{"type": item[0], "location": item[1], "description": item[2], "dateFound": item[3], "lfLocation": selected_building} for item in items],
+        "sort_order": sort_order,
+        "filterType": filter_type,
+        "buildings": buildings,
+        "selected_building": selected_building
+    }
+    return jsonify(response)
+
 
 
 @main_bp.route('/claimedItems', methods=['GET', 'POST'])
 def ClaimedItems():
-    if 'user_id' in session:
+
         # Handle POST request (when an item is being deleted)
         username = session.get('username')
         uid = db_queries.getUserId(username)
@@ -152,10 +163,7 @@ def ClaimedItems():
             items = db_queries.get_Claimed_items(selected_building, order)  # Fetch all items
         else:
             items = db_queries.get_Claimed_items_by_type(selected_building, filter_type, order)  # Fetch filtered items
-        return render_template("claimedItems.html", items=items, sort_order=sort_order, filterType=filter_type, buildings=buildings, selected_building=selected_building)
-    else:
-        session['next_url'] = request.url
-        return redirect(url_for('account.login'))
+        return jsonify(items)
 
 @main_bp.route('/addBuilding', methods=['GET', 'POST'])
 def addBuilding():
@@ -255,7 +263,6 @@ def EditFloor():
 
 @main_bp.route('/RedirectDashboard')
 def RedirectDashboard():
-    # Check if the user is logged in (assuming `user_id` is stored in the session)
     if 'user_id' in session:
         role = session['role']
         if role == 'admin':

@@ -1,20 +1,20 @@
 # Guilherme Cassiano, Shane Petree, Mary Cottier
 from pickle import TRUE
-from flask import Blueprint, jsonify, render_template, request, redirect, url_for, flash, session
+from flask import Blueprint, jsonify, render_template, request, redirect, url_for, flash, session, make_response
 from HelloFlask.queries import Queries  
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import tempfile
-
+from flask_cors import cross_origin
 # Instance of Queries for database access
 db_queries = Queries()
 account_bp = Blueprint('account', __name__)
 
-# Mary Cottier
 # handles the login http request from angular
 @account_bp.route('/login', methods=['POST'])
+@cross_origin(supports_credentials=True) 
 def login():
-    data = request.get_json()  # Get the JSON data from the request
+    data = request.get_json() # Get the JSON data from the request
     username = data.get('NetId')
     password = data.get('password')
 
@@ -25,22 +25,16 @@ def login():
         session['user_id'] = user['uid']
         session['role'] = user['role']
         session['username'] = user['username']
-        
-        response = {
-            'success': True,
-            'user': {
-                'uid': user['uid'],
-                'role': user['role'],
-                'username': user['username'],
-            }
-        }
-    else:
-        response = {
-            'success': False,
-        }
-    
-    return jsonify(response)
+        session.permanent = True 
 
+        return jsonify({
+            'success': True,
+            'user_id': user['uid'],
+            'role': user['role'],
+            'username': user['username']
+        }), 200
+    else:
+        return jsonify({'success': False, 'error': "Invalid credentials"}), 401
 # @account_bp.route('/admdashboard', methods=['GET'])
 # def admDashboard():
 # 	return render_template("AccountLogic/admin_home.html")

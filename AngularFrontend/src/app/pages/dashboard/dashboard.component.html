@@ -1,39 +1,40 @@
-<!--Matthew Guild, Shane Petree-->
-<div class="main-container">
-    <header>
-        <div class="logo-group">
-          <img class="university-logo-large-img align-image-bottom" alt="University of Nevada, Reno" src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg" width="65" height="65">
-          <span class="logo-text-new align-text-middle">University of Nevada, Reno</span>
-        </div>
-        <nav>
-          <ul>
-            <!-- Shane Petree -->
-            <li><a routerLink="/dashboard">Dashboard</a></li>
-            <li><a routerLink="/add-item">Report Lost Item</a></li>
-            <li><a routerLink="/lost-and-found">View Items</a></li>
+<!--Matthew Guild, Shane Petree, Guilherme Cassiano-->
+<span *ngIf="role !== 'student'">
+  <a routerLink="/login">Login</a>
+</span>
 
-            <li><a routerLink="">Help</a></li>
-            <li><a routerLink="/login">Logout</a></li>
-          </ul>
-        </nav>
-      </header>
-  
-    <!-- Hero Section -->
-    <section class="hero">
-      <div class="hero-overlay"></div>
-      <div class="hero-content">
-        <h1>Welcome to Lost and Found</h1>
-        <p>Here you can report lost items, view found items, and check for updates.</p>
-        <div class="hero-buttons">
-          <!-- Shane Petree -->
-          <a routerLink="/add-item" class="hero-button">Report Lost Item</a>
-        </div>
+<div class="main-container" *ngIf="role === 'student'">
+  <header>
+    <div class="logo-group">
+      <img class="university-logo-large-img align-image-bottom" alt="University of Nevada, Reno"
+           src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg" width="65" height="65">
+      <span class="logo-text-new align-text-middle">University of Nevada, Reno</span>
+    </div>
+    <nav>
+      <ul>
+        <li><a routerLink="/map">Map</a></li>
+        <li><a routerLink="">Help</a></li>
+        <li><a (click)="logout()">Logout</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h1>Welcome to Lost and Found</h1>
+      <p>Here you can report lost items, view found items, and check for updates.</p>
+      <div class="hero-buttons">
+        <a routerLink="/add-item" class="hero-button">Report Lost Item</a>
+        <a routerLink="/claimed-items" class="hero-button">View Claimed Items</a>
+        <a routerLink="/remove-item" class="hero-button">Remove an Item</a>
       </div>
-    </section>
-  
-    <!-- Footer -->
-    <footer>
-      <p>&copy; 2025 University of Nevada, Reno. Lost and Found Service.</p>
-    </footer>
-  </div>
-  
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 University of Nevada, Reno. Lost and Found Service.</p>
+  </footer>
+</div>

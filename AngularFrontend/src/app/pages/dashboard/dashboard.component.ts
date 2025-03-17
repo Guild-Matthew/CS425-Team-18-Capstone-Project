@@ -1,7 +1,6 @@
-// Matthew Guild, Shane Petree
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router'; // Shane Petree
+import { RouterLink, Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -10,4 +9,29 @@ import { RouterLink } from '@angular/router'; // Shane Petree
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent {}
+export class DashboardComponent {
+  role: string | null = null;
+
+  constructor(private router: Router) { }
+
+  ngOnInit() {
+    this.checkLoginStatus();
+  }
+
+  checkLoginStatus() {
+    this.role = localStorage.getItem('role');  
+
+    if (this.role !== 'student') {
+      console.error("User is not a student. Redirecting to login.");
+      this.router.navigate(['/login']);
+    } else {
+      console.log(`User is logged in as: ${this.role}`);
+    }
+  }
+
+  logout() {
+    localStorage.removeItem('role');  
+    localStorage.removeItem('user_id');  
+    this.router.navigate(['/login']);
+  }
+}
