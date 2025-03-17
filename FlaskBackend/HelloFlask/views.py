@@ -47,46 +47,50 @@ def info():
     # return jsonify(items)
 
 @main_bp.route('/Items', methods=['GET', 'POST'])
+@cross_origin(supports_credentials=True)
 def Reportitems():
-    if 'user_id' in session:
-        username = session.get('username')
-        #print(username)
-        uid = db_queries.getUserId(username)
-        #print(uid)
-        buildings = db_queries.getBuildingsFromPermissions(uid)
-        if request.method == 'POST':
-            dateFound = request.form['dateFound']
-            locationFound = request.form['locationFound']
-            itemType = request.form['itemType']
-            description = request.form['description']
-            location = request.form['location']
+    if request.method == 'POST':
+        user_id = request.form.get('user_id')
+        role = request.form.get('role')
 
-            # Use the application's root path to construct the upload folder path
-            upload_folder = os.path.join(current_app.root_path, 'static', 'uploads')
-            os.makedirs(upload_folder, exist_ok=True)
+        if not user_id:
+            return jsonify({"error": "Unauthorized - Missing User ID"}), 401
 
-            image_file = request.files.get('imagePhoto')
-            relative_path = None 
+        item_type = request.form.get('itemType')
+        location_found = request.form.get('locationFound')
+        date_found = request.form.get('dateFound') #Should we have this? We can just use datetime.now to get the date when the form was submited 
+        description = request.form.get('description')
+        lostAndFindLocation = request.form.get('location')  
 
-            if image_file and image_file.filename:
-                filename = secure_filename(image_file.filename)
-                file_path = os.path.join(upload_folder, filename)
-                try:
-                    image_file.save(file_path)
-                    # Save the relative path for use in templates
-                    relative_path = os.path.join('uploads', image_file.filename).replace('\\', '/')
-                except Exception as e:
-                    print(f"Error saving file: {e}")
+        if not all([item_type, location_found, date_found, description, lostAndFindLocation]):
+            return jsonify({"error": "Missing fields"}), 400
 
-            # Insert item into the database
-            db_queries.insert_item(itemType, locationFound, description, dateFound, location, relative_path)
-            return redirect(url_for('main.Reportitems'))
+        upload_folder = os.path.join(current_app.root_path, 'static', 'uploads')
+        os.makedirs(upload_folder, exist_ok=True)
 
-        return render_template('items.html', buildings=buildings)
-    else:
-        session['next_url'] = request.url
-        return redirect(url_for('account.login'))
+        image_file = request.files.get('imagePhoto')
+        relative_path = None  
 
+        if image_file and image_file.filename:
+            filename = secure_filename(image_file.filename)
+            file_path = os.path.join(upload_folder, filename)
+            try:
+                image_file.save(file_path)
+                relative_path = os.path.join('uploads', filename).replace('\\', '/')
+            except Exception as e:
+                print(f"Error saving file: {e}")
+
+        db_queries.insert_item(item_type, location_found, description, date_found, lostAndFindLocation, relative_path)
+
+        return jsonify({"message": "Item added successfully"}), 200
+
+    user_id = request.args.get('user_id')  
+    if not user_id:
+        return jsonify({"error": "Unauthorized - Missing User ID"}), 401
+
+    buildings = db_queries.getBuildingsFromPermissions(user_id)
+    
+    return jsonify({"buildings": buildings})
 
 @main_bp.route('/remove_item', methods=['GET', 'POST'])
 @cross_origin(supports_credentials=True)
@@ -103,7 +107,7 @@ def remove_items():
         location_found = data.get('locationFound')
         date_found = data.get('dateFound')
         description = data.get('description')
-        dateClaimed = datetime.now().strftime('%Y-%m-%d')
+        dateClaimed = datetime.now().strftime('%Y-%m-%d %H:%M')
         lostAndFindLocation = data.get('lfLocation')
 
         if not all([item_type, location_found, date_found, description]):
@@ -160,7 +164,7 @@ def ClaimedItems():
             items = db_queries.get_Claimed_items_by_type(filter_type, selected_building, order)
 
         response = {
-        "items": [{"type": item[0], "location": item[1], "description": item[2], "dateFound": item[3], "lfLocation": selected_building} for item in items],
+        "items": [{"type": item[0], "location": item[1], "description": item[2], "dateFound": item[3], "lfLocation": selected_building, "dateClaimed": item[4]} for item in items],
         "sort_order": sort_order,
         "filterType": filter_type,
         "buildings": buildings,

@@ -45,7 +45,7 @@ export class ClaimedItemsComponent implements OnInit {
       this.building = "Please select a building";
     }
 
-    const url = `${flask_URL}/remove_item?user_id=${userId}&role=${role}&building=${this.building}&filterType=${this.filterType}&sort=${this.sortOrder}`;
+    const url = `${flask_URL}/claimedItems?user_id=${userId}&role=${role}&building=${this.building}&filterType=${this.filterType}&sort=${this.sortOrder}`;
 
     console.log("Fetching items from:", url);
 

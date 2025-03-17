@@ -66,14 +66,14 @@
 
         <!-- Products Section -->
         <section id="products">
-            <h2>Found Items in Building: {{ building }}</h2>
+            <h2>Found Claimed Items in Building: {{ building }}</h2>
             <div class="product-grid">
                 <div class="product" *ngFor="let item of items">
-                    <h3><strong>Item type:</strong> <span>{{ item.type }}</span></h3>
-                    <h3><strong>Location found:</strong> <span>{{ item.location }}</span></h3>
-                    <h3><strong>Date found:</strong> <span>{{ item.dateFound }}</span></h3>
-                    <h3><strong>Date claimed:</strong> <span>{{ item.dateClaimed }}</span></h3>
-                    <h3><strong>Description:</strong> <span>{{ item.description }}</span></h3>
+                    <h3><strong>Item type: </strong> <span>{{ item.type }}</span></h3>
+                    <h3><strong>Location found: </strong> <span>{{ item.location }}</span></h3>
+                    <h3><strong>Date found: </strong> <span>{{ item.dateFound }}</span></h3>
+                    <h3><strong>Date claimed: </strong> <span>{{ item.dateClaimed }}</span></h3>
+                    <h3><strong>Description: </strong> <span>{{ item.description }}</span></h3>
                 </div>
                 <p *ngIf="items.length === 0">No items found for the selected filter.</p>
             </div>
