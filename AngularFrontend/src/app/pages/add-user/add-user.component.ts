@@ -24,9 +24,10 @@ export class AddUserComponent {
   addUserForm: FormGroup;
   buildings = [
     { id: 'AB', name: 'AB' },
-    { id: 'DLM', name: 'DLM' },
-    { id: 'JCSU', name: 'JCSU' },
-    { id: 'WFC', name: 'WFC' }
+    { id: 'DMSC', name: 'DMSC' },
+    { id: 'SEM', name: 'SEM' },
+    { id: 'WFC', name: 'WFC' },
+    { id: 'CFA', name: 'CFA' }
   ];
 
   constructor(private fb: FormBuilder, private http: HttpClient) {
@@ -66,7 +67,7 @@ export class AddUserComponent {
       const headers = new HttpHeaders({
         'Content-Type': 'application/json'  // Ensure content type is set for POST requests
       });
-      
+
       console.log("Submitting role:", this.addUserForm.value.role);
       console.log("Submitting user data:", userData);
       console.log('Request Headers:', headers);
