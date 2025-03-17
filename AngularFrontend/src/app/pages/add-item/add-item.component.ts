@@ -78,7 +78,7 @@ export class AddItemComponent implements OnInit {
       formData.append('imagePhoto', this.item.imagePhoto);
     }
 
-    console.log("🚀 Sending data:");
+    console.log("Sending data:");
     formData.forEach((value, key) => {
       console.log(`${key}: ${value}`);
     });

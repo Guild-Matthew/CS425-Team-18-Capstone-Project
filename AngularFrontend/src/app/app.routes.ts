@@ -13,6 +13,7 @@ import { MapComponent } from './pages/map/map.component';
 import { _404Component } from './pages/404/404.component';
 import { AuthGuard } from './auth.guard'; //Ensure only logged people can access certain pages
 import { RemoveItemComponent } from './pages/remove-item/remove-item.component';
+import { AddBuildingComponent } from './pages/add-building/add-building.component';
 
 export const routes: Routes = [
   { path: 'admin-home', component: AdminHomeComponent, canActivate: [AuthGuard] },
@@ -26,7 +27,8 @@ export const routes: Routes = [
   { path: 'add-item', component: AddItemComponent, canActivate: [AuthGuard] },
   { path: 'claimed-items', component: ClaimedItemsComponent, canActivate: [AuthGuard] },
   { path: 'map', component: MapComponent },
-  { path: 'remove-item', component: RemoveItemComponent, canActivate:[AuthGuard]},
+  { path: 'remove-item', component: RemoveItemComponent, canActivate: [AuthGuard] },
+  { path: 'add-building', component: AddBuildingComponent, canActivate: [AuthGuard] },
   //task this would be better if it was an error:404 page
   { path: '404', component: _404Component },
   { path: '**', redirectTo: '404' } // Handles unknown paths

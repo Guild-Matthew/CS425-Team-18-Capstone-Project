@@ -1,43 +1,43 @@
-<!--Mary Cottier-->
-<div class="main-container">
-    <header>
-      <div class="logo-group">
-        <img class="university-logo-large-img align-image-bottom" alt="University of Nevada, Reno" src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg" width="65" height="65">
-        <span class="logo-text-new align-text-middle">University of Nevada, Reno - Lost and Found Super-Admin</span>
+<!--Mary Cottier, Guilherme Cassiano-->
+<span *ngIf="role !== 'superadmin'">
+  <a routerLink="/login">Login</a>
+</span>
+
+<div class="main-container" *ngIf="role === 'superadmin'">
+  <header>
+    <div class="logo-group">
+      <img class="university-logo-large-img align-image-bottom" alt="University of Nevada, Reno" src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg" width="65" height="65">
+      <span class="logo-text-new align-text-middle">University of Nevada, Reno - Lost and Found Super-Admin</span>
+    </div>
+    <nav>
+      <ul>
+        <li><a routerLink="/map">Map</a></li>
+        <li><a routerLink="/super-admin-dashboard">Dashboard</a></li>
+        <li><a routerLink="/manage-items">Manage Items</a></li>
+        <li><a routerLink="/reports">Reports</a></li>
+        <li><a routerLink="/login">Logout</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h1>Super-Admin Dashboard</h1>
+      <p>Manage lost and found items, view reports, and oversee campus inventory.</p>
+      <div class="hero-buttons">
+        <a routerLink="/validate-account" class="hero-button">Validate Account</a>
+        <a routerLink="/deactivate-account" class="hero-button">Deactivate an Account</a>
+        <a routerLink="/add-building" class="hero-button">Add a Building</a>
+        <a routerLink="/edit-building" class="hero-button">Edit a Building</a>
+        <a routerLink="/edit-floor" class="hero-button">Edit a Floor</a>
       </div>
-      <nav>
-        <ul>
-          <li><a routerLink="/map">Map</a></li>
-          <li><a routerLink="/super-admin-dashboard">Dashboard</a></li>
-          <li><a routerLink="/manage-items">Manage Items</a></li>
-          <li><a routerLink="/reports">Reports</a></li>
-          <li><a routerLink="/login">Logout</a></li>
-        </ul>
-      </nav>
-    </header>
-  
-    <!-- Hero Section -->
-    <section class="hero">
-      <div class="hero-overlay"></div>
-      <div class="hero-content">
-        <h1>Super-Admin Dashboard</h1>
-        <p>Manage lost and found items, view reports, and oversee campus inventory.</p>
-        <div class="hero-buttons">
-          <a routerLink="/add-item" class="hero-button">Add New Item</a>
-          <a routerLink="/view-items" class="hero-button">View All Items</a>
-          <a routerLink="/generate-report" class="hero-button">Generate Report</a>
-          <a routerLink="/validate-account" class="hero-button">Validate Account</a>
-          <a routerLink="/deactivate-account" class="hero-button">Deactivate an Account</a>
-          <a routerLink="/add-building" class="hero-button">Add a Building</a>
-          <a routerLink="/edit-building" class="hero-button">Edit a Building</a>
-          <a routerLink="/edit-floor" class="hero-button">Edit a Floor</a>
-        </div>
-      </div>
-    </section>
-  
-    <!-- Footer Section -->
-    <footer>
-      <p>&copy; 2024 University of Nevada, Reno. Super-Admin Dashboard.</p>
-    </footer>
-  </div>
-  
+    </div>
+  </section>
+
+  <!-- Footer Section -->
+  <footer>
+    <p>&copy; 2024 University of Nevada, Reno. Super-Admin Dashboard.</p>
+  </footer>
+</div>

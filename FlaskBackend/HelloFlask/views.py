@@ -173,22 +173,28 @@ def ClaimedItems():
         return jsonify(response)
 
 @main_bp.route('/addBuilding', methods=['GET', 'POST'])
+@cross_origin(supports_credentials=True)
 def addBuilding():
-    if 'user_id' in session:
-        if request.method == 'POST':
-            BuildingCode = request.form.get('Building Code')
-            Latitude = request.form.get('Latitude')
-            Longitude = request.form.get('Longitude')
+    if request.method == 'POST':
+        user_id = request.form.get('user_id')
+        role = request.form.get('role')
+        BuildingCode = request.form.get('BuildingCode')
+        Latitude = request.form.get('Latitude')
+        Longitude = request.form.get('Longitude')
 
-            if not any([BuildingCode, Latitude, Longitude]):
-                error_message = 'Please fill out all fields on the form or upload a valid file.'
-                return render_template("AccountLogic/addBuilding.html", error=error_message)
+        print("Received from Frontend:")
+        print(f"user_id: {user_id}, role: {role}, BuildingCode: {BuildingCode}, Latitude: {Latitude}, Longitude: {Longitude}")
 
-            if all([BuildingCode, Latitude, Longitude]):
-                # Validate and process single-user form submission
-                #create a permission for each bulding
-                db_queries.createBuilding(BuildingCode, Latitude, Longitude)
-    return render_template("addBuilding.html")
+        if not user_id:
+            return jsonify({"error": "Unauthorized - Missing User ID"}), 401
+
+        if not all([BuildingCode, Latitude, Longitude]):
+            return jsonify({"error": "Missing fields"}), 400
+
+        # Save to Database
+        db_queries.createBuilding(BuildingCode, Latitude, Longitude)
+
+        return jsonify({"message": "Building added successfully!"}), 200
 
 @main_bp.route('/editBuilding', methods=['GET', 'POST'])
 def EditBuilding():
