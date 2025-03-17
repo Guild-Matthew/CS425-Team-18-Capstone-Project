@@ -5,6 +5,7 @@ from HelloFlask.queries import Queries
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import tempfile
+from flask_cors import cross_origin
 
 # Instance of Queries for database access
 db_queries = Queries()
@@ -13,47 +14,34 @@ account_bp = Blueprint('account', __name__)
 # Mary Cottier
 # handles the login http request from angular
 @account_bp.route('/login', methods=['POST'])
+@cross_origin(origins=["http://localhost:64749"], supports_credentials=True)
 def login():
-    data = request.get_json()  # Get the JSON data from the request
+    data = request.get_json()
     username = data.get('NetId')
     password = data.get('password')
 
-    # Retrieve user data from the database
     user = db_queries.getUser(username)
-    
+
     if user and user['active'] == True and check_password_hash(user['password'], password):
         session['user_id'] = user['uid']
         session['role'] = user['role']
         session['username'] = user['username']
-        
-        response = {
+        session['authToken'] = user['role']  # Store the role as authToken
+
+        print("Session after login:", dict(session))  # ✅ Print session data
+
+        return jsonify({
             'success': True,
             'user': {
                 'uid': user['uid'],
                 'role': user['role'],
                 'username': user['username'],
-            }
-        }
+            },
+            'authToken': user['role'] 
+        })
     else:
-        response = {
-            'success': False,
-        }
-    
-    return jsonify(response)
+        return jsonify({'success': False}), 401
 
-# @account_bp.route('/admdashboard', methods=['GET'])
-# def admDashboard():
-# 	return render_template("AccountLogic/admin_home.html")
-
-# @account_bp.route('/userdashboard', methods=['GET'])
-# def userDashboard():
-# 	return render_template("AccountLogic/user_home.html")
-
-# # Shane Petree
-# # Route for the super-admin page
-# @account_bp.route('/superdashboard', methods=['GET'])
-# def superDashboard():
-# 	return render_template("AccountLogic/super_home.html")
 
 @account_bp.route('/logout')
 def logout():
@@ -66,73 +54,44 @@ def logout():
     session.clear()
     return redirect(url_for('main.home'))
 
-@account_bp.route('/adduser', methods=['GET', 'POST'])
+@account_bp.route('/adduser', methods=['POST'])
+@cross_origin(supports_credentials=True)
 def addUser():
-    username = session.get('username')
-    uid = db_queries.getUserId(username)
-    buildingsDisplay = db_queries.getBuildingsFromPermissions(uid)
-    if request.method == 'POST':
-        # Check for file upload
-        file = request.files.get('batchFile')
-        if file and file.filename.endswith('.txt'):
-            # Process batch file
-            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-                file.save(temp_file.name)
-                file_path = temp_file.name
+    print("Session details:", session)
 
-            with open(file_path, 'r') as f:
-                for line in f:
-                    print(f"Processing line: {line.strip()}")
-                    parts = line.strip().split(',')
-                    if len(parts) == 4:
-                        netID, email, password, building = parts
-                        hashed_password = generate_password_hash(password)
-                        try:
-                            db_queries.createAccount(netID, hashed_password, email, 'student', building)
-                            print(f"User {netID} added successfully.")
-                        except Exception as e:
-                            print(f"Error adding user {netID}: {e}")
-                    else:
-                        print(f"Invalid line format: {line.strip()}")
+    # Check if the session has a valid user and that the role is 'admin'
+    if session.get('role') != 'admin':
+        return jsonify({'success': False, 'message': 'Unauthorized access'}), 403
 
-            os.remove(file_path)
-            return redirect(url_for('account.addUser',buildingsDisplay=buildingsDisplay ))
+    data = request.get_json()
+    username = data.get('netID')
+    password = data.get('password')
+    email = data.get('email')
+    role = data.get('role')  # Dynamic role from form
+    buildings = data.get('buildings')
 
-        # Check for single-user form submission
-        username = request.form.get('netID')
-        password = request.form.get('NetID password')
-        email = request.form.get('email')
-        buildings = request.form.getlist('building') 
+    if not all([username, password, email, role, buildings]):
+        return jsonify({'success': False, 'message': 'All fields are required'}), 400
 
-        if not any([file, username, password, email, buildings]):
-            error_message = 'Please fill out all fields on the form or upload a valid file.'
-            return render_template("AccountLogic/adduser.html", error=error_message, buildingsDisplay=buildingsDisplay)
+    if not email.endswith('@unr.edu'):
+        return jsonify({'success': False, 'message': 'Invalid email domain. Use @unr.edu'}), 400
 
-        if all([username, password, email, buildings]):
-            # Validate and process single-user form submission
-            if not email.endswith('@unr.edu'):
-                error_message = "Invalid email domain. Please use an @unr.edu email."
-                return render_template("AccountLogic/adduser.html", error=error_message, buildingsDisplay=buildingsDisplay)
-            #hash user passowrd
-            hashed_password = generate_password_hash(password)
-            #create account 
-            db_queries.createAccount(username, hashed_password, email, 'student')
-            #get user ID from netID
-            uid = db_queries.getUserId(username)
-            #create a permission for each bulding
-            for building in buildings:
-                bid = db_queries.getBuildingID(building)
-                db_queries.createPermissions(bid, uid)
-            
-            
-            print(f"User {username} added successfully.")
-            return redirect(url_for('account.addUser', buildingsDisplay=buildingsDisplay))
+    hashed_password = generate_password_hash(password)
 
-        # If neither file nor form is valid, show an error
-        error_message = 'Please provide a valid file or fill out the form completely.'
-        return render_template("AccountLogic/adduser.html", error=error_message, buildingsDisplay=buildingsDisplay)
+    try:
+        # Create user with dynamic role
+        db_queries.createAccount(username, hashed_password, email, role)
+        uid = db_queries.getUserId(username)
 
-    return render_template("AccountLogic/adduser.html", buildingsDisplay=buildingsDisplay)
+        # Create permissions for each building
+        for building in buildings:
+            bid = db_queries.getBuildingID(building)
+            db_queries.createPermissions(bid, uid)
+
+        return jsonify({'success': True, 'message': f'User {username} added successfully'})
+    except Exception as e:
+        print(f"Error adding user: {str(e)}")  # Log the error
+        return jsonify({'success': False, 'message': f'Internal Server Error: {str(e)}'}), 500
 
 @account_bp.route('/adduserSuper', methods=['GET', 'POST'])
 def addUserSuper():

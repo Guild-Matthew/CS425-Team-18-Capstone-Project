@@ -1,4 +1,4 @@
-//Matthew Guild, Mary Cottier, Shane Petree
+//Matthew Guild, Mary Cottier
 
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -39,21 +39,21 @@ export class LoginComponent {
     const loginData = { NetId: this.netId, password: this.password };
   
     const headers = { 'Content-Type': 'application/json' };
-
-    // Shane Petree 1 line, updated flask URL in http request
-    this.http.post(flask_URL + '/login', loginData, { headers }).subscribe(
+  
+    this.http.post(flask_URL + '/login', loginData, { headers, withCredentials: true }).subscribe(
       (response: any) => {
         if (response.success) {
           localStorage.setItem('user', JSON.stringify(response.user));
+          localStorage.setItem('authToken', response.authToken);
           if (response.user.role === 'admin') {
             this.router.navigate(['/admin-home']);
           } else if(response.user.role === 'superadmin'){
             this.router.navigate(['/super-admin-home']);
-          }else{
+          } else {
             this.router.navigate(['/dashboard']);
           }
         }
       },
     );
-  }
+  }  
 }  

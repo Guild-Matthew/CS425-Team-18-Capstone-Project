@@ -2,6 +2,8 @@
 import psycopg2
 from psycopg2 import sql
 from werkzeug.security import generate_password_hash, check_password_hash
+ALLOWED_ROLES = ['admin', 'user', 'staff']
+
 class Queries:
     def __init__(self):
         # Initialize the connection to the database
@@ -90,26 +92,33 @@ class Queries:
         return self.cursor.fetchall()  # Fetch all matching items
 
     # Query to create an account (admin or user)
-    def createAccount(self, username, password, email, role): #*
+    def createAccount(self, username, password, email, role):
+        if role not in ALLOWED_ROLES:
+            raise ValueError("Invalid role specified.")
+        hashed_password = generate_password_hash(password)
         query = """
             INSERT INTO users (username, password, email, role)
             VALUES (%s, %s, %s, %s)
         """
-        self.cursor.execute(query, (username, password, email, role))
+        self.cursor.execute(query, (username, hashed_password, email, role))
         self.conn.commit()
 
     # Query to check if user exists when logging in 
-    def getUser(self, username): # Only use username, remove email
-        self.cursor.execute("""
-        SELECT uid, username, password, role, active 
-        FROM users 
-        WHERE username = %s
-        """, (username,))
-        row = self.cursor.fetchone()
-        if row:
-            # Convert rows to a list of dictionaries
-            return {"uid": row[0], "username": row[1], "password": row[2], "role": row[3], "active": row[4]}  
-        return None
+    def getUser(self, username):
+        try:
+            self.cursor.execute("""
+                SELECT uid, username, password, role, active
+                FROM users
+                WHERE username = %s
+            """, (username,))
+            row = self.cursor.fetchone()
+            if row:
+                return {"uid": row[0], "username": row[1], "password": row[2], "role": row[3], "active": row[4]}
+            return None
+        except Exception as e:
+            print(f"Error fetching user {username}: {e}")
+            return None
+
 
 
     # Query to get all users for the "void" user page
