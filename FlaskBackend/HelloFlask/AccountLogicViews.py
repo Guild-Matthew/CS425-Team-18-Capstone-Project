@@ -97,6 +97,13 @@ def addUser():
         print(f"Error adding user: {str(e)}")  
         return jsonify({'success': False, 'message': f'Internal Server Error: {str(e)}'}), 500
 
+@account_bp.route('/getUserRole', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def get_user_role():
+    if 'role' in session:
+        return jsonify({'role': session['role']})
+    return jsonify({'role': None}), 401
+
 @account_bp.route('/VoidStudent', methods=['GET', 'POST'])
 def voidUser():
         if 'user_id' in session:

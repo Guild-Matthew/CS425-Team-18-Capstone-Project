@@ -1,5 +1,5 @@
-//Mary Cottier
-import { Component } from '@angular/core';
+// Mary Cottier
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -20,8 +20,11 @@ import { flask_URL } from '../../app.config';
   templateUrl: './add-user.component.html',
   styleUrls: ['./add-user.component.css'],
 })
-export class AddUserComponent {
+export class AddUserComponent implements OnInit {
+  userRole: string = ''; // Logged-in user's role
+  availableRoles: string[] = []; // Roles available for selection
   addUserForm: FormGroup;
+
   buildings = [
     { id: 'AB', name: 'AB' },
     { id: 'DMSC', name: 'DMSC' },
@@ -35,9 +38,32 @@ export class AddUserComponent {
       netID: ['', Validators.required],
       password: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      role: ['', [Validators.required]],
+      role: ['', [Validators.required]], // Role dropdown
       buildings: this.fb.array([]), // Stores selected buildings
     });
+  }
+
+  ngOnInit() {
+    // Fetch the logged-in user's role from the backend
+    this.http.get<{ role: string }>('http://localhost:52363/getUserRole', { withCredentials: true })
+      .subscribe(
+        response => {
+          this.userRole = response.role;
+          this.setAvailableRoles();
+        },
+        error => {
+          console.error('Error fetching user role:', error);
+        }
+      );
+  }
+
+  setAvailableRoles() {
+    // Set role options based on the logged-in user's role
+    if (this.userRole === 'admin') {
+      this.availableRoles = ['student']; // Admin can only add students
+    } else if (this.userRole === 'superadmin') {
+      this.availableRoles = ['student', 'admin', 'superadmin']; // Superadmin can add all roles
+    }
   }
 
   onCheckboxChange(event: any) {
@@ -54,6 +80,7 @@ export class AddUserComponent {
       }
     }
   }
+
   onSubmit() {
     if (this.addUserForm.valid) {
       const formData = this.addUserForm.value;
@@ -61,22 +88,20 @@ export class AddUserComponent {
         netID: formData.netID,
         password: formData.password,
         email: formData.email,
-        role: formData.role?.trim(),        buildings: formData.buildings,
+        role: formData.role?.trim(),
+        buildings: formData.buildings,
       };
-  
+
       const headers = new HttpHeaders({
-        'Content-Type': 'application/json'  // Ensure content type is set for POST requests
+        'Content-Type': 'application/json'
       });
 
       console.log("Submitting role:", this.addUserForm.value.role);
       console.log("Submitting user data:", userData);
-      console.log('Request Headers:', headers);
       
       this.http.post('http://localhost:52363/adduser', userData, { 
-        withCredentials: true,  // Ensures session cookies are sent!
-        headers: new HttpHeaders({
-          'Content-Type': 'application/json'
-        })
+        withCredentials: true,
+        headers
       })
       .subscribe(
         response => {
@@ -87,5 +112,5 @@ export class AddUserComponent {
         }
       );
     }
-  }      
+  }
 }
