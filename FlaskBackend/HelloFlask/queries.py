@@ -2,7 +2,7 @@
 import psycopg2
 from psycopg2 import sql
 from werkzeug.security import generate_password_hash, check_password_hash
-ALLOWED_ROLES = ['admin', 'user', 'staff']
+ALLOWED_ROLES = ['admin', 'superadmin', 'student']
 
 class Queries:
     def __init__(self):
