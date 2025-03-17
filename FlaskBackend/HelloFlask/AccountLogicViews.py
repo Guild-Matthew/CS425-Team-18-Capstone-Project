@@ -11,6 +11,8 @@ from flask_cors import cross_origin
 db_queries = Queries()
 account_bp = Blueprint('account', __name__)
 
+valid_roles = {"admin", "student", "superadmin"}
+
 # Mary Cottier
 # handles the login http request from angular
 @account_bp.route('/login', methods=['POST'])
@@ -59,20 +61,26 @@ def logout():
 def addUser():
     print("Session before authorization:", dict(session))
 
-    print("Session details:", session)
-
-    # Check if the session has a valid user and that the role is 'admin'
-    if session.get('role') != 'admin':
-        return jsonify({'success': False, 'message': 'Unauthorized access'}), 403
-
     data = request.get_json()
+    if not data:  
+        return jsonify({'error': 'Invalid JSON payload'}), 400  
+
     username = data.get('netID')
     password = data.get('password')
     email = data.get('email')
-    role = data.get('role')  # Dynamic role from form
-    buildings = data.get('buildings')
+    role = data.get('role')
 
-    if not all([username, password, email, role, buildings]):
+    if not role:
+        return jsonify({"error": "Role is required"}), 400  
+
+    role = role.strip().lower()  # ✅ Normalize role input
+    print(f"Received role: '{role}'")  # ✅ Debug output
+    print(f"Valid roles: {valid_roles}")  # ✅ Debug output
+
+    if role not in valid_roles:
+        return jsonify({"error": f"Invalid role specified: {role}"}), 400  # ✅ Include invalid role in error message
+
+    if not all([username, password, email, role]):
         return jsonify({'success': False, 'message': 'All fields are required'}), 400
 
     if not email.endswith('@unr.edu'):
@@ -81,18 +89,12 @@ def addUser():
     hashed_password = generate_password_hash(password)
 
     try:
-        # Create user with dynamic role
         db_queries.createAccount(username, hashed_password, email, role)
         uid = db_queries.getUserId(username)
 
-        # Create permissions for each building
-        for building in buildings:
-            bid = db_queries.getBuildingID(building)
-            db_queries.createPermissions(bid, uid)
-
         return jsonify({'success': True, 'message': f'User {username} added successfully'})
     except Exception as e:
-        print(f"Error adding user: {str(e)}")  # Log the error
+        print(f"Error adding user: {str(e)}")  
         return jsonify({'success': False, 'message': f'Internal Server Error: {str(e)}'}), 500
 
 @account_bp.route('/adduserSuper', methods=['GET', 'POST'])

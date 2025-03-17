@@ -60,15 +60,17 @@ export class AddUserComponent {
         netID: formData.netID,
         password: formData.password,
         email: formData.email,
-        role: formData.role, 
-        buildings: formData.buildings,
+        role: formData.role?.trim(),        buildings: formData.buildings,
       };
   
       const headers = new HttpHeaders({
         'Content-Type': 'application/json'  // Ensure content type is set for POST requests
       });
-  
+      
+      console.log("Submitting role:", this.addUserForm.value.role);
+      console.log("Submitting user data:", userData);
       console.log('Request Headers:', headers);
+      
       this.http.post('http://localhost:52363/adduser', userData, { 
         withCredentials: true,  // Ensures session cookies are sent!
         headers: new HttpHeaders({
