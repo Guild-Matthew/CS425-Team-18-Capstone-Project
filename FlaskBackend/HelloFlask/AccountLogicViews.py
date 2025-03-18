@@ -35,19 +35,6 @@ def login():
         }), 200
     else:
         return jsonify({'success': False, 'error': "Invalid credentials"}), 401
-# @account_bp.route('/admdashboard', methods=['GET'])
-# def admDashboard():
-# 	return render_template("AccountLogic/admin_home.html")
-
-# @account_bp.route('/userdashboard', methods=['GET'])
-# def userDashboard():
-# 	return render_template("AccountLogic/user_home.html")
-
-# # Shane Petree
-# # Route for the super-admin page
-# @account_bp.route('/superdashboard', methods=['GET'])
-# def superDashboard():
-# 	return render_template("AccountLogic/super_home.html")
 
 @account_bp.route('/logout')
 def logout():

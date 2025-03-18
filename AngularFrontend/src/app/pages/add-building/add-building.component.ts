@@ -54,12 +54,21 @@ export class AddBuildingComponent {
       (response: any) => {
         console.log("Building added successfully:", response);
         alert('Building successfully added!');
+        this.resetForm();
       },
       error => {
         console.error("Error adding building:", error);
         alert('Error adding building!');
       }
     );
+  }
+
+  resetForm(): void {
+    this.building = {
+      BuildingCode: '',
+      Latitude: '',
+      Longitude: '',
+    };
   }
 
 }
