@@ -52,18 +52,18 @@ nav ul li a {
 
 /* Hero Section */
 .hero {
-    position: relative;
-/*    background-image: url('/assets/images/campus_image.jpg');*/
-    /*Shane Petree*/
-    background-image: url('/src/assets/campus_image.jpg');
-    background-size: cover;
-    background-position: center;
-    height: 60vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    text-align: center;
+  position: relative;
+  /*    background-image: url('/assets/images/campus_image.jpg');*/
+  /*Shane Petree*/
+  background-image: url(../../../assets/campus_image.jpg);
+  background-size: cover;
+  background-position: center;
+  height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-align: center;
 }
 
 .hero-overlay {

@@ -6,6 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import tempfile
 from flask_cors import cross_origin
+import json
 # Instance of Queries for database access
 db_queries = Queries()
 account_bp = Blueprint('account', __name__)
@@ -48,11 +49,15 @@ def logout():
     return redirect(url_for('main.home'))
 
 @account_bp.route('/adduser', methods=['GET', 'POST'])
+@cross_origin(supports_credentials=True) 
 def addUser():
-    username = session.get('username')
-    uid = db_queries.getUserId(username)
-    buildingsDisplay = db_queries.getBuildingsFromPermissions(uid)
     if request.method == 'POST':
+        user_id = request.form.get('user_id')
+        role = request.form.get('role')
+
+        if not user_id:
+            return jsonify({"error": "Unauthorized - Missing User ID POST"}), 401
+
         # Check for file upload
         file = request.files.get('batchFile')
         if file and file.filename.endswith('.txt'):
@@ -77,43 +82,53 @@ def addUser():
                         print(f"Invalid line format: {line.strip()}")
 
             os.remove(file_path)
-            return redirect(url_for('account.addUser',buildingsDisplay=buildingsDisplay ))
+            #return redirect(url_for('account.addUser',buildingsDisplay=buildingsDisplay ))
 
         # Check for single-user form submission
         username = request.form.get('netID')
-        password = request.form.get('NetID password')
+        password = request.form.get('password')
         email = request.form.get('email')
-        buildings = request.form.getlist('building') 
+        selectedRole = request.form.get('role')
+        buildingsJSON = request.form.get('buildings')  #get full JSON from angular
+        try:
+            buildings = json.loads(buildingsJSON) #converts JSON to python list
+        except json.JSONDecodeError:
+            return jsonify({"error": "Invalid buildings format"}), 400
 
         if not any([file, username, password, email, buildings]):
-            error_message = 'Please fill out all fields on the form or upload a valid file.'
-            return render_template("AccountLogic/adduser.html", error=error_message, buildingsDisplay=buildingsDisplay)
+            return jsonify({"error": "Missing fields"}), 400
 
         if all([username, password, email, buildings]):
             # Validate and process single-user form submission
             if not email.endswith('@unr.edu'):
-                error_message = "Invalid email domain. Please use an @unr.edu email."
-                return render_template("AccountLogic/adduser.html", error=error_message, buildingsDisplay=buildingsDisplay)
+                return jsonify({"error": "Email is not valid"}), 400
             #hash user passowrd
             hashed_password = generate_password_hash(password)
             #create account 
             db_queries.createAccount(username, hashed_password, email, 'student')
             #get user ID from netID
-            uid = db_queries.getUserId(username)
             #create a permission for each bulding
+            uid = db_queries.getUserId(username)
+            print(buildings)
             for building in buildings:
+                print(uid)
+                print(building)
                 bid = db_queries.getBuildingID(building)
+                print(bid)
                 db_queries.createPermissions(bid, uid)
             
-            
-            print(f"User {username} added successfully.")
-            return redirect(url_for('account.addUser', buildingsDisplay=buildingsDisplay))
+            return jsonify({"message": "User added successfully"}), 200
 
         # If neither file nor form is valid, show an error
         error_message = 'Please provide a valid file or fill out the form completely.'
-        return render_template("AccountLogic/adduser.html", error=error_message, buildingsDisplay=buildingsDisplay)
+        return jsonify({"error": "Missing Fields"}), 401
 
-    return render_template("AccountLogic/adduser.html", buildingsDisplay=buildingsDisplay)
+    user_id = request.args.get('user_id')  
+    if not user_id:
+        return jsonify({"error": "Unauthorized - Missing User ID GET"}), 401
+    #role = request.args.get('role')
+    buildingsPermissions = db_queries.getBuildingsFromPermissions(user_id)
+    return jsonify({"buildings": buildingsPermissions})
 
 @account_bp.route('/adduserSuper', methods=['GET', 'POST'])
 def addUserSuper():

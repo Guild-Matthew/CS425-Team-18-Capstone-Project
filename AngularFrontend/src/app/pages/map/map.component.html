@@ -1,8 +1,10 @@
-<!--Guilherme Cassiano-->
 <nav>
   <a routerLink="/">Home</a> |
   <a routerLink="/map">Map</a> |
-  <a routerLink="/dashboard">Dashboard</a>
+  <a *ngIf="!role" routerLink="/dashboard">Dashboard</a> 
+  <a *ngIf="role === 'student'" routerLink="/dashboard">Dashboard</a> 
+  <a *ngIf="role === 'admin'" routerLink="/admin-home">Dashboard</a> 
+  <a *ngIf="role === 'superadmin'" routerLink="/super-admin-home">Dashboard</a> 
 </nav>
 
 <google-map *ngIf="center" [center]="center" [zoom]="zoom" [options]="mapOptions">

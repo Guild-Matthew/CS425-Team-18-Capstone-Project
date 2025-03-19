@@ -14,7 +14,7 @@ export class MapComponent implements OnInit {
   zoom = 17;
   markers: { lat: number; lng: number; title: string }[] = [];
   mapOptions: google.maps.MapOptions = {};
-
+  role: string | null = null;
   user: any = null;
   constructor(private router: Router) { }
 
@@ -83,6 +83,7 @@ export class MapComponent implements OnInit {
     this.router.navigate(['/lost-and-found'], { queryParams: { building: buildingName } });
   }
   checkLoginStatus() {
+    this.role = localStorage.getItem('role');  
     const userData = localStorage.getItem('user');
     this.user = userData ? JSON.parse(userData) : null;
   }

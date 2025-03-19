@@ -7,6 +7,7 @@ import { RouterLink, ActivatedRoute } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
+
 @Component({
   selector: 'add-building',
   standalone: true,
@@ -14,6 +15,7 @@ import { Router } from '@angular/router';
   templateUrl: './add-building.component.html',
   styleUrl: './add-building.component.css'
 })
+
 export class AddBuildingComponent {
   building: any = {
     BuildingCode: '',
