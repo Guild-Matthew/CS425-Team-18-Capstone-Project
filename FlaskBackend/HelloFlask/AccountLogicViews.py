@@ -111,10 +111,7 @@ def addUser():
             uid = db_queries.getUserId(username)
             print(buildings)
             for building in buildings:
-                print(uid)
-                print(building)
                 bid = db_queries.getBuildingID(building)
-                print(bid)
                 db_queries.createPermissions(bid, uid)
             
             return jsonify({"message": "User added successfully"}), 200

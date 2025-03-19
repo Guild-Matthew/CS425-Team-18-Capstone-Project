@@ -13,7 +13,11 @@ import { flask_URL } from '../../app.config';
 @Component({
   selector: 'app-add-user',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatCheckboxModule, RouterLink],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatCheckboxModule,
+    RouterLink],
   templateUrl: './add-user.component.html',
   styleUrls: ['./add-user.component.css'],
 })
