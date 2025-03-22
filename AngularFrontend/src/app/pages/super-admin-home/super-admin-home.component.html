@@ -1,4 +1,4 @@
-<!--Mary Cottier, Guilherme Cassiano-->
+<!--Mary Cottier, Guilherme Cassiano, Shane Petree-->
 <span *ngIf="role !== 'superadmin'">
   <a routerLink="/login">Login</a>
 </span>
@@ -15,7 +15,7 @@
         <li><a routerLink="/super-admin-dashboard">Dashboard</a></li>
         <li><a routerLink="/manage-items">Manage Items</a></li>
         <li><a routerLink="/reports">Reports</a></li>
-        <li><a routerLink="/login">Logout</a></li>
+        <li><a (click)="logout()">Logout</a></li>
       </ul>
     </nav>
   </header>
