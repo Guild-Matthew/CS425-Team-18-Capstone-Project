@@ -20,7 +20,6 @@ export const routes: Routes = [
   { path: 'super-admin-home', component: SuperAdminHomeComponent, canActivate: [AuthGuard] },
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: '', redirectTo: 'map', pathMatch: 'full' },
-  //task there is not a way to get to add-user or login yet through the UI
   { path: 'add-user', component: AddUserComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
   { path: 'lost-and-found', component: LostAndFoundComponent },
@@ -29,7 +28,6 @@ export const routes: Routes = [
   { path: 'map', component: MapComponent },
   { path: 'remove-item', component: RemoveItemComponent, canActivate: [AuthGuard] },
   { path: 'add-building', component: AddBuildingComponent, canActivate: [AuthGuard] },
-  //task this would be better if it was an error:404 page
   { path: '404', component: _404Component },
   { path: '**', redirectTo: '404' } // Handles unknown paths
 ];
