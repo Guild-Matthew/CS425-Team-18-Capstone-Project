@@ -6,7 +6,7 @@ class Queries:
     def __init__(self):
         # Initialize the connection to the database
         self.conn = psycopg2.connect(
-            dbname="TestDB", #change this to lower case and make it work
+            dbname="testdb", #change this to lower case and make it work
             user="postgres",
             password="#aH6TR5fkcdx99",
             host="localhost",
