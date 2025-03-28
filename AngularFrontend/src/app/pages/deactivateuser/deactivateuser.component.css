@@ -3,6 +3,72 @@
 * {
   box-sizing: border-box;
 }
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+/* Header Styling */
+header {
+  background-color:  #041E42;
+  color: white;
+  padding: 15px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Logo Group (Image + Text) */
+.logo-group {
+  display: flex;
+  align-items: center;
+}
+
+.logo-group img {
+  width: 65px;
+  height: auto;
+  margin-right: 15px;
+}
+
+.logo-group span {
+  font-size: 1.5em;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+/* Navigation Styling */
+nav {
+  flex-grow: 1; /* Ensures nav stretches */
+  display: flex;
+  justify-content: flex-end;
+}
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 20px;
+}
+
+nav ul li {
+  display: inline-block;
+}
+
+nav ul li a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.1em;
+  padding: 10px 15px;
+}
+
+nav ul li a:hover {
+  text-decoration: underline;
+}
 
 body {
   font-family: Arial, sans-serif;
@@ -76,6 +142,29 @@ header nav ul {
   gap: 20px; /* Adds space between sidebar and products */
 }
 
+.main-content-buttons {
+  margin-top: 0px;
+  display: flex;
+  gap: 15px;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.main-content-button {
+  padding: 8px 12px;
+  background-color: #041E42;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.1em;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.main-content-button:hover {
+  background-color:  #041E42;
+}
+
 .sidebar {
   flex: 0 0 250px; /* Fixes sidebar width */
   position: sticky; /* Ensures it stays fixed when scrolling */
@@ -89,7 +178,6 @@ header nav ul {
   margin-left: 200px;
   margin-top: 60px;
 }
-
 
   .sidebar h2 {
     font-size: 1.5rem;

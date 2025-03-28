@@ -8,9 +8,15 @@
 </head>
 
 <body>
-  <!--Header section-->
-  <header>
-    <div class="container">
+
+  <!-- Role-Based Navigation -->
+  <span *ngIf="role !== 'student'">
+    <a routerLink="/login">Login</a>
+  </span>
+
+  <div class="main-container" *ngIf="role === 'student'">
+    <!-- Updated Header -->
+    <header>
       <div class="logo-group">
         <img class="university-logo-large-img align-image-bottom" 
              alt="University of Nevada, Reno" 
@@ -20,53 +26,57 @@
           University of Nevada, Reno
         </span>
       </div>
-      <h1>Lost and Found</h1>
       <nav>
         <ul>
-          <li><a href="#">Health and Safety</a></li>
+          <li><a routerLink="/map">Map</a></li>
+          <li><a routerLink="">Help</a></li>
+          <li><a (click)="logout()">Logout</a></li>
         </ul>
       </nav>
+    </header>
+
+    <div class="main-content">
+      <div class="main-content-buttons">
+      <a routerLink="/add-user" class="main-content-button">Add User</a>
     </div>
-  </header>
-
-  <div class="main-content">
-    <!--Sidebar for sort and filter-->
-    <aside class="sidebar">
-      <h2>Sort & Filter</h2>
-      <div class="filter-section">
-        <label for="filterType">Filter by Building:</label>
-        <select id="filterType" #filterTypeSelect (change)="filterAccounts(filterTypeSelect.value)">
-          <option value="all">All</option>
-          <option value="SEM">SEM</option>
-          <option value="DMSC">DMSC</option>
-          <option value="AB">AB</option>
-        </select>
-      </div>
-    </aside>
-
-    <!--Users Section-->
-    <section id="products">
-      <h2>Students Working in Selected Building</h2>
-      <div class="product-grid">
-        <div *ngIf="users.length > 0; else noUsers">
-          <div *ngFor="let user of users" class="product">
-            <p><strong>Name:</strong> {{ user.name }}</p>
-            <p><strong>Email:</strong> {{ user.email }}</p>
-            <p><strong>Building:</strong> {{ user.building }}</p>
-            <button (click)="deactivateUser(user.id)">Deactivate</button>
-          </div>
+    <!-- Sidebar for sort and filter -->
+      <aside class="sidebar">
+        <h2>Sort & Filter</h2>
+        <div class="filter-section">
+          <label for="filterType">Filter by Building:</label>
+          <select id="filterType" #filterTypeSelect (change)="filterAccounts(filterTypeSelect.value)">
+            <option value="all">All</option>
+            <option value="SEM">SEM</option>
+            <option value="DMSC">DMSC</option>
+            <option value="AB">AB</option>
+          </select>
         </div>
-        <ng-template #noUsers>
-          <p>No student accounts found for the selected filter.</p>
-        </ng-template>
-      </div>
-    </section>
-  </div>
+      </aside>
 
-  <!--Footer section-->
-  <footer>
-    <p>&copy; 2024 University of Nevada, Reno. Lost and Found Service.</p>
-  </footer>
+      <!-- Users Section -->
+      <section id="products">
+        <h2>Students Working in Selected Building</h2>
+        <div class="product-grid">
+          <div *ngIf="users.length > 0; else noUsers">
+            <div *ngFor="let user of users" class="product">
+              <p><strong>Name:</strong> {{ user.name }}</p>
+              <p><strong>Email:</strong> {{ user.email }}</p>
+              <p><strong>Building:</strong> {{ user.building }}</p>
+              <button (click)="deactivateUser(user.id)">Deactivate</button>
+            </div>
+          </div>
+          <ng-template #noUsers>
+            <p>No student accounts found for the selected filter.</p>
+          </ng-template>
+        </div>
+      </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <p>&copy; 2025 University of Nevada, Reno. Lost and Found Service.</p>
+    </footer>
+  </div>
 
 </body>
 </html>

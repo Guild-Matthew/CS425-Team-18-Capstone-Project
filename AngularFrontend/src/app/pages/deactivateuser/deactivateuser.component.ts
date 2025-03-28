@@ -10,14 +10,20 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './deactivateuser.component.html',
   styleUrl: './deactivateuser.component.css'
 })
-
 export class DeactivateUserComponent implements OnInit {
   users: any[] = [];
+  role: string = ''; // Added role property
 
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
+    this.getUserRole(); // Get the user role
     this.loadUsers();
+  }
+
+  getUserRole(): void {
+    // Example: Fetch from local storage or API
+    this.role = localStorage.getItem('userRole') || 'student'; // Default role: student
   }
 
   loadUsers(): void {
@@ -47,5 +53,10 @@ export class DeactivateUserComponent implements OnInit {
         alert('Failed to deactivate user');
       });
     }
+  }
+
+  logout(): void {
+    console.log('User logged out');
+    localStorage.removeItem('userRole'); // Clears role when logging out
   }
 }
