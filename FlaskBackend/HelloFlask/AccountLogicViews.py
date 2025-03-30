@@ -127,73 +127,6 @@ def addUser():
     buildingsPermissions = db_queries.getBuildingsFromPermissions(user_id)
     return jsonify({"buildings": buildingsPermissions})
 
-@account_bp.route('/adduserSuper', methods=['GET', 'POST'])
-def addUserSuper():
-    buildingsDisplay = db_queries.getAllBuildings()
-    if request.method == 'POST':
-        # Check for file upload
-        file = request.files.get('batchFile')
-        if file and file.filename.endswith('.txt'):
-            # Process batch file
-            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-                file.save(temp_file.name)
-                file_path = temp_file.name
-
-            with open(file_path, 'r') as f:
-                for line in f:
-                    print(f"Processing line: {line.strip()}")
-                    parts = line.strip().split(',')
-                    if len(parts) == 4:
-                        netID, email, password, building = parts
-                        hashed_password = generate_password_hash(password)
-                        try:
-                            db_queries.createAccount(netID, hashed_password, email, 'student', building)
-                            print(f"User {netID} added successfully.")
-                        except Exception as e:
-                            print(f"Error adding user {netID}: {e}")
-                    else:
-                        print(f"Invalid line format: {line.strip()}")
-
-            os.remove(file_path)
-            return redirect(url_for('account.addUserSuper', buildingsDisplay=buildingsDisplay))
-
-        # Check for single-user form submission
-        username = request.form.get('netID')
-        password = request.form.get('NetID password')
-        email = request.form.get('email')
-        buildings = request.form.getlist('building') 
-        role = request.form.get('role')
-        if not any([file, username, password, email, buildings]):
-            error_message = 'Please fill out all fields on the form or upload a valid file.'
-            return render_template("AccountLogic/adduserSuper.html", error=error_message, buildingsDisplay=buildingsDisplay)
-
-        if all([username, password, email, buildings]):
-            # Validate and process single-user form submission
-            if not email.endswith('@unr.edu'):
-                error_message = "Invalid email domain. Please use an @unr.edu email."
-                return render_template("AccountLogic/adduserSuper.html", error=error_message, buildingsDisplay=buildingsDisplay)
-            #hash user passowrd
-            hashed_password = generate_password_hash(password)
-            #create account 
-            db_queries.createAccount(username, hashed_password, email, role)
-            #get user ID from netID
-            uid = db_queries.getUserId(username)
-            #create a permission for each bulding
-            for building in buildings:
-                bid = db_queries.getBuildingID(building)
-                db_queries.createPermissions(bid, uid)
-            
-            
-            print(f"User {username} added successfully.")
-            return redirect(url_for('account.addUserSuper', buildingsDisplay=buildingsDisplay))
-
-        # If neither file nor form is valid, show an error
-        error_message = 'Please provide a valid file or fill out the form completely.'
-        return render_template("AccountLogic/adduserSuper.html", error=error_message, buildingsDisplay=buildingsDisplay)
-
-    return render_template("AccountLogic/adduserSuper.html", buildingsDisplay=buildingsDisplay)
-
-
 @account_bp.route('/VoidStudent', methods=['GET', 'POST'])
 def voidUser():
         if 'user_id' in session:
@@ -222,32 +155,3 @@ def voidUser():
             uid_list = db_queries.getUsersFromPermissions(bid)  # Get list of UIDs
             users = db_queries.getUserVoidFiltered(uid_list, 'student', 'true')  # Pass list of UIDs
         return render_template("AccountLogic/voiduser.html", users=users, filter_type_building=filter_type_building, buildings=buildings, selected_building=selected_building)
-
-@account_bp.route('/VoidStudentSuper', methods=['GET', 'POST'])
-def voidUserSuper():
-        if 'user_id' in session:
-            buildings = db_queries.getAllBuildings()
-            if request.method == 'POST':
-                selected_building = request.form.get('selected_building') 
-            else:
-                selected_building = request.args.get('building')  
-            # Default to the first building if none is selected
-            if selected_building is None or selected_building == '':
-                if buildings:
-                    selected_building = buildings[0]
-            if request.method == 'POST':
-                email = request.form['email']
-                username = request.form['username']
-                db_queries.deleteUser(email, username)
-                return redirect(url_for('account.voidUserSuper'))
-        filter_type_building = request.args.get('building', 'all')  # Default to 'all'
-
-        if filter_type_building == 'all':
-            users = db_queries.getUserVoidSuper('student', 'admin', 'true')  # Fetch all users
-        else:
-            bid = db_queries.getBuildingID(filter_type_building)
-            uid_list = db_queries.getUsersFromPermissions(bid)  # Get list of UIDs
-            users = db_queries.getUserVoidFilteredSuper(uid_list, 'student', 'admin', 'true')  # Pass list of UIDs
-        return render_template("AccountLogic/voidusersuperADM.html", users=users, filter_type_building=filter_type_building, buildings=buildings, selected_building=selected_building)
-
-

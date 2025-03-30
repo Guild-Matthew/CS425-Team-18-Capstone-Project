@@ -22,17 +22,20 @@ export class DeactivateUserComponent implements OnInit {
   }
 
   getUserRole(): void {
-    // Example: Fetch from local storage or API
-    this.role = localStorage.getItem('userRole') || 'student'; // Default role: student
+    this.role = localStorage.getItem('userRole') || 'student';
   }
 
   loadUsers(): void {
-    this.http.get<any[]>('/api/users').subscribe(data => {
-      this.users = data;
-    }, error => {
-      console.error('Error fetching users:', error);
-    });
-  }
+    this.http.get<any[]>('/api/users').subscribe(
+      data => {
+        console.log('Users loaded:', data);
+        this.users = data;
+      },
+      error => {
+        console.error('Error fetching users:', error);
+      }
+    );
+  }  
 
   filterAccounts(selectedFilter: string): void {
     const url = selectedFilter === 'all' ? '/api/users' : `/api/users?building=${selectedFilter}`;
@@ -45,15 +48,18 @@ export class DeactivateUserComponent implements OnInit {
 
   deactivateUser(userId: string): void {
     if (confirm('Are you sure you want to deactivate this user?')) {
-      this.http.post(`/api/deactivate/${userId}`, {}).subscribe(response => {
-        alert('User deactivated successfully');
-        this.loadUsers();
-      }, error => {
-        console.error('Error deactivating user:', error);
-        alert('Failed to deactivate user');
-      });
+      this.http.post(`/api/deactivate/${userId}`, {}).subscribe(
+        response => {
+          alert('User deactivated successfully');
+          this.loadUsers();  // Reload users after deactivation
+        },
+        error => {
+          console.error('Error deactivating user:', error);
+          alert('Failed to deactivate user');
+        }
+      );
     }
-  }
+  }  
 
   logout(): void {
     console.log('User logged out');
