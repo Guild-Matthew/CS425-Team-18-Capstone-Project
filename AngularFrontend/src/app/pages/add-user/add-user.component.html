@@ -1,56 +1,133 @@
 <!--Matthew Guild, Shane Petree, Guilherme Cassiano, Mary Cottier-->
 
-<header>
-  <div class="container">
-    <div class="logo-group">
-      <img class="university-logo-large-img align-image-bottom" alt="University of Nevada, Reno" src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg" width="65" height="65">
-      <span class="logo-text-new align-text-middle"> University of Nevada, Reno </span>
-    </div>
-    <h1>Manage Access</h1>
-    <nav>
-      <ul>
-        <!-- Shane Petree -->
-        <!--change the dashboard link to go to the role dashboard eventually-->
-        <li><a routerLink="/admin-home">Dashboard</a></li>
-        <li><a routerLink="/map">Map</a></li>
-        <li><a routerLink="/login">Logout</a></li>
-      </ul>
-    </nav>
-  </div>
-</header>
-
-<section class="add-item-form">
-  <h2>Add a User</h2>
-  <form [formGroup]="addUserForm" (ngSubmit)="onSubmit()">
-
-    <div class="form-group">
-      <label for="netID">NetID for user</label>
-      <input type="text" id="netID" formControlName="netID" placeholder="Enter NetID" required />
-    </div>
-
-    <div class="form-group">
-      <label for="email">Email for user</label>
-      <input type="email" id="email" formControlName="email" placeholder="Enter email" required />
-    </div>
-
-    <div class="form-group">
-      <label for="password">NetID Password</label>
-      <input type="password" id="password" formControlName="password" placeholder="Enter password" required />
-    </div>
-
-    <label>Buildings for Lost and Found Access</label>
-    <div class="example-section">
-      <div *ngFor="let building of buildings">
-        <input type="checkbox" [value]="building" (change)="onCheckboxChange($event)" />
-        {{ building }}
+<div class="main-container" *ngIf="role === 'admin'">
+  <header>
+    <div class="container">
+      <div class="logo-group">
+        <img class="university-logo-large-img align-image-bottom" alt="University of Nevada, Reno" src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg" width="65" height="65">
+        <span class="logo-text-new align-text-middle"> University of Nevada, Reno </span>
       </div>
+      <h1>Manage Access</h1>
+      <nav>
+        <ul>
+          <!-- Shane Petree -->
+          <!--change the dashboard link to go to the role dashboard eventually-->
+          <li><a routerLink="/admin-home">Dashboard</a></li>
+          <li><a routerLink="/map">Map</a></li>
+          <li><a routerLink="/login">Logout</a></li>
+        </ul>
+      </nav>
     </div>
+  </header>
 
-    <button type="submit" [disabled]="addUserForm.invalid">Add User</button>
-  </form>
-</section>
+  <section class="add-item-form">
+    <h2>Add a User</h2>
+    <form [formGroup]="addUserForm" (ngSubmit)="onSubmit()">
+
+      <div class="form-group">
+        <label for="netID">NetID for user</label>
+        <input type="text" id="netID" formControlName="netID" placeholder="Enter NetID" required />
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email for user</label>
+        <input type="email" id="email" formControlName="email" placeholder="Enter email" required />
+      </div>
+
+      <div class="form-group">
+        <label for="password">NetID Password</label>
+        <input type="password" id="password" formControlName="password" placeholder="Enter password" required />
+      </div>
+
+      <div class="form-group">
+        <label for="selectedRole">Select Role</label>
+        <select id="selectedRole" formControlName="selectedRole">
+          <option value="student" selected>Student</option>
+        </select>
+      </div>
+
+      <label>Buildings for Lost and Found Access</label>
+      <div class="example-section">
+        <div *ngFor="let building of buildings">
+          <input type="checkbox" [value]="building" (change)="onCheckboxChange($event)" />
+          {{ building }}
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="addUserForm.invalid">Add User</button>
+    </form>
+  </section>
 
 
-<footer>
-  <p>&copy; 2025 University of Nevada, Reno. Lost and Found Service.</p>
-</footer>
+  <footer>
+    <p>&copy; 2025 University of Nevada, Reno. Lost and Found Service.</p>
+  </footer>
+</div>
+
+<!--Matthew Guild, Shane Petree, Guilherme Cassiano, Mary Cottier-->
+
+<div class="main-container" *ngIf="role === 'superadmin'">
+  <header>
+    <div class="container">
+      <div class="logo-group">
+        <img class="university-logo-large-img align-image-bottom" alt="University of Nevada, Reno" src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg" width="65" height="65">
+        <span class="logo-text-new align-text-middle"> University of Nevada, Reno </span>
+      </div>
+      <h1>Manage Access</h1>
+      <nav>
+        <ul>
+          <!-- Shane Petree -->
+          <!--change the dashboard link to go to the role dashboard eventually-->
+          <li><a routerLink="/admin-home">Dashboard</a></li>
+          <li><a routerLink="/map">Map</a></li>
+          <li><a routerLink="/login">Logout</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <section class="add-item-form">
+    <h2>Add a User</h2>
+    <form [formGroup]="addUserForm" (ngSubmit)="onSubmit()">
+
+      <div class="form-group">
+        <label for="netID">NetID for user</label>
+        <input type="text" id="netID" formControlName="netID" placeholder="Enter NetID" required />
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email for user</label>
+        <input type="email" id="email" formControlName="email" placeholder="Enter email" required />
+      </div>
+
+      <div class="form-group">
+        <label for="password">NetID Password</label>
+        <input type="password" id="password" formControlName="password" placeholder="Enter password" required />
+      </div>
+
+      <div class="form-group">
+        <label for="selectedRole">Select Role</label>
+        <select id="selectedRole" formControlName="selectedRole">
+          <option value="student" selected>Student</option>
+          <option value="admin" selected>Admin</option>
+          <option value="superadmin" selected>SuperAdmin</option>
+        </select>
+      </div>
+
+      <label>Buildings for Lost and Found Access</label>
+      <div class="example-section">
+        <div *ngFor="let building of buildings">
+          <input type="checkbox" [value]="building" (change)="onCheckboxChange($event)" />
+          {{ building }}
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="addUserForm.invalid">Add User</button>
+    </form>
+  </section>
+
+
+  <footer>
+    <p>&copy; 2025 University of Nevada, Reno. Lost and Found Service.</p>
+  </footer>
+</div>

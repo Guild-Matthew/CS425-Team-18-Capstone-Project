@@ -58,9 +58,12 @@ def addUser():
     if request.method == 'POST':
         user_id = request.form.get('user_id')
         role = request.form.get('role')
-        formAuthToken = request.form.get('authtoken')
+        formAuthToken = request.form.get('authToken')
 
         uidauthtoken = db_queries.getTokenByUID(user_id)
+        if isinstance(uidauthtoken, list):
+            uidauthtoken = uidauthtoken[0]  
+
         if uidauthtoken != formAuthToken:
             return jsonify({"error": "Unauthorized"}), 401
 
@@ -95,7 +98,7 @@ def addUser():
         username = request.form.get('netID')
         password = request.form.get('password')
         email = request.form.get('email')
-        selectedRole = request.form.get('role')
+        selectedRole = request.form.get('selectedRole')
         buildingsJSON = request.form.get('buildings')  #get full JSON from angular
         try:
             buildings = json.loads(buildingsJSON) #converts JSON to python list
@@ -112,7 +115,7 @@ def addUser():
             #hash user passowrd
             hashed_password = generate_password_hash(password)
             #create account 
-            db_queries.createAccount(username, hashed_password, email, 'student')
+            db_queries.createAccount(username, hashed_password, email, selectedRole)
             #get user ID from netID
             #create a permission for each bulding
             uid = db_queries.getUserId(username)
@@ -130,8 +133,12 @@ def addUser():
     user_id = request.args.get('user_id')  
     if not user_id:
         return jsonify({"error": "Unauthorized - Missing User ID GET"}), 401
+    role = request.args.get('role')
     #role = request.args.get('role')
-    buildingsPermissions = db_queries.getBuildingsFromPermissions(user_id)
+    if role == 'superadmin':
+        buildingsPermissions = db_queries.getAllBuildings()
+    elif role == 'admin':
+        buildingsPermissions = db_queries.getBuildingsFromPermissions(user_id)
     return jsonify({"buildings": buildingsPermissions})
 
 @account_bp.route('/VoidStudent', methods=['GET', 'POST'])

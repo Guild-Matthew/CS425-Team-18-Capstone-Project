@@ -33,6 +33,7 @@ export class AddUserComponent implements OnInit {
       netID: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
+      selectedRole:['', Validators.required],
       buildings: this.fb.array([]), // Store selected buildings
     });
   }
@@ -45,14 +46,14 @@ export class AddUserComponent implements OnInit {
 
   fetchBuildings(): void {
     const userId = localStorage.getItem('user_id');
-
+    const role = localStorage.getItem('role');
     if (!userId) {
       console.error("No user ID found. Redirecting to login.");
       this.router.navigate(['/login']);
       return;
     }
 
-    const url = `${flask_URL}/adduser?user_id=${userId}`;
+    const url = `${flask_URL}/adduser?user_id=${userId}&role=${role}`;
 
     this.http.get<any>(url, { withCredentials: true }).subscribe(
       data => {
@@ -96,6 +97,7 @@ export class AddUserComponent implements OnInit {
       formData.append('netID', this.addUserForm.value.netID);
       formData.append('email', this.addUserForm.value.email);
       formData.append('password', this.addUserForm.value.password);
+      formData.append('selectedRole', this.addUserForm.value.selectedRole);
       formData.append('buildings', JSON.stringify(this.addUserForm.value.buildings));
 
       this.http.post(`${flask_URL}/adduser`, formData, { withCredentials: true }).subscribe(
