@@ -6,7 +6,7 @@ class Queries:
     def __init__(self):
         # Initialize the connection to the database
         self.conn = psycopg2.connect(
-            dbname="TestDB", #change this to lower case and make it work
+            dbname="testdb", #change this to lower case and make it work
             user="postgres",
             password="#aH6TR5fkcdx99",
             host="localhost",
@@ -174,10 +174,20 @@ class Queries:
         return [{"username": row[0], "email": row[1], "active": row[2], "role": row[3]} for row in rows] 
  
     # Query to deactivate an account 
-    def deleteUser(self, email, username):
+    def deactivateUser(self, email, username):
         query = """
         UPDATE users
         SET active = FALSE
+        WHERE email = %s AND username = %s
+        """
+        self.cursor.execute(query, (email, username))  
+        self.conn.commit()
+
+    # Query to reactivate an account that already exists 
+    def activateUser(self, email, username):
+        query = """
+        UPDATE users
+        SET active = TRUE
         WHERE email = %s AND username = %s
         """
         self.cursor.execute(query, (email, username))  
