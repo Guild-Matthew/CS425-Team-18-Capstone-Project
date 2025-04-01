@@ -21,7 +21,7 @@ export class ClaimedItemsComponent implements OnInit {
   building: string = '';
   items: any[] = [];
   buildings: string[] = [];
-
+  authToken: string | null = null;
   constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
@@ -29,11 +29,13 @@ export class ClaimedItemsComponent implements OnInit {
       this.building = params['building'] || '';
       this.fetchItems();
     });
+    this.authToken = localStorage.getItem('authtoken');
   }
 
   fetchItems(): void {
     const userId = localStorage.getItem('user_id');
     const role = localStorage.getItem('role');
+    const authToken = localStorage.getItem('authtoken');
 
     if (!userId) {
       console.error("No user ID found. Redirecting to login.");
@@ -45,7 +47,7 @@ export class ClaimedItemsComponent implements OnInit {
       this.building = "Please select a building";
     }
 
-    const url = `${flask_URL}/claimedItems?user_id=${userId}&role=${role}&building=${this.building}&filterType=${this.filterType}&sort=${this.sortOrder}`;
+    const url = `${flask_URL}/claimedItems?token=${authToken}&user_id=${userId}&role=${role}&building=${this.building}&filterType=${this.filterType}&sort=${this.sortOrder}`;
 
     console.log("Fetching items from:", url);
 

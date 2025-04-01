@@ -7,6 +7,7 @@ import os
 import tempfile
 from flask_cors import cross_origin
 import json
+import uuid
 # Instance of Queries for database access
 db_queries = Queries()
 account_bp = Blueprint('account', __name__)
@@ -27,12 +28,14 @@ def login():
         session['role'] = user['role']
         session['username'] = user['username']
         session.permanent = True 
-
+        authtoken = str(uuid.uuid4())  
+        db_queries.updateUserToken(user['uid'], authtoken)
         return jsonify({
             'success': True,
             'user_id': user['uid'],
             'role': user['role'],
-            'username': user['username']
+            'username': user['username'],
+            'authtoken': authtoken
         }), 200
     else:
         return jsonify({'success': False, 'error': "Invalid credentials"}), 401
@@ -45,6 +48,7 @@ def logout():
         return redirect(url_for('account.login'))
     
     # Clear the session
+    db_queries.updateUserToken(session['user_id'])
     session.clear()
     return redirect(url_for('main.home'))
 
@@ -54,9 +58,12 @@ def addUser():
     if request.method == 'POST':
         user_id = request.form.get('user_id')
         role = request.form.get('role')
+        formAuthToken = request.form.get('authtoken')
 
-        if not user_id:
-            return jsonify({"error": "Unauthorized - Missing User ID POST"}), 401
+        uidauthtoken = db_queries.getTokenByUID(user_id)
+        if uidauthtoken != formAuthToken:
+            return jsonify({"error": "Unauthorized"}), 401
+
 
         # Check for file upload
         file = request.files.get('batchFile')

@@ -22,12 +22,13 @@ export class AddBuildingComponent {
     Latitude: '',
     Longitude: '',
   };
+  authToken: string | null = null;
   constructor(private http: HttpClient, private router: Router) { }
 
   onSubmit(): void {
     const userId = localStorage.getItem('user_id');
     const role = localStorage.getItem('role');
-
+    const authToken = localStorage.getItem('authtoken');
     if (!userId) {
       console.error("No user ID found. Redirecting to login.");
       this.router.navigate(['/login']);
@@ -48,7 +49,7 @@ export class AddBuildingComponent {
     formData.append('BuildingCode', this.building.BuildingCode);
     formData.append('Latitude', latitude);
     formData.append('Longitude', longitude);
-
+    formData.append('authToken', this.authToken);
     console.log("Sending Data:");
     formData.forEach((value, key) => console.log(`${key}: ${value}`));
 

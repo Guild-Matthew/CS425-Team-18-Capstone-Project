@@ -98,6 +98,15 @@ class Queries:
         self.cursor.execute(query, (username, password, email, role))
         self.conn.commit()
 
+    def updateUserToken(self, uid, token):
+        query = """
+            UPDATE users
+            SET authtoken = %s
+            WHERE uid = %s
+        """
+        self.cursor.execute(query, (token, uid))
+        self.conn.commit()
+
     # Query to check if user exists when logging in 
     def getUser(self, username): # Only use username, remove email
         self.cursor.execute("""
@@ -328,6 +337,24 @@ class Queries:
         """, (bid,))
         rows = self.cursor.fetchall()
         return [row[0] for row in rows]
+
+    def getTokenByUID(self, uid):
+        self.cursor.execute("""
+        SELECT authtoken
+        FROM users
+        WHERE uid = %s
+        """, (uid,))
+        row = self.cursor.fetchone()
+        return [row[0] if row else None]
+
+    def removeAuthToken(self, UID):
+        query = """
+            UPDATE users
+            SET authtoken = NULL
+            WHERE uid = %s
+        """
+        self.cursor.execute(query, (UID,))
+        self.conn.commit()
 
 if __name__ == "__main__":
     # Create an instance of Queries

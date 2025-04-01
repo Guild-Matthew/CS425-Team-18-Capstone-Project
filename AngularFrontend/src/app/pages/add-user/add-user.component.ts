@@ -25,6 +25,7 @@ export class AddUserComponent implements OnInit {
   addUserForm: FormGroup;
   buildings: string[] = [];
   role: string | null = null;
+  authToken: string | null = null;
 
 
   constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) {
@@ -38,6 +39,7 @@ export class AddUserComponent implements OnInit {
 
   ngOnInit(): void {
     this.role = localStorage.getItem('role');
+    this.authToken = localStorage.getItem('authtoken');
     this.fetchBuildings();
   }
 
@@ -90,6 +92,7 @@ export class AddUserComponent implements OnInit {
 
       const formData = new FormData();
       formData.append('user_id', userId);
+      formData.append('authToken', this.authToken)
       formData.append('netID', this.addUserForm.value.netID);
       formData.append('email', this.addUserForm.value.email);
       formData.append('password', this.addUserForm.value.password);

@@ -18,20 +18,21 @@ import { Router } from '@angular/router';
 export class AddItemComponent implements OnInit {
   item: any = {
     worker: '',
-    location: '',  
+    location: '',
     dateFound: '',
     locationFound: '',
     itemType: '',
     description: '',
     imagePhoto: null
   };
-
+  authToken: string | null = null;
   buildings: string[] = [];  
 
   constructor(private http: HttpClient, private router: Router) { }
 
   ngOnInit(): void {
     this.fetchBuildings();
+    this.authToken = localStorage.getItem('authtoken');
   }
 
   fetchBuildings(): void {
@@ -73,6 +74,7 @@ export class AddItemComponent implements OnInit {
     formData.append('locationFound', this.item.locationFound);
     formData.append('itemType', this.item.itemType);
     formData.append('description', this.item.description);
+    formData.append('authToken', this.authToken);
 
     if (this.item.imagePhoto) {
       formData.append('imagePhoto', this.item.imagePhoto);

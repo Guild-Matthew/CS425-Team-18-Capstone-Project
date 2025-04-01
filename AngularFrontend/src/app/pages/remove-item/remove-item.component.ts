@@ -21,6 +21,7 @@ export class RemoveItemComponent implements OnInit {
   building: string = '';
   items: any[] = [];
   buildings: string[] = [];
+  authToken: string | null = null;
 
   constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router) { }
 
@@ -29,6 +30,7 @@ export class RemoveItemComponent implements OnInit {
       this.building = params['building'] || '';
         this.fetchItems(); 
     });
+    this.authToken = localStorage.getItem('authtoken');
   }
 
   fetchItems(): void {
@@ -62,7 +64,7 @@ export class RemoveItemComponent implements OnInit {
   removeItem(item: any): void {
     const userId = localStorage.getItem('user_id');
     const role = localStorage.getItem('role');
-
+    const authToken = localStorage.getItem('authtoken');
     if (!userId) {
       console.error("No user ID found. Redirecting to login.");
       this.router.navigate(['/login']);
@@ -75,7 +77,8 @@ export class RemoveItemComponent implements OnInit {
 
     const body = {
       user_id: userId,  
-      role: role,  
+      role: role,
+      authToken: authToken,
       itemType: item.type,
       locationFound: item.location,
       dateFound: item.dateFound,

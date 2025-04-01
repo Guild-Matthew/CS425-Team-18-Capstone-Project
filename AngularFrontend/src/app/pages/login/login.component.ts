@@ -48,7 +48,7 @@ export class LoginComponent {
 
           localStorage.setItem('user_id', response.user_id);
           localStorage.setItem('role', response.role);
-
+          localStorage.setItem('authtoken', response.authtoken);
           if (response.role === 'admin') {
             this.router.navigate(['/admin-home']);
           }

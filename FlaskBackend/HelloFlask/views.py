@@ -52,9 +52,11 @@ def Reportitems():
     if request.method == 'POST':
         user_id = request.form.get('user_id')
         role = request.form.get('role')
+        formAuthToken = request.form.get('authtoken')
 
-        if not user_id:
-            return jsonify({"error": "Unauthorized - Missing User ID"}), 401
+        uidauthtoken = db_queries.getTokenByUID(user_id)
+        if uidauthtoken != formAuthToken:
+            return jsonify({"error": "Unauthorized"}), 401
 
         item_type = request.form.get('itemType')
         location_found = request.form.get('locationFound')
@@ -99,9 +101,11 @@ def remove_items():
         data = request.get_json() 
         user_id = data.get('user_id')
         role = data.get('role')
+        formAuthToken = data.get('authtoken')
 
-        if not user_id:
-            return jsonify({"error": "Unauthorized - Missing User ID"}), 401
+        uidauthtoken = db_queries.getTokenByUID(user_id)
+        if uidauthtoken != formAuthToken:
+            return jsonify({"error": "Unauthorized"}), 401
 
         item_type = data.get('itemType')
         location_found = data.get('locationFound')
@@ -149,8 +153,12 @@ def remove_items():
 def ClaimedItems():
         user_id = request.args.get('user_id')  
         role = request.args.get('role')
-        if not user_id:
-            return jsonify({"error": "Unauthorized - Missing User ID"}), 401
+        formAuthToken = request.args.get('token')
+        uidauthtoken = db_queries.getTokenByUID(user_id)
+        uidauthtoken = uidauthtoken[0] if isinstance(uidauthtoken, list) and uidauthtoken else None
+
+        if uidauthtoken != formAuthToken:
+            return jsonify({"error": "Unauthorized"}), 401
 
         buildings = db_queries.getBuildingsFromPermissions(user_id)
         selected_building = request.args.get('building', buildings[0] if buildings else None)
@@ -178,15 +186,14 @@ def addBuilding():
     if request.method == 'POST':
         user_id = request.form.get('user_id')
         role = request.form.get('role')
+        formAuthToken = request.form.get('authtoken')
         BuildingCode = request.form.get('BuildingCode')
         Latitude = request.form.get('Latitude')
         Longitude = request.form.get('Longitude')
 
-        print("Received from Frontend:")
-        print(f"user_id: {user_id}, role: {role}, BuildingCode: {BuildingCode}, Latitude: {Latitude}, Longitude: {Longitude}")
-
-        if not user_id:
-            return jsonify({"error": "Unauthorized - Missing User ID"}), 401
+        uidauthtoken = db_queries.getTokenByUID(user_id)
+        if uidauthtoken != formAuthToken:
+            return jsonify({"error": "Unauthorized"}), 401
 
         if not all([BuildingCode, Latitude, Longitude]):
             return jsonify({"error": "Missing fields"}), 400
