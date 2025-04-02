@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DeactivateuserComponent } from './deactivateuser.component';
+import { DeactivateUserComponent } from './deactivateuser.component';
 
 describe('DeactivateuserComponent', () => {
-  let component: DeactivateuserComponent;
-  let fixture: ComponentFixture<DeactivateuserComponent>;
+  let component: DeactivateUserComponent;
+  let fixture: ComponentFixture<DeactivateUserComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    declarations: [DeactivateuserComponent]
+    declarations: [DeactivateUserComponent]
 })
     .compileComponents();
 
-    fixture = TestBed.createComponent(DeactivateuserComponent);
+    fixture = TestBed.createComponent(DeactivateUserComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,13 +1,13 @@
 <nav>
   <a routerLink="/">Home</a> |
   <a routerLink="/map">Map</a> |
-  <a *ngIf="!role" routerLink="/dashboard">Dashboard</a> 
+  <a *ngIf="!role" routerLink="/login">Login</a> 
   <a *ngIf="role === 'student'" routerLink="/dashboard">Dashboard</a> 
   <a *ngIf="role === 'admin'" routerLink="/admin-home">Dashboard</a> 
   <a *ngIf="role === 'superadmin'" routerLink="/super-admin-home">Dashboard</a> 
 </nav>
 
-<google-map *ngIf="center" [center]="center" [zoom]="zoom" [options]="mapOptions">
+<google-map *ngIf="center" [center]="center" [zoom]="zoom" width="100%" height="90%" [options]="mapOptions">
   <map-marker *ngFor="let marker of markers"
               [position]="marker"
               [title]="marker.title"
