@@ -44,8 +44,6 @@
   <ItemGroup>
     <Content Include="DB Dumps\3-3-2025_TestDB_dump.sql" />
     <Content Include="DB Dumps\TestDB-dump-tested-3-3-2025.backup" />
-    <Content Include="HelloFlask\.DS_Store" />
-    <Content Include="HelloFlask\static\.DS_Store" />
     <Content Include="HelloFlask\static\css\addUser.css" />
     <Content Include="HelloFlask\static\css\claimedItems.css" />
     <Content Include="HelloFlask\static\css\items.css" />
@@ -90,8 +88,6 @@
     <Content Include="HelloFlask\templates\items.html" />
     <Content Include="HelloFlask\templates\L&amp;F.html" />
     <Content Include="HelloFlask\templates\remove_item.html" />
-    <Content Include="Main Page\cover.html" />
-    <Content Include="Main Page\style.css" />
     <Content Include="requirements.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -103,7 +99,6 @@
     <Folder Include="HelloFlask\static\uploads\" />
     <Folder Include="HelloFlask\templates\" />
     <Folder Include="HelloFlask\templates\AccountLogic\" />
-    <Folder Include="Main Page\" />
     <Folder Include="DB Dumps\" />
   </ItemGroup>
   <ItemGroup>

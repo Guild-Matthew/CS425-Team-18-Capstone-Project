@@ -366,9 +366,6 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-/FlaskBackend/env
-/env
-/.gitattributes
 
 # from angular
 # Compiled output
@@ -411,4 +408,9 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
-/FlaskBackend/HelloFlask/flask-connection.config.json
+
+# Project Related Files
+/.gitattributes
+/FlaskBackend/env/
+/FlaskBackend/flask_sessions/
+/AngularFrontend/package-lock.json
