@@ -1,4 +1,4 @@
-//Mary Cottier
+//Mary Cottier, Shane Petree
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
@@ -31,8 +31,8 @@ export class AdminHomeComponent {
   }
 
   logout() {
-    localStorage.removeItem('role');
-    localStorage.removeItem('user_id');
-    this.router.navigate(['/login']);
+    localStorage.clear();
+    alert('Your session has been closed');
+    this.router.navigate(['/map']);
   }
 }

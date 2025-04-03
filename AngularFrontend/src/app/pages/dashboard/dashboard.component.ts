@@ -30,8 +30,8 @@ export class DashboardComponent {
   }
 
   logout() {
-    localStorage.removeItem('role');  
-    localStorage.removeItem('user_id');  
-    this.router.navigate(['/login']);
+    localStorage.clear();
+    alert('Your session has been closed');
+    this.router.navigate(['/map']);
   }
 }
