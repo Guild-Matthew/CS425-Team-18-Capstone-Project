@@ -29,10 +29,4 @@ export class SuperAdminHomeComponent {
       console.log(`User is logged in as: ${this.role}`);
     }
   }
-
-  logout() {
-    localStorage.clear();
-    alert('Your session has been closed');
-    this.router.navigate(['/map']);
-  }
 }

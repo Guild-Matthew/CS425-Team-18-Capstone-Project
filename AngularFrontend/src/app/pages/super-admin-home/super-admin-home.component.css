@@ -1,4 +1,4 @@
- /* Mary Cottier */
+ /* Mary Cottier, Shane Petree */
 body {
     margin: 0;
     font-family: Arial, sans-serif;
@@ -49,6 +49,10 @@ nav ul li a {
     text-decoration: none;
     font-weight: bold;
 }
+
+  nav ul li a:hover {
+    text-decoration: underline;
+  }
 
 /* Hero Section */
 .hero {

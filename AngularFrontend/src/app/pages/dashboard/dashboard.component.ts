@@ -29,9 +29,9 @@ export class DashboardComponent {
     }
   }
 
-  logout() {
-    localStorage.clear();
-    alert('Your session has been closed');
-    this.router.navigate(['/map']);
-  }
+  //logout() {
+  //  localStorage.clear();
+  //  alert('Your session has been closed');
+  //  this.router.navigate(['/map']);
+  //}
 }
