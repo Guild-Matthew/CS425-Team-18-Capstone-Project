@@ -29,9 +29,17 @@ export class DashboardComponent {
     }
   }
 
+<<<<<<< HEAD
   logout() {
     localStorage.removeItem('role');  
     localStorage.removeItem('user_id');  
     this.router.navigate(['/login']);
   }
+=======
+  //logout() {
+  //  localStorage.clear();
+  //  alert('Your session has been closed');
+  //  this.router.navigate(['/map']);
+  //}
+>>>>>>> e67f265 (Created a logout component and replaced logout method.)
 }

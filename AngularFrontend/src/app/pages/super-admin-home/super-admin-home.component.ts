@@ -29,10 +29,13 @@ export class SuperAdminHomeComponent {
       console.log(`User is logged in as: ${this.role}`);
     }
   }
+<<<<<<< HEAD
 
   logout() {
     localStorage.removeItem('role');
     localStorage.removeItem('user_id');
     this.router.navigate(['/login']);
   }
+=======
+>>>>>>> e67f265 (Created a logout component and replaced logout method.)
 }

@@ -15,7 +15,11 @@ import { AuthGuard } from './auth.guard'; //Ensure only logged people can access
 import { RemoveItemComponent } from './pages/remove-item/remove-item.component';
 import { AddBuildingComponent } from './pages/add-building/add-building.component';
 import { DeactivateUserComponent } from './pages/deactivateuser/deactivateuser.component';
+<<<<<<< HEAD
 import { AddFloorComponent } from './pages/add-floor/add-floor.component';
+=======
+import { LogoutComponent } from './pages/logout/logout.component';
+>>>>>>> e67f265 (Created a logout component and replaced logout method.)
 
 export const routes: Routes = [
   { path: 'admin-home', component: AdminHomeComponent, canActivate: [AuthGuard] },
@@ -24,6 +28,7 @@ export const routes: Routes = [
   { path: '', redirectTo: 'map', pathMatch: 'full' },
   { path: 'add-user', component: AddUserComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
+  { path: 'logout', component: LogoutComponent }, // navigate here to log out and clear localStorage
   { path: 'lost-and-found', component: LostAndFoundComponent },
   { path: 'add-item', component: AddItemComponent, canActivate: [AuthGuard] },
   { path: 'claimed-items', component: ClaimedItemsComponent, canActivate: [AuthGuard] },
