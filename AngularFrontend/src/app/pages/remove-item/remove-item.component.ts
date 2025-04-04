@@ -91,6 +91,7 @@ export class RemoveItemComponent implements OnInit {
     this.http.post(url, body, { headers, withCredentials: true }).subscribe(
       response => {
         console.log("Item removed successfully", response);
+        alert('Item marked as claimed');
         this.items = this.items.filter(i => i !== item);
       },
       error => console.error("Error removing item:", error)

@@ -87,7 +87,7 @@ export class AddItemComponent implements OnInit {
 
     this.http.post(`${flask_URL}/Items`, formData, { withCredentials: true }).subscribe(
       (response: any) => {
-        console.log("tem added successfully:", response);
+        console.log("item added successfully:", response);
         alert('Item successfully added!');
         this.resetForm();
       },
