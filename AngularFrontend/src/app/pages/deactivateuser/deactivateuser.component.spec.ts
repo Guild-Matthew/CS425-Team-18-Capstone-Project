@@ -1,23 +1,37 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
-import { DeactivateUserComponent } from './deactivateuser.component';
-
-describe('DeactivateuserComponent', () => {
-  let component: DeactivateUserComponent;
-  let fixture: ComponentFixture<DeactivateUserComponent>;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-    declarations: [DeactivateUserComponent]
+@Component({
+  selector: 'app-deactivateuser',
+  standalone: true,
+  templateUrl: './deactivateuser.component.html',
+  styleUrls: ['./deactivateuser.component.css'],
+  imports: [CommonModule]
 })
-    .compileComponents();
+export class DeactivateUserComponent {
+  // Simulate current user role (can be 'student' or 'staff')
+  role: string = 'student';
 
-    fixture = TestBed.createComponent(DeactivateUserComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+  users = [
+    { id: 1, name: 'Alice', email: 'alice@unr.edu', role: 'student', building: 'SEM' },
+    { id: 2, name: 'Bob', email: 'bob@unr.edu', role: 'staff', building: 'DMSC' },
+    { id: 3, name: 'Charlie', email: 'charlie@unr.edu', role: 'student', building: 'AB' },
+    { id: 4, name: 'Diana', email: 'diana@unr.edu', role: 'staff', building: 'SEM' }
+  ];
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+  filterType: string = 'all';
+
+  filterAccounts(type: string) {
+    this.filterType = type;
+  }
+
+  deactivateUser(userId: number) {
+    this.users = this.users.filter(user => user.id !== userId);
+    alert(`✅ User with ID ${userId} has been deactivated.`);
+  }
+
+  get filteredUsers() {
+    if (this.filterType === 'all') return this.users;
+    return this.users.filter(user => user.building === this.filterType);
+  }
+}
