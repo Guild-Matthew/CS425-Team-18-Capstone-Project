@@ -28,5 +28,6 @@ export class DashboardComponent {
       console.log(`User is logged in as: ${this.role}`);
     }
   }
+  
 
 }
