@@ -34,11 +34,12 @@
         <!-- Student buttons -->
         <a *ngIf="role === 'student' || role === 'admin' || role === 'superadmin'" routerLink="/lost-and-found" class="hero-button">View All Items</a>
         <a *ngIf="role === 'student' || role === 'admin' || role === 'superadmin'" routerLink="/claimed-items" class="hero-button">View Claimed Items</a>
-
+        <a *ngIf="role === 'student' || role === 'admin' || role === 'superadmin'" routerLink="/remove-item" class="hero-button">Remove Items</a>
         <!-- Admin and Superadmin buttons -->
         <a *ngIf="role === 'admin' || role === 'superadmin'" routerLink="/generate-report" class="hero-button">Generate Report</a>
         <a *ngIf="role === 'admin' || role === 'superadmin'" routerLink="/deactivateuser" class="hero-button">Edit Access</a>
-        <a *ngIf="role === 'admin' || role === 'superadmin'" routerLink="/add-building" class="hero-button">Edit Buildings</a>
+        <a *ngIf="role === 'admin' || role === 'superadmin'" routerLink="/add-building" class="hero-button">Add Buildings</a>
+        <a *ngIf="role === 'admin' || role === 'superadmin'" routerLink="/add-floor" class="hero-button">Edit Buildings</a>
       </div>
     </div>
   </section>

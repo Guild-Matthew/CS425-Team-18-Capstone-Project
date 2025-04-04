@@ -15,6 +15,7 @@ import { RemoveItemComponent } from './pages/remove-item/remove-item.component';
 import { AddBuildingComponent } from './pages/add-building/add-building.component';
 import { DeactivateUserComponent } from './pages/deactivateuser/deactivateuser.component';
 import { LogoutComponent } from './pages/logout/logout.component';
+import { AddFloorComponent } from './pages/add-floor/add-floor.component';
 
 export const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
@@ -28,6 +29,7 @@ export const routes: Routes = [
   { path: 'map', component: MapComponent },
   { path: 'remove-item', component: RemoveItemComponent, canActivate: [AuthGuard] },
   { path: 'add-building', component: AddBuildingComponent, canActivate: [AuthGuard] },
+  { path: 'add-floor', component: AddFloorComponent, canActivate: [AuthGuard]},
   { path: 'deactivateuser', component: DeactivateUserComponent, canActivate: [AuthGuard] },
   { path: '404', component: _404Component },
   { path: '**', redirectTo: '404' } // Handles unknown paths
