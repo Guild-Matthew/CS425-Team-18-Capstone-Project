@@ -28,10 +28,4 @@ export class DashboardComponent {
       console.log(`User is logged in as: ${this.role}`);
     }
   }
-
-  logout() {
-    localStorage.removeItem('role');  
-    localStorage.removeItem('user_id');  
-    this.router.navigate(['/login']);
-  }
 }

@@ -1,7 +1,8 @@
+<!--Mary Cottier, Guilherme Cassiano, Shane Petree-->
 <span *ngIf="role !== 'admin'">
   <a routerLink="/login">Login</a>
 </span>
-<!--Mary Cottier, Guilherme Cassiano-->
+
 <div class="main-container" *ngIf="role === 'admin'">
   <header>
     <div class="logo-group">
@@ -11,7 +12,7 @@
     <nav>
       <ul>
         <li><a routerLink="/map">Map</a></li>
-        <li><a routerLink="/login">Logout</a></li>
+        <li><a routerLink="/logout">Logout</a></li>
       </ul>
     </nav>
   </header>

@@ -1,4 +1,4 @@
-//Mary Cottier, Guilherme Cassiano
+//Mary Cottier, Guilherme Cassiano, Shane Petree
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
@@ -28,11 +28,5 @@ export class SuperAdminHomeComponent {
     } else {
       console.log(`User is logged in as: ${this.role}`);
     }
-  }
-
-  logout() {
-    localStorage.removeItem('role');
-    localStorage.removeItem('user_id');
-    this.router.navigate(['/login']);
   }
 }
