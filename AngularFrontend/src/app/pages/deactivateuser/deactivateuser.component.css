@@ -1,240 +1,224 @@
-/* Mary Cottier */
-/* Styling */
-* {
-  box-sizing: border-box;
-}
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
-}
-/* Header Styling */
-header {
-  background-color:  #041E42;
-  color: white;
-  padding: 15px 30px;
+/* Base layout */
+.page-wrapper {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  box-sizing: border-box;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-/* Logo Group (Image + Text) */
-.logo-group {
-  display: flex;
-  align-items: center;
+.content-area {
+  flex: 1;
+  padding: 2rem;
 }
 
-.logo-group img {
-  width: 65px;
-  height: auto;
-  margin-right: 15px;
-}
-
-.logo-group span {
-  font-size: 1.5em;
-  font-weight: bold;
-  white-space: nowrap;
-}
-
-/* Navigation Styling */
-nav {
-  flex-grow: 1; /* Ensures nav stretches */
-  display: flex;
-  justify-content: flex-end;
-}
-
-nav ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  gap: 20px;
-}
-
-nav ul li {
-  display: inline-block;
-}
-
-nav ul li a {
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
-  font-size: 1.1em;
-  padding: 10px 15px;
-}
-
-nav ul li a:hover {
-  text-decoration: underline;
-}
-
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f3f4f6;
-  color: #000000;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-  display: flex;
-}
-
-/* header Styles */
-header {
-  background-color: #041E42;
-  color: #ffffff;
-  padding: 20px 0;
-  margin-bottom: 20px;
-  width: 100%;
-  border-radius: 0px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.logo-group {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-header h1 {
-  font-size: 2.5rem;
-  margin: 0;
-}
-
-header nav ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  gap: 25px;
-}
-
-  header nav ul li a {
-    color: #ffffff;
-    text-decoration: none;
-    font-size: 1.2rem;
-    transition: color 0.3s ease;
-  }
-
-    header nav ul li a:hover {
-      color: #f3f4f6;
-    }
-
-/* Sidebar sort and filter styles */
-.main-content {
+.content-wrapper {
   display: flex;
   align-items: flex-start;
-  gap: 20px; /* Adds space between sidebar and products */
+  gap: 3rem;
 }
 
-.main-content-buttons {
-  margin-top: 0px;
-  display: flex;
-  gap: 15px;
-  justify-content: flex-end;
+/* Sidebar */
+.sidebar {
+  width: 250px;
+  background-color: #ffffff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.filter-section label {
+  font-weight: 600;
+}
+
+.filter-section select {
   width: 100%;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
 }
 
-.main-content-button {
-  padding: 8px 12px;
-  background-color: #041E42;
-  color: white;
+/* User cards */
+.user-section {
+  flex: 1;
+}
+
+.user-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.user-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+}
+
+.user-card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 1rem 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.user-card p {
+  margin: 0.25rem 0;
+}
+
+.user-card button {
+  margin-top: 0.5rem;
+  padding: 0.4rem 1rem;
+  background-color: #c62828;
+  color: #fff;
   border: none;
-  border-radius: 5px;
-  font-size: 1.1em;
+  border-radius: 6px;
   cursor: pointer;
-  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.user-card button:hover {
+  background-color: #b71c1c;
+}
+
+/* Add User Button */
+.main-content-button {
+  background-color: #002147;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 .main-content-button:hover {
-  background-color:  #041E42;
+  background-color: #001730;
 }
 
-.sidebar {
-  flex: 0 0 250px; /* Fixes sidebar width */
-  position: sticky; /* Ensures it stays fixed when scrolling */
-  top: 0; /* Sticks to the top of the container */
-  height: auto; /* Adjusts height dynamically */
-  background-color: #ffffff;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-right: 100px;
-  margin-left: 200px;
-  margin-top: 60px;
-}
-
-  .sidebar h2 {
-    font-size: 1.5rem;
-    margin-bottom: 15px;
-  }
-
-.filter-section {
-  margin-bottom: 20px;
-}
-
-  .filter-section label,
-  .filter-section select {
-    display: block;
-    width: 100%;
-    margin-bottom: 10px;
-  }
-
-/* Product(items) Styles */
-#products {
-  margin-bottom: 20px;
-  margin-left: 200px;
-}
-
-  #products h2 {
-    text-align: left; /* Aligns the subheader to the left */
-    margin-bottom: 20px; /* Adds space between the subheader and the grid */
-  }
-
-.product h3 span {
-  font-weight: normal; /* Set non-bold font weight */
-}
-
-.product {
-  background-color: #ffffff; /* White background for the box */
-  border-radius: 10px; /* Rounded corners */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-  padding: 20px; /* Space inside the box */
-  text-align: left; /* Align text to the left inside the box */
-  transition: transform 0.3s ease; /* Smooth hover effect */
-}
-
-  .product:hover {
-    transform: translateY(-5px); /* Move up slightly */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
-  }
-
-.product-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr; /* Two equal columns */
-  gap: 20px; /* Space between items */
-}
-
-/* Footer Styles */
-footer {
-  background-color: #041E42;
+/* Footer */
+.footer {
+  background-color: #002244;
   color: white;
   text-align: center;
-  padding: 10px 0;
-  font-size: 0.9em;
+  padding: 1.5rem 1rem;
+  background-image: url("../../assets/site-footer-bg.jpg");
+  background-size: cover;
+  background-position: center;
+  font-family: Arial, sans-serif;
+}
+
+.footer p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* ===== Restored Centered Header Layout ===== */
+.header {
+  font-family: Arial, sans-serif;
+  width: 100%;
+}
+
+/* Top nav bar (MAP, DASHBOARD, etc.) */
+.top-bar {
+  background-color: #002244;
+  padding: 0.5rem 1rem;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.top-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.top-links .nav-link {
+  color: white;
+  text-transform: uppercase;
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.top-links .nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Optional LOGIN button */
+.top-links .login-button {
+  background-color: #78be20;
+  color: black;
+  font-weight: bold;
+  padding: 0.4rem 1rem;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  transition: background-color 0.2s ease;
+}
+
+.top-links .login-button:hover {
+  background-color: #65a718;
+}
+
+/* Centered branding */
+.branding-bar {
+  background-color: #002244;
+  text-align: center;
+  padding: 1.5rem 1rem;
+  color: white;
+}
+
+.branding-bar img {
+  height: 60px;
+  margin-bottom: 0.5rem;
+}
+
+.branding-bar h1 {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.branding-bar p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #ccc;
+}
+
+/* ===== Responsive Styles ===== */
+@media (max-width: 1024px) {
+  .content-wrapper {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    margin-bottom: 2rem;
+  }
+
+  .user-section {
+    width: 100%;
+  }
+
+  .user-card-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+
+  .top-links {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .branding-bar img {
+    height: 48px;
+  }
+
+  .branding-bar h1 {
+    font-size: 1.5rem;
+  }
 }
