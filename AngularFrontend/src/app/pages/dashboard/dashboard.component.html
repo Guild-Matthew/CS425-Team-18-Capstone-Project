@@ -1,9 +1,9 @@
-<!--Matthew Guild, Shane Petree, Guilherme Cassiano-->
-<span *ngIf="role !== 'student'">
+<!--Matthew Guild, Shane Petree, Guilherme Cassiano, Mary Cottier-->
+<span *ngIf="role !== 'student' && role !== 'admin' && role !== 'superadmin'">
   <a routerLink="/login">Login</a>
 </span>
 
-<div class="main-container" *ngIf="role === 'student'">
+<div class="main-container" *ngIf="role === 'student' || role === 'admin' || role === 'superadmin'">
   <header>
     <div class="logo-group">
       <img class="university-logo-large-img align-image-bottom" alt="University of Nevada, Reno"
@@ -23,12 +23,22 @@
   <section class="hero">
     <div class="hero-overlay"></div>
     <div class="hero-content">
-      <h1>Welcome to Lost and Found</h1>
+      <!-- Dynamic title -->
+      <h1 *ngIf="role === 'student'">Student Dashboard</h1>
+      <h1 *ngIf="role === 'admin'">Admin Dashboard</h1>
+      <h1 *ngIf="role === 'superadmin'">Superadmin Dashboard</h1>
+
       <p>Here you can report lost items, view found items, and check for updates.</p>
+
       <div class="hero-buttons">
-        <a routerLink="/add-item" class="hero-button">Report Lost Item</a>
-        <a routerLink="/claimed-items" class="hero-button">View Claimed Items</a>
-        <a routerLink="/remove-item" class="hero-button">Remove an Item</a>
+        <!-- Student buttons -->
+        <a *ngIf="role === 'student' || role === 'admin' || role === 'superadmin'" routerLink="/lost-and-found" class="hero-button">View All Items</a>
+        <a *ngIf="role === 'student' || role === 'admin' || role === 'superadmin'" routerLink="/claimed-items" class="hero-button">View Claimed Items</a>
+
+        <!-- Admin and Superadmin buttons -->
+        <a *ngIf="role === 'admin' || role === 'superadmin'" routerLink="/generate-report" class="hero-button">Generate Report</a>
+        <a *ngIf="role === 'admin' || role === 'superadmin'" routerLink="/add-user" class="hero-button">Edit Access</a>
+        <a *ngIf="role === 'admin' || role === 'superadmin'" routerLink="/add-building" class="hero-button">Edit Buildings</a>
       </div>
     </div>
   </section>

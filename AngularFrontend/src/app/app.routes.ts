@@ -7,8 +7,6 @@ import { LoginComponent } from './pages/login/login.component';
 import { LostAndFoundComponent } from './pages/lost-and-found/lost-and-found.component';
 import { AddItemComponent } from './pages/add-item/add-item.component';
 import { ClaimedItemsComponent } from './pages/claimed-items/claimed-items.component';
-import { AdminHomeComponent } from './pages/admin-home/admin-home.component';
-import { SuperAdminHomeComponent } from './pages/super-admin-home/super-admin-home.component';
 import { MapComponent } from './pages/map/map.component';
 import { _404Component } from './pages/404/404.component';
 import { AuthGuard } from './auth.guard'; //Ensure only logged people can access certain pages
@@ -19,8 +17,6 @@ import { DeactivateUserComponent } from './pages/deactivateuser/deactivateuser.c
 import { LogoutComponent } from './pages/logout/logout.component';
 
 export const routes: Routes = [
-  { path: 'admin-home', component: AdminHomeComponent, canActivate: [AuthGuard] },
-  { path: 'super-admin-home', component: SuperAdminHomeComponent, canActivate: [AuthGuard] },
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: '', redirectTo: 'map', pathMatch: 'full' },
   { path: 'add-user', component: AddUserComponent, canActivate: [AuthGuard] },

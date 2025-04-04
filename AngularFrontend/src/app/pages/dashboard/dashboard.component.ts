@@ -19,13 +19,14 @@ export class DashboardComponent {
   }
 
   checkLoginStatus() {
-    this.role = localStorage.getItem('role');  
-
-    if (this.role !== 'student') {
-      console.error("User is not a student. Redirecting to login.");
+    this.role = localStorage.getItem('role');
+  
+    if (this.role !== 'student' && this.role !== 'admin' && this.role !== 'superadmin') {
+      console.error("User is not authorized. Redirecting to login.");
       this.router.navigate(['/login']);
     } else {
       console.log(`User is logged in as: ${this.role}`);
     }
   }
+
 }
