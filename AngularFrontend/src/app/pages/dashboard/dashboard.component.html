@@ -37,7 +37,7 @@
 
         <!-- Admin and Superadmin buttons -->
         <a *ngIf="role === 'admin' || role === 'superadmin'" routerLink="/generate-report" class="hero-button">Generate Report</a>
-        <a *ngIf="role === 'admin' || role === 'superadmin'" routerLink="/add-user" class="hero-button">Edit Access</a>
+        <a *ngIf="role === 'admin' || role === 'superadmin'" routerLink="/deactivateuser" class="hero-button">Edit Access</a>
         <a *ngIf="role === 'admin' || role === 'superadmin'" routerLink="/add-building" class="hero-button">Edit Buildings</a>
       </div>
     </div>

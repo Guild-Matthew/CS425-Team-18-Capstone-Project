@@ -102,7 +102,7 @@
   color: white;
   text-align: center;
   padding: 1.5rem 1rem;
-  background-image: url("../../assets/site-footer-bg.jpg");
+  background-image: url("/assets/site-footer-bg.jpg");
   background-size: cover;
   background-position: center;
   font-family: Arial, sans-serif;
