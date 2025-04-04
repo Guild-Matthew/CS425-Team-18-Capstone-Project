@@ -92,6 +92,7 @@ export class RemoveItemComponent implements OnInit {
       response => {
         console.log("Item removed successfully", response);
         this.items = this.items.filter(i => i !== item);
+        this.fetchItems();
       },
       error => console.error("Error removing item:", error)
     );

@@ -7,7 +7,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
-
 @Component({
   selector: 'add-floor',
   standalone: true,
@@ -15,23 +14,24 @@ import { Router } from '@angular/router';
   templateUrl: './add-floor.component.html',
   styleUrl: './add-floor.component.css'
 })
-export class AddFloorComponent implements OnInit{
+export class AddFloorComponent implements OnInit {
   items: any[] = [];
   buildings: string[] = [];
   authToken: string | null = null;
-  building: string = '';
-  floors: string[] = []; 
   selectedBuilding: string = '';
+  floors: string[] = [];
   newFloorNumber: number | null = null;
 
   constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router) { }
-    ngOnInit(): void {
-      this.route.queryParams.subscribe(params => {
-        this.building = params['building'] || '';
-        this.fetchItems();
-      });
-      this.authToken = localStorage.getItem('authtoken');
-    }
+
+  ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      this.selectedBuilding = params['selected_building'] || '';
+      this.fetchItems();
+    });
+    this.authToken = localStorage.getItem('authtoken');
+  }
+
   fetchItems(): void {
     const userId = localStorage.getItem('user_id');
     const role = localStorage.getItem('role');
@@ -43,11 +43,11 @@ export class AddFloorComponent implements OnInit{
       return;
     }
 
-    if (!this.building) {
-      this.building = "Please select a building";
+    if (!this.selectedBuilding) {
+      this.selectedBuilding = "Please select a building";
     }
 
-    const url = `${flask_URL}/editBuilding?token=${authToken}&user_id=${userId}&role=${role}&building=${this.building}`;
+    const url = `${flask_URL}/editBuilding?token=${authToken}&user_id=${userId}&role=${role}&selected_building=${this.selectedBuilding}`;
 
     console.log("Fetching items from:", url);
 
@@ -85,13 +85,14 @@ export class AddFloorComponent implements OnInit{
       response => {
         console.log("Floor added successfully", response);
         this.newFloorNumber = null;
-        this.fetchItems(); 
+        this.fetchItems();
       },
       error => {
         console.error("Error adding floor:", error);
       }
     );
   }
+
   removeFloor(floor: string): void {
     const userId = localStorage.getItem('user_id');
     const role = localStorage.getItem('role');
@@ -113,12 +114,11 @@ export class AddFloorComponent implements OnInit{
     this.http.post(`${flask_URL}/editBuilding`, formData, { withCredentials: true }).subscribe(
       response => {
         console.log(`Floor ${floor} removed successfully`, response);
-        this.fetchItems(); 
+        this.fetchItems();
       },
       error => {
         console.error("Error removing floor:", error);
       }
     );
   }
-
-  }
+}

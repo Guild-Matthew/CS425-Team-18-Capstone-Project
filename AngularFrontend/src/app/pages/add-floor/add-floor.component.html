@@ -25,7 +25,7 @@
     <!-- Building Section -->
     <div class="filter-section">
       <label for="building">Lost and Found Location:</label>
-      <select id="building" [(ngModel)]="building" (change)="fetchItems()">
+      <select id="selectedBuilding" [(ngModel)]="selectedBuilding" (change)="fetchItems()">
         <option *ngFor="let b of buildings" [value]="b">{{ b }}</option>
       </select>
     </div>

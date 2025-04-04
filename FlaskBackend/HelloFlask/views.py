@@ -207,6 +207,7 @@ def addBuilding():
 @cross_origin(supports_credentials=True) 
 def EditBuilding():
         user_id = request.args.get('user_id')  
+        print(user_id)
         role = request.args.get('role')
         formAuthToken = request.args.get('token')
         uidauthtoken = db_queries.getTokenByUID(user_id)
@@ -219,7 +220,7 @@ def EditBuilding():
         if request.method == 'POST':
             selected_building = request.form.get('selected_building', buildings[0] if buildings else None)
         else:
-            selected_building = request.args.get('building', buildings[0] if buildings else None)
+            selected_building = request.args.get('selected_building', buildings[0] if buildings else None)
 
         # Fetch floors for the selected building
         bid = db_queries.getBuildingID(selected_building)
@@ -228,18 +229,19 @@ def EditBuilding():
         if request.method == 'POST':
             action = request.form.get('action') 
             if action == 'add_floor':
+                user_id = request.form.get('user_id')
+                role = request.form.get('role')
                 floorNumber = request.form['floorNumber']
                 db_queries.addFloor(bid, floorNumber)
                 floors = db_queries.getFloors(bid)
             elif action == 'remove_floor':
+                user_id = request.form.get('user_id')
+                role = request.form.get('role')
                 floor_number = request.form.get('floor_number') 
                 db_queries.removeFloor(bid, floor_number)
                 floors = db_queries.getFloors(bid)
 
-        user_id = request.args.get('user_id')  
-        if not user_id:
-            return jsonify({"error": "Unauthorized - Missing User ID GET"}), 401
-        role = request.args.get('role')
+
         if role == 'superadmin':
             buildingsPermissions = db_queries.getAllBuildings()
         elif role == 'admin':
