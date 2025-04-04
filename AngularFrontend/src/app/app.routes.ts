@@ -15,11 +15,8 @@ import { AuthGuard } from './auth.guard'; //Ensure only logged people can access
 import { RemoveItemComponent } from './pages/remove-item/remove-item.component';
 import { AddBuildingComponent } from './pages/add-building/add-building.component';
 import { DeactivateUserComponent } from './pages/deactivateuser/deactivateuser.component';
-<<<<<<< HEAD
 import { AddFloorComponent } from './pages/add-floor/add-floor.component';
-=======
 import { LogoutComponent } from './pages/logout/logout.component';
->>>>>>> e67f265 (Created a logout component and replaced logout method.)
 
 export const routes: Routes = [
   { path: 'admin-home', component: AdminHomeComponent, canActivate: [AuthGuard] },
