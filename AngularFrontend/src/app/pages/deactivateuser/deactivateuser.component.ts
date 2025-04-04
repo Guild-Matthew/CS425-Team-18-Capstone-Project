@@ -1,68 +1,37 @@
-import { Component, OnInit } from '@angular/core';
-import { RouterLink, Router } from '@angular/router';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 
 @Component({
-  selector: 'app-deactivateUser',
+  selector: 'app-deactivateuser',
   standalone: true,
-  imports: [CommonModule, RouterLink],
   templateUrl: './deactivateuser.component.html',
-  styleUrl: './deactivateuser.component.css'
+  styleUrls: ['./deactivateuser.component.css'],
+  imports: [CommonModule]
 })
-export class DeactivateUserComponent implements OnInit {
-  users: any[] = [];
-  role: string = ''; // Added role property
+export class DeactivateUserComponent {
+  // Simulate current user role (can be 'student' or 'staff')
+  role: string = 'student';
 
-  constructor(private http: HttpClient) {}
+  users = [
+    { id: 1, name: 'Alice', email: 'alice@unr.edu', role: 'student', building: 'SEM' },
+    { id: 2, name: 'Bob', email: 'bob@unr.edu', role: 'staff', building: 'DMSC' },
+    { id: 3, name: 'Charlie', email: 'charlie@unr.edu', role: 'student', building: 'AB' },
+    { id: 4, name: 'Diana', email: 'diana@unr.edu', role: 'staff', building: 'SEM' }
+  ];
 
-  ngOnInit(): void {
-    this.getUserRole(); // Get the user role
-    this.loadUsers();
+  filterType: string = 'all';
+
+  filterAccounts(type: string) {
+    this.filterType = type;
   }
 
-  getUserRole(): void {
-    this.role = localStorage.getItem('userRole') || 'student';
+  deactivateUser(userId: number) {
+    this.users = this.users.filter(user => user.id !== userId);
+    alert(`✅ User with ID ${userId} has been deactivated.`);
   }
 
-  loadUsers(): void {
-    this.http.get<any[]>('/api/users').subscribe(
-      data => {
-        console.log('Users loaded:', data);
-        this.users = data;
-      },
-      error => {
-        console.error('Error fetching users:', error);
-      }
-    );
-  }  
-
-  filterAccounts(selectedFilter: string): void {
-    const url = selectedFilter === 'all' ? '/api/users' : `/api/users?building=${selectedFilter}`;
-    this.http.get<any[]>(url).subscribe(data => {
-      this.users = data;
-    }, error => {
-      console.error('Error filtering users:', error);
-    });
-  }
-
-  deactivateUser(userId: string): void {
-    if (confirm('Are you sure you want to deactivate this user?')) {
-      this.http.post(`/api/deactivate/${userId}`, {}).subscribe(
-        response => {
-          alert('User deactivated successfully');
-          this.loadUsers();  // Reload users after deactivation
-        },
-        error => {
-          console.error('Error deactivating user:', error);
-          alert('Failed to deactivate user');
-        }
-      );
-    }
-  }  
-
-  logout(): void {
-    console.log('User logged out');
-    localStorage.removeItem('userRole'); // Clears role when logging out
+  get filteredUsers() {
+    if (this.filterType === 'all') return this.users;
+    return this.users.filter(user => user.building === this.filterType);
   }
 }
