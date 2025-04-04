@@ -414,3 +414,4 @@ Thumbs.db
 /FlaskBackend/env/
 /FlaskBackend/flask_sessions/
 /AngularFrontend/package-lock.json
+/env
