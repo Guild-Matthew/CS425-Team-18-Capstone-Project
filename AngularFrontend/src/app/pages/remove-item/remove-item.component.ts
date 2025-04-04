@@ -93,6 +93,7 @@ export class RemoveItemComponent implements OnInit {
         console.log("Item removed successfully", response);
         alert('Item marked as claimed');
         this.items = this.items.filter(i => i !== item);
+        this.fetchItems();
       },
       error => console.error("Error removing item:", error)
     );

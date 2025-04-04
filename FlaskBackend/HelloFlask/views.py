@@ -204,18 +204,23 @@ def addBuilding():
         return jsonify({"message": "Building added successfully!"}), 200
 
 @main_bp.route('/editBuilding', methods=['GET', 'POST'])
+@cross_origin(supports_credentials=True) 
 def EditBuilding():
-    if 'user_id' in session:
-        buildings = db_queries.getAllBuildings()
-        if request.method == 'POST':
-            selected_building = request.form.get('selected_building') 
-        else:
-            selected_building = request.args.get('building')  
+        user_id = request.args.get('user_id')  
+        print(user_id)
+        role = request.args.get('role')
+        formAuthToken = request.args.get('token')
+        uidauthtoken = db_queries.getTokenByUID(user_id)
+        uidauthtoken = uidauthtoken[0] if isinstance(uidauthtoken, list) and uidauthtoken else None
 
-        # Default to the first building if none is selected
-        if selected_building is None or selected_building == '':
-            if buildings:
-                selected_building = buildings[0]
+        if uidauthtoken != formAuthToken:
+            return jsonify({"error": "Unauthorized"}), 401
+
+        buildings = db_queries.getBuildingsFromPermissions(user_id)
+        if request.method == 'POST':
+            selected_building = request.form.get('selected_building', buildings[0] if buildings else None)
+        else:
+            selected_building = request.args.get('selected_building', buildings[0] if buildings else None)
 
         # Fetch floors for the selected building
         bid = db_queries.getBuildingID(selected_building)
@@ -224,18 +229,28 @@ def EditBuilding():
         if request.method == 'POST':
             action = request.form.get('action') 
             if action == 'add_floor':
+                user_id = request.form.get('user_id')
+                role = request.form.get('role')
                 floorNumber = request.form['floorNumber']
                 db_queries.addFloor(bid, floorNumber)
                 floors = db_queries.getFloors(bid)
             elif action == 'remove_floor':
+                user_id = request.form.get('user_id')
+                role = request.form.get('role')
                 floor_number = request.form.get('floor_number') 
                 db_queries.removeFloor(bid, floor_number)
                 floors = db_queries.getFloors(bid)
 
-        return render_template("editBuilding.html", buildings=buildings, selected_building=selected_building, floors=floors)
-    else:
-        session['next_url'] = request.url
-        return redirect(url_for('account.login'))
+
+        if role == 'superadmin':
+            buildingsPermissions = db_queries.getAllBuildings()
+        elif role == 'admin':
+            buildingsPermissions = db_queries.getBuildingsFromPermissions(user_id)
+        return jsonify({
+            "buildings": buildingsPermissions,
+            "selected_building": selected_building,
+            "floors": floors
+        })
 
 @main_bp.route('/editFloor', methods=['GET', 'POST'])
 def EditFloor():

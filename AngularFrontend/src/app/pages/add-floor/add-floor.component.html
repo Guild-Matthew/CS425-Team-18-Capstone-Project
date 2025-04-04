@@ -1,0 +1,65 @@
+<!-- Implemented by Guilherme Domingues Cassiano -->
+<!--Header section-->
+<header>
+  <div class="container">
+    <div class="logo-group">
+      <img class="university-logo-large-img align-image-bottom" alt="University of Nevada, Reno" src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg" width="65" height="65">
+      <span class="logo-text-new align-text-middle">
+        University of Nevada, Reno
+      </span>
+    </div>
+    <h1>Lost and Found</h1>
+    <nav>
+      <ul>
+        <li><a routerLink="/super-admin-home">Dashboard</a></li>
+        <li><a routerLink="/map">Map</a></li>
+        <li><a routerLink="/login">Logout</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<div class="main-content">
+  <!-- Sidebar for sort and filter -->
+  <aside class="sidebar">
+    <!-- Building Section -->
+    <div class="filter-section">
+      <label for="building">Lost and Found Location:</label>
+      <select id="selectedBuilding" [(ngModel)]="selectedBuilding" (change)="fetchItems()">
+        <option *ngFor="let b of buildings" [value]="b">{{ b }}</option>
+      </select>
+    </div>
+  </aside>
+  <!--Add floor button-->
+  <section class="add-floor-section">
+    <form (ngSubmit)="addFloor()" #addFloorForm="ngForm">
+      <label for="floorNumber">Number of floor being added:</label>
+      <input type="number"
+             id="floorNumber"
+             name="floorNumber"
+             [(ngModel)]="newFloorNumber"
+             required />
+      <button type="submit">Add Floor</button>
+    </form>
+  </section>
+  <section class="product-section">
+    <!--Floor Section-->
+    <h2>Floors in Building: {{ selectedBuilding }}</h2>
+    <div class="product-grid">
+      <div *ngIf="floors && floors.length > 0; else noFloors">
+        <div *ngFor="let floor of floors" class="product">
+          <h3><strong>Floor Number:</strong> <span>{{ floor }}</span></h3>
+          <button (click)="removeFloor(floor)">Remove Floor</button>
+        </div>
+      </div>
+      <ng-template #noFloors>
+        <p>No floors found for the selected building.</p>
+      </ng-template>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <p>&copy; 2024 University of Nevada, Reno. Lost and Found Service.</p>
+</footer>
