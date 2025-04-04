@@ -1,82 +1,76 @@
-<!-- Matthew Guild -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>UNR Lost and Found</title>
-</head>
-
-<body>
-
-  <!-- Role-Based Navigation -->
-  <span *ngIf="role !== 'student'">
-    <a routerLink="/login">Login</a>
-  </span>
-
-  <div class="main-container" *ngIf="role === 'student'">
-    <!-- Updated Header -->
-    <header>
-      <div class="logo-group">
-        <img class="university-logo-large-img align-image-bottom" 
-             alt="University of Nevada, Reno" 
-             src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg" 
-             width="65" height="65">
-        <span class="logo-text-new align-text-middle">
-          University of Nevada, Reno
-        </span>
+<div class="page-wrapper">
+  <!-- HEADER -->
+  <header class="header">
+    <div class="top-bar">
+      <div class="top-links">
+        <a class="nav-link" href="#">MAP</a>
+        <a class="nav-link" href="#">DASHBOARD</a>
+        <a class="nav-link" href="#">LOST & FOUND</a>
+        <a class="login-button" href="#">LOGIN</a>
       </div>
-      <nav>
-        <ul>
-          <li><a routerLink="/map">Map</a></li>
-          <li><a routerLink="">Help</a></li>
-          <li><a routerLink="/login">Logout</a></li>
-        </ul>
-      </nav>
-    </header>
-
-    <div class="main-content">
-      <div class="main-content-buttons">
-      <a routerLink="/add-user" class="main-content-button">Add User</a>
     </div>
-    <!-- Sidebar for sort and filter -->
-      <aside class="sidebar">
+  
+    <div class="branding-bar">
+      <img src="assets/unr_logo.png" alt="University Logo" />
+      <h1>University of Nevada, Reno</h1>
+      <p>Inspiring Excellence Since 1874</p>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="content-area">
+    <div class="content-wrapper">
+      <!-- Sidebar -->
+      <div class="sidebar">
         <h2>Sort & Filter</h2>
         <div class="filter-section">
-          <label for="filterType">Filter by Building:</label>
-          <select id="filterType" #filterTypeSelect (change)="filterAccounts(filterTypeSelect.value)">
+          <label for="building">Filter by Building:</label>
+          <select id="building">
             <option value="all">All</option>
-            <option value="SEM">SEM</option>
-            <option value="DMSC">DMSC</option>
-            <option value="AB">AB</option>
           </select>
         </div>
-      </aside>
+      </div>
 
       <!-- Users Section -->
-      <section id="products">
-        <h2>Students Working in Selected Building</h2>
-        <div class="product-grid">
-          <div *ngIf="users.length > 0; else noUsers">
-            <div *ngFor="let user of users" class="product">
-              <p><strong>Name:</strong> {{ user.name }}</p>
-              <p><strong>Email:</strong> {{ user.email }}</p>
-              <p><strong>Building:</strong> {{ user.building }}</p>
-              <button (click)="deactivateUser(user.id)">Deactivate</button>
-            </div>
-          </div>
-          <ng-template #noUsers>
-            <p>No student accounts found for the selected filter.</p>
-          </ng-template>
+      <div class="user-section">
+        <div class="user-header">
+          <h2 class="students-header">Students Working in Selected Building</h2>
+          <button class="main-content-button">Add User</button>
         </div>
-      </section>
+
+        <!-- Cards -->
+        <div class="user-card-grid">
+          <div class="user-card">
+            <p><strong>Name:</strong> Alice</p>
+            <p><strong>Email:</strong> alice&#64;unr.edu</p>
+            <p><strong>Building:</strong> SEM</p>
+            <button>Deactivate</button>
+          </div>
+          <div class="user-card">
+            <p><strong>Name:</strong> Bob</p>
+            <p><strong>Email:</strong> bob&#64;unr.edu</p>
+            <p><strong>Building:</strong> DMSC</p>
+            <button>Deactivate</button>
+          </div>
+          <div class="user-card">
+            <p><strong>Name:</strong> Charlie</p>
+            <p><strong>Email:</strong> charlie&#64;unr.edu</p>
+            <p><strong>Building:</strong> AB</p>
+            <button>Deactivate</button>
+          </div>
+          <div class="user-card">
+            <p><strong>Name:</strong> Diana</p>
+            <p><strong>Email:</strong> diana&#64;unr.edu</p>
+            <p><strong>Building:</strong> SEM</p>
+            <button>Deactivate</button>
+          </div>
+        </div>
+      </div>
     </div>
+  </main>
 
-    <!-- Footer -->
-    <footer>
-      <p>&copy; 2025 University of Nevada, Reno. Lost and Found Service.</p>
-    </footer>
-  </div>
-
-</body>
-</html>
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>&copy; 2025 University of Nevada, Reno. Lost and Found Service.</p>
+  </footer>
+</div>
