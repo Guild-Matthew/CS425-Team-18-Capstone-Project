@@ -48,20 +48,33 @@
       <!-- Products Section -->
       <section id="products">
         <h2>Items will be kept until December 29th, 2024</h2>
-        <h2>Found Items in Building: {{ building }}</h2>
-        <div class="product-grid">
+        <h2>Found Items in Building: {{ selectedBuilding }}</h2>
+
+        <!-- Display error message if any -->
+        <div *ngIf="errorMessage" class="error-message">
+          <p style="color: red;"><strong>{{ errorMessage }}</strong></p>
+        </div>
+
+        <div class="product-grid" *ngIf="!errorMessage">
           <div *ngFor="let item of filteredItems; trackBy: trackByFn" class="product" (click)="toggleImage(item)">
             <h3><strong>Item type: </strong> <span>{{ item.type }}</span></h3>
             <h3><strong>Location found: </strong> <span>{{ item.location }}</span></h3>
             <h3><strong>Date found: </strong> <span>{{ item.dateFound }}</span></h3>
             <h3><strong>Description: </strong> <span>{{ item.description }}</span></h3>
-
             <div *ngIf="item.imageUrl">
               <img [src]="item.imageUrl" alt="Photo of {{ item.type }}" style="max-width: 200px;">
             </div>
           </div>
         </div>
       </section>
+
+      <!-- Building Filter -->
+      <div class="filter-section">
+        <label for="building">Lost and Found Location:</label>
+        <select id="building" [(ngModel)]="selectedBuilding" (change)="onBuildingChange()">
+          <option *ngFor="let b of buildings" [value]="b">{{ b }}</option>
+        </select>
+      </div>
 
     </div>
 

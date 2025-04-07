@@ -366,6 +366,16 @@ class Queries:
         self.cursor.execute(query, (UID,))
         self.conn.commit()
 
+    def getBuildingCoordinates(self):
+        query = """
+            SELECT buildingcode, latitude, longitude
+            FROM building
+        """
+        self.cursor.execute(query)
+        rows = self.cursor.fetchall()
+        return [{'buildingcode': row[0], 'latitude': row[1], 'longitude':row[2]} for row in rows]
+
+
 if __name__ == "__main__":
     # Create an instance of Queries
     db_queries = Queries()
