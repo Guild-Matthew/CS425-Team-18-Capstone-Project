@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-deactivateuser',
   standalone: true,
   templateUrl: './deactivateuser.component.html',
   styleUrls: ['./deactivateuser.component.css'],
-  imports: [CommonModule]
+  imports: [CommonModule, RouterModule]
 })
 export class DeactivateUserComponent {
   // Simulate current user role (can be 'student' or 'staff')
@@ -27,7 +28,7 @@ export class DeactivateUserComponent {
 
   deactivateUser(userId: number) {
     this.users = this.users.filter(user => user.id !== userId);
-    alert(`✅ User with ID ${userId} has been deactivated.`);
+    alert(`User with ID ${userId} has been deactivated.`);
   }
 
   get filteredUsers() {

@@ -3,16 +3,17 @@
   <header class="header">
     <div class="top-bar">
       <div class="top-links">
-        <a class="nav-link" href="#">MAP</a>
-        <a class="nav-link" href="#">DASHBOARD</a>
-        <a class="nav-link" href="#">LOST & FOUND</a>
-        <a class="login-button" href="#">LOGIN</a>
+        <a class="nav-link" routerLink="/map">Map</a>
+        <a class="nav-link" routerLink="/dashboard">Dashboard</a>
+        <a class="nav-link" routerLink="/lost-and-found">Lost & Found</a>
+        <a class="login-button" routerLink="/login">Logout</a>            
       </div>
     </div>
   
     <div class="branding-bar">
-      <img src="assets/unr_logo.png" alt="University Logo" />
-      <h1>University of Nevada, Reno</h1>
+      <img class="university-logo-large-img align-image-bottom" alt="University of Nevada, Reno"
+      src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg" width="65" height="65">
+       <h1>University of Nevada, Reno</h1>
       <p>Inspiring Excellence Since 1874</p>
     </div>
   </header>
@@ -35,34 +36,16 @@
       <div class="user-section">
         <div class="user-header">
           <h2 class="students-header">Students Working in Selected Building</h2>
-          <button class="main-content-button">Add User</button>
+          <button class="main-content-button" [routerLink]="'/add-user'">Add User</button>
         </div>
 
         <!-- Cards -->
         <div class="user-card-grid">
-          <div class="user-card">
-            <p><strong>Name:</strong> Alice</p>
-            <p><strong>Email:</strong> alice&#64;unr.edu</p>
-            <p><strong>Building:</strong> SEM</p>
-            <button>Deactivate</button>
-          </div>
-          <div class="user-card">
-            <p><strong>Name:</strong> Bob</p>
-            <p><strong>Email:</strong> bob&#64;unr.edu</p>
-            <p><strong>Building:</strong> DMSC</p>
-            <button>Deactivate</button>
-          </div>
-          <div class="user-card">
-            <p><strong>Name:</strong> Charlie</p>
-            <p><strong>Email:</strong> charlie&#64;unr.edu</p>
-            <p><strong>Building:</strong> AB</p>
-            <button>Deactivate</button>
-          </div>
-          <div class="user-card">
-            <p><strong>Name:</strong> Diana</p>
-            <p><strong>Email:</strong> diana&#64;unr.edu</p>
-            <p><strong>Building:</strong> SEM</p>
-            <button>Deactivate</button>
+          <div class="user-card" *ngFor="let user of filteredUsers">
+            <p><strong>Name:</strong> {{ user.name }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Building:</strong> {{ user.building }}</p>
+            <button (click)="deactivateUser(user.id)">Deactivate</button>
           </div>
         </div>
       </div>
