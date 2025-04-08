@@ -12,8 +12,8 @@
   
     <div class="branding-bar">
       <img class="university-logo-large-img align-image-bottom" alt="University of Nevada, Reno"
-      src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg" width="65" height="65">
-       <h1>University of Nevada, Reno</h1>
+           src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg" width="65" height="65">
+      <h1>University of Nevada, Reno</h1>
       <p>Inspiring Excellence Since 1874</p>
     </div>
   </header>
@@ -25,12 +25,29 @@
       <div class="sidebar">
         <h2>Sort & Filter</h2>
         <div class="filter-section">
-          <label for="building">Filter by Building:</label>
-          <select id="building">
-            <option value="all">All</option>
-          </select>
-        </div>
-      </div>
+          <label>Filter by Building:</label>
+          <div class="checkbox-group">
+
+            <!-- Individual Buildings -->
+            <div *ngFor="let building of accessibleBuildings">
+              <label>
+                <input type="checkbox"
+                       [value]="building"
+                       [checked]="selectedBuildings.has(building)"
+                       (change)="onBuildingCheckboxChange($event)" />
+                {{ building }}
+              </label>
+            </div>
+            <!-- "Select All" Option -->
+            <label>
+              <input type="checkbox"
+                [checked]="selectedBuildings.size === accessibleBuildings.length"
+                (change)="toggleSelectAll($event)" />
+                Select All
+            </label>
+          </div>
+        </div> <!-- Close filter-section div here -->
+      </div> <!-- Close sidebar div here -->
 
       <!-- Users Section -->
       <div class="user-section">
