@@ -1,4 +1,5 @@
 //Mary Cottier, Matthew Guild, Shane Petree, Guilherme Cassiano
+
 import { Routes } from '@angular/router';
 import { AppComponent } from './app.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
@@ -16,6 +17,7 @@ import { AddBuildingComponent } from './pages/add-building/add-building.componen
 import { DeactivateUserComponent } from './pages/deactivateuser/deactivateuser.component';
 import { LogoutComponent } from './pages/logout/logout.component';
 import { AddFloorComponent } from './pages/add-floor/add-floor.component';
+import { EditFloorComponent } from './pages/edit-floor/edit-floor.component';
 
 export const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
@@ -30,6 +32,7 @@ export const routes: Routes = [
   { path: 'remove-item', component: RemoveItemComponent, canActivate: [AuthGuard] },
   { path: 'add-building', component: AddBuildingComponent, canActivate: [AuthGuard] },
   { path: 'add-floor', component: AddFloorComponent, canActivate: [AuthGuard]},
+  { path: 'edit-floor', component: EditFloorComponent, canActivate: [AuthGuard] },
   { path: 'deactivateuser', component: DeactivateUserComponent, canActivate: [AuthGuard] },
   { path: '404', component: _404Component },
   { path: '**', redirectTo: '404' } // Handles unknown paths
