@@ -16,12 +16,12 @@ body {
 header {
   font-family: Arial, sans-serif;
   width: 100%;
-  background-color: #002244;
+  background-color: #041E42;
   color: white;
 }
 
 .top-bar {
-  background-color: #002244;
+  background-color: #041E42;
   padding: 0.5rem 1rem;
   display: flex;
   justify-content: flex-end;
@@ -66,7 +66,7 @@ header {
 }
 
 .branding-bar {
-  background-color: #002244;
+  background-color: #041E42;
   text-align: center;
   padding: 1.5rem 1rem;
   color: white;
@@ -165,7 +165,7 @@ header {
 
 /* Footer */
 footer {
-  background-color: #002244;
+  background-color: #041E42;
   color: white;
   text-align: center;
   padding: 1.5rem 1rem;
