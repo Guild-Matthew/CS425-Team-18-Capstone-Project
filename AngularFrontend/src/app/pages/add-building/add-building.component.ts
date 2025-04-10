@@ -1,77 +1,68 @@
-//Guilherme Cassiano
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { flask_URL } from '../../app.config';
-import { CommonModule, NgFor } from '@angular/common';
-import { RouterLink, ActivatedRoute } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
-import { FormsModule, NgForm } from '@angular/forms';
+//Guilherme Cassiano, Matthew Guild
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+  FormsModule
+} from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
-  selector: 'add-building',
+  selector: 'app-add-building',
   standalone: true,
-  imports: [FormsModule, RouterLink, NgFor],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './add-building.component.html',
-  styleUrl: './add-building.component.css'
+  styleUrls: ['./add-building.component.css']
 })
-
 export class AddBuildingComponent {
-  building: any = {
+  buildingForm: FormGroup;
+  imageFile: File | null = null;
+
+  building = {
     BuildingCode: '',
-    Latitude: '',
-    Longitude: '',
+    coordinates: ''
   };
-  authToken: string | null = null;
-  constructor(private http: HttpClient, private router: Router) { }
+
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private snackBar: MatSnackBar
+  ) {
+    this.buildingForm = this.fb.group({
+      name: ['', Validators.required],
+      description: ['', Validators.required],
+      coordinates: ['', Validators.required],
+      image: [null]
+    });
+  }
+
+  onFileChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      this.imageFile = input.files[0];
+    }
+  }
 
   onSubmit(): void {
-    const userId = localStorage.getItem('user_id');
-    const role = localStorage.getItem('role');
-    const authToken = localStorage.getItem('authtoken');
-    if (!userId) {
-      console.error("No user ID found. Redirecting to login.");
-      this.router.navigate(['/login']);
+    if (this.buildingForm.invalid) {
+      this.snackBar.open('Please fill in all required fields.', 'Close', { duration: 3000 });
       return;
     }
 
-    if (!this.building.coordinates || !this.building.coordinates.includes(',')) {
-      console.error("Invalid coordinates format! Expected: Lat, Lng");
-      alert("Invalid coordinates format! Please enter: Latitude, Longitude");
-      return;
-    }
+  
+    console.log('Submitted building:', {
+      formValues: this.buildingForm.value,
+      modelValues: this.building,
+      file: this.imageFile
+    });
 
-    const [latitude, longitude] = this.building.coordinates.split(',').map(coord => coord.trim());
+    this.snackBar.open('Building saved locally (no backend)', 'Close', { duration: 3000 });
 
-    const formData = new FormData();
-    formData.append('user_id', userId);
-    formData.append('role', role);
-    formData.append('BuildingCode', this.building.BuildingCode);
-    formData.append('Latitude', latitude);
-    formData.append('Longitude', longitude);
-    formData.append('authToken', this.authToken);
-    console.log("Sending Data:");
-    formData.forEach((value, key) => console.log(`${key}: ${value}`));
-
-    this.http.post(`${flask_URL}/addBuilding`, formData, { withCredentials: true }).subscribe(
-      (response: any) => {
-        console.log("Building added successfully:", response);
-        alert('Building successfully added!');
-        this.resetForm();
-      },
-      error => {
-        console.error("Error adding building:", error);
-        alert('Error adding building!');
-      }
-    );
+    // Optional navigation
+    this.router.navigate(['/']);
   }
-
-  resetForm(): void {
-    this.building = {
-      BuildingCode: '',
-      Latitude: '',
-      Longitude: '',
-    };
-  }
-
 }
