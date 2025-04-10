@@ -376,14 +376,12 @@ class Queries:
         return [{'buildingcode': row[0], 'latitude': row[1], 'longitude':row[2]} for row in rows]
 
 
+
 if __name__ == "__main__":
     # Create an instance of Queries
     db_queries = Queries()
     
-    # Call the method and store the result
     
-    db_queries.addRoom(5, 202)
-   
 
     
     # Close the database connection
