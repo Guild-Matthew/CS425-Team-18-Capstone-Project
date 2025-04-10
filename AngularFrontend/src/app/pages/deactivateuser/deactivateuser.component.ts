@@ -1,16 +1,16 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-deactivateuser',
   standalone: true,
   templateUrl: './deactivateuser.component.html',
   styleUrls: ['./deactivateuser.component.css'],
-  imports: [CommonModule]
+  imports: [CommonModule, RouterModule]
 })
 export class DeactivateUserComponent {
-  // Simulate current user role (can be 'student' or 'staff')
-  role: string = 'student';
+  role: string = 'student'; // Simulate current user role
 
   users = [
     { id: 1, name: 'Alice', email: 'alice@unr.edu', role: 'student', building: 'SEM' },
@@ -19,19 +19,48 @@ export class DeactivateUserComponent {
     { id: 4, name: 'Diana', email: 'diana@unr.edu', role: 'staff', building: 'SEM' }
   ];
 
-  filterType: string = 'all';
+  // Simulated user-accessible buildings
+  accessibleBuildings: string[] = ['SEM', 'DMSC', 'AB']; // Customize per user
+  selectedBuildings: Set<string> = new Set();
 
-  filterAccounts(type: string) {
-    this.filterType = type;
+  ngOnInit(): void {
+    // By default, all buildings accessible to the user are selected
+    this.accessibleBuildings.forEach(b => this.selectedBuildings.add(b));
   }
 
-  deactivateUser(userId: number) {
+  onBuildingCheckboxChange(event: any): void {
+    const building = event.target.value;
+    const checked = event.target.checked;
+
+    if (checked) {
+      this.selectedBuildings.add(building);
+    } else {
+      this.selectedBuildings.delete(building);
+    }
+  }
+
+  // Handle "Select All" checkbox
+  toggleSelectAll(event: any): void {
+    const checked = event.target.checked;
+    if (checked) {
+      this.accessibleBuildings.forEach(building => this.selectedBuildings.add(building));
+    } else {
+      this.selectedBuildings.clear();
+    }
+  }
+
+  deactivateUser(userId: number): void {
     this.users = this.users.filter(user => user.id !== userId);
-    alert(`✅ User with ID ${userId} has been deactivated.`);
+    alert(`User with ID ${userId} has been deactivated.`);
   }
 
+  // Filter users based on selected buildings
   get filteredUsers() {
-    if (this.filterType === 'all') return this.users;
-    return this.users.filter(user => user.building === this.filterType);
+    if (this.selectedBuildings.size === 0) {
+      return this.users; // Show all users if no buildings are selected
+    }
+    return this.users.filter(user =>
+      this.selectedBuildings.has(user.building)
+    );
   }
 }
