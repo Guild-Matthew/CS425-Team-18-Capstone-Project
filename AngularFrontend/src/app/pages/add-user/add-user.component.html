@@ -24,37 +24,38 @@
     <main class="main-content">
       <section class="form-card">
         <h2>Add New User</h2>
-        <form (ngSubmit)="addUser()" #addUserForm="ngForm">
-          <label for="name">Name:</label>
-          <input
-            id="name"
-            name="name"
-            [(ngModel)]="user.name"
-            required
-            placeholder="Enter user's name"
-          />
-  
+        <form [formGroup]="addUserForm" (ngSubmit)="onSubmit()">
+          <label for="netID">NetID:</label>
+          <input id="netID" type="text" formControlName="netID" placeholder="Enter NetID" required />
+
           <label for="email">Email:</label>
-          <input
-            id="email"
-            name="email"
-            [(ngModel)]="user.email"
-            type="email"
-            required
-            placeholder="Enter user's email"
-          />
-  
-          <label for="role">Role:</label>
-          <select id="role" name="role" [(ngModel)]="user.role" required>
+          <input id="email" type="email" formControlName="email" placeholder="Enter Email" required />
+
+          <label for="password">Password:</label>
+          <input id="password" type="password" formControlName="password" placeholder="Enter Password" required />
+
+          <label for="selectedRole">Role:</label>
+          <select id="selectedRole" formControlName="selectedRole" required>
             <option value="" disabled>Select a role</option>
             <option value="admin">Admin</option>
             <option value="user">User</option>
           </select>
-  
+
+          <div class="checkbox-group">
+            <label>Building Permissions:</label>
+            <div *ngFor="let building of buildings">
+              <label>
+                <input type="checkbox" [value]="building" (change)="onCheckboxChange($event)" />
+                {{ building }}
+              </label>
+            </div>
+          </div>
+
           <div class="add-item-button-wrapper">
             <button type="submit" class="add-item-button">Add User</button>
           </div>
         </form>
+
       </section>
     </main>
   

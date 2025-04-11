@@ -6,7 +6,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { flask_URL } from '../app.config'; // ✅ Make sure the path is correct
+import { flask_URL } from '../../app.config';
 
 @Component({
   selector: 'app-add-user',
@@ -36,7 +36,7 @@ export class AddUserComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
       selectedRole: ['', Validators.required],
-      buildings: this.fb.array([]) // checkbox array
+      buildings: this.fb.array([]) 
     });
   }
 

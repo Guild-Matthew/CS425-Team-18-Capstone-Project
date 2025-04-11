@@ -102,13 +102,13 @@
   }
   
   /* FOOTER */
-  footer {
-    background-color: #041e42;
-    color: white;
-    text-align: center;
-    padding: 1rem;
-    background-image: url("../../assets/site-footer-bg.jpg");
-    background-size: cover;
-    background-position: center;
-  }
+footer {
+  background-color: #041e42;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  background-image: url("/assets/site-footer-bg.jpg");
+  background-size: cover;
+  background-position: center;
+}
   

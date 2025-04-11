@@ -29,59 +29,42 @@
       <section class="add-item-form">
         <h2>Add New Item</h2>
 
-        <form (ngSubmit)="addItem()" #addItemForm="ngForm">
-          <div>
-            <label for="itemName">Item Name:</label>
-            <input
-              type="text"
-              id="itemName"
-              name="itemName"
-              [(ngModel)]="itemName"
-              required
-            />
-          </div>
+        <form (ngSubmit)="onSubmit()" #addItemForm="ngForm">
 
-          <div>
-            <label for="description">Description:</label>
-            <textarea
-              id="description"
-              name="description"
-              [(ngModel)]="description"
-              required
-            ></textarea>
-          </div>
+          <!-- Item Name -->
+          <input type="text"
+                 id="itemName"
+                 name="itemName"
+                 [(ngModel)]="item.itemType"
+                 required />
 
-          <div>
-            <label for="location">Location:</label>
-            <input
-              type="text"
-              id="location"
-              name="location"
-              [(ngModel)]="location"
-              required
-            />
-          </div>
+          <!-- Description -->
+          <textarea id="description"
+                    name="description"
+                    [(ngModel)]="item.description"
+                    required></textarea>
 
-          <div>
-            <label for="category">Category:</label>
-            <input
-              type="text"
-              id="category"
-              name="category"
-              [(ngModel)]="category"
-              required
-            />
-          </div>
+          <!-- Location -->
+          <input type="text"
+                 id="location"
+                 name="location"
+                 [(ngModel)]="item.location"
+                 required />
+
+          <!-- Category (can be used as locationFound or similar) -->
+          <input type="text"
+                 id="category"
+                 name="category"
+                 [(ngModel)]="item.locationFound"
+                 required />
 
           <div>
             <label for="image">Upload Image:</label>
-            <input
-              type="file"
-              id="image"
-              name="image"
-              (change)="onFileSelected($event)"
-              accept="image/*"
-            />
+            <input type="file"
+                   id="image"
+                   name="image"
+                   (change)="onFileSelected($event)"
+                   accept="image/*" />
           </div>
 
           <div class="add-item-button-wrapper">
