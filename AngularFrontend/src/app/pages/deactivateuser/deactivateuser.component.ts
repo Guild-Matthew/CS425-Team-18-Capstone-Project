@@ -1,31 +1,45 @@
-import { Component } from '@angular/core';
+//Guilherme Cassiano, Mary Cottier 
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+import { flask_URL } from '../../app.config';
 
 @Component({
   selector: 'app-deactivateuser',
   standalone: true,
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './deactivateuser.component.html',
-  styleUrls: ['./deactivateuser.component.css'],
-  imports: [CommonModule, RouterModule]
+  styleUrls: ['./deactivateuser.component.css']
 })
-export class DeactivateUserComponent {
-  role: string = 'student'; // Simulate current user role
-
-  users = [
-    { id: 1, name: 'Alice', email: 'alice@unr.edu', role: 'student', building: 'SEM' },
-    { id: 2, name: 'Bob', email: 'bob@unr.edu', role: 'staff', building: 'DMSC' },
-    { id: 3, name: 'Charlie', email: 'charlie@unr.edu', role: 'student', building: 'AB' },
-    { id: 4, name: 'Diana', email: 'diana@unr.edu', role: 'staff', building: 'SEM' }
-  ];
-
-  // Simulated user-accessible buildings
-  accessibleBuildings: string[] = ['SEM', 'DMSC', 'AB']; // Customize per user
+export class DeactivateUserComponent implements OnInit {
+  users: any[] = [];
+  accessibleBuildings: string[] = [];
   selectedBuildings: Set<string> = new Set();
+  role: string = 'student';
+
+  constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
-    // By default, all buildings accessible to the user are selected
-    this.accessibleBuildings.forEach(b => this.selectedBuildings.add(b));
+    const userId = localStorage.getItem('user_id');
+    const role = localStorage.getItem('role');
+
+    const params = new HttpParams()
+      .set('user_id', userId || '')
+      .set('role', role || '')
+      .set('building', 'all');
+
+    this.http.get<any>(`${flask_URL}/deactivate_user`, { params }).subscribe(
+      response => {
+        this.users = response.users;
+        this.accessibleBuildings = response.buildings;
+        this.selectedBuildings = new Set(response.buildings);
+      },
+      error => {
+        console.error('Failed to load users:', error);
+      }
+    );
   }
 
   onBuildingCheckboxChange(event: any): void {
@@ -39,28 +53,43 @@ export class DeactivateUserComponent {
     }
   }
 
-  // Handle "Select All" checkbox
   toggleSelectAll(event: any): void {
     const checked = event.target.checked;
     if (checked) {
-      this.accessibleBuildings.forEach(building => this.selectedBuildings.add(building));
+      this.accessibleBuildings.forEach(b => this.selectedBuildings.add(b));
     } else {
       this.selectedBuildings.clear();
     }
   }
 
   deactivateUser(userId: number): void {
-    this.users = this.users.filter(user => user.id !== userId);
-    alert(`User with ID ${userId} has been deactivated.`);
+    const user_id = localStorage.getItem('user_id');
+    const role = localStorage.getItem('role');
+    const token = localStorage.getItem('authtoken');
+
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const body = {
+      user_id,
+      role,
+      authtoken: token,
+      target_id: userId
+    };
+
+    this.http.post(`${flask_URL}/deactivate_user`, body, { headers }).subscribe(
+      () => {
+        this.users = this.users.filter(user => user.id !== userId);
+        alert(`User with ID ${userId} has been deactivated.`);
+      },
+      error => {
+        console.error('Error deactivating user:', error);
+      }
+    );
   }
 
-  // Filter users based on selected buildings
-  get filteredUsers() {
+  get filteredUsers(): any[] {
     if (this.selectedBuildings.size === 0) {
-      return this.users; // Show all users if no buildings are selected
+      return this.users;
     }
-    return this.users.filter(user =>
-      this.selectedBuildings.has(user.building)
-    );
+    return this.users.filter(user => this.selectedBuildings.has(user.building));
   }
 }

@@ -22,7 +22,6 @@ class Queries:
 
     # Query to insert an item into the "items" table
     def insert_item(self, itemType, LocationFound, itemDescription, dateFound, LFlocation, image_path, performed_by="system"):
-        # Insert the item
         insert_query = """
             INSERT INTO items (itemType, LocationFound, itemDescription, dateFound, LFlocation, image_path)
             VALUES (%s, %s, %s, %s, %s, %s)
@@ -30,7 +29,6 @@ class Queries:
         self.cursor.execute(insert_query, (itemType, LocationFound, itemDescription, dateFound, LFlocation, image_path))
         self.conn.commit()
 
-        # Log the operation
         log_query = """
             INSERT INTO operationslogitems (actiontype, itemtype, locationfound, description, datefound, performedby)
             VALUES ('INSERT', %s, %s, %s, %s, %s)
@@ -204,31 +202,20 @@ class Queries:
 
     # Query to remove an item from the "items" table (removing an item from the L&F)
     def deleteItem(self, itemType, LocationFound, itemDescription, dateFound, performed_by="system"):
-        # Fetch the item before deletion (optional, but ensures it exists)
-        fetch_query = """
-            SELECT itemType, LocationFound, itemDescription, dateFound
-            FROM items
-            WHERE itemType = %s AND LocationFound = %s AND dateFound = %s AND itemDescription = %s
-        """
-        self.cursor.execute(fetch_query, (itemType, LocationFound, dateFound, itemDescription))
-        item = self.cursor.fetchone()
-
-        if item:
-            # Perform deletion
-            delete_query = """
-                DELETE FROM items
-                WHERE itemType = %s AND LocationFound = %s AND dateFound = %s AND itemDescription = %s
+        delete_query = """
+            DELETE FROM items
+            WHERE itemType = %s AND LocationFound = %s AND itemDescription = %s AND dateFound = %s
             """
-            self.cursor.execute(delete_query, (itemType, LocationFound, dateFound, itemDescription))
-            self.conn.commit()
+        self.cursor.execute(delete_query, (itemType, LocationFound, itemDescription, dateFound))
+        self.conn.commit()
 
-            # Log deletion
-            log_query = """
-                INSERT INTO operations_log operationslogitems (actiontype, itemtype, locationfound, description, datefound, performedby)
-                VALUES ('DELETE', %s, %s, %s, %s, %s)
+        log_query = """
+            INSERT INTO operationslogitems (actiontype, itemtype, locationfound, description, datefound, performedby)
+            VALUES ('DELETE', %s, %s, %s, %s, %s)
             """
-            self.cursor.execute(log_query, (itemType, LocationFound, itemDescription, dateFound, performed_by))
-            self.conn.commit()
+
+        self.cursor.execute(log_query, (itemType, LocationFound, itemDescription, dateFound, performed_by))
+        self.conn.commit()
 
 
     # Query to create a new building to be displayed on the map

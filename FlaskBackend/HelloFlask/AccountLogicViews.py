@@ -141,31 +141,52 @@ def addUser():
         buildingsPermissions = db_queries.getBuildingsFromPermissions(user_id)
     return jsonify({"buildings": buildingsPermissions})
 
-@account_bp.route('/VoidStudent', methods=['GET', 'POST'])
-def voidUser():
-        if 'user_id' in session:
-            username = session.get('username')
-            uid = db_queries.getUserId(username)
-            buildings = db_queries.getBuildingsFromPermissions(uid)
-            if request.method == 'POST':
-                selected_building = request.form.get('selected_building') 
-            else:
-                selected_building = request.args.get('building')  
-            # Default to the first building if none is selected
-            if selected_building is None or selected_building == '':
-                if buildings:
-                    selected_building = buildings[0]
-            if request.method == 'POST':
-                email = request.form['email']
-                username = request.form['username']
-                db_queries.deleteUser(email, username)
-                return redirect(url_for('account.voidUser'))
-        filter_type_building = request.args.get('building', 'all')  # Default to 'all'
+@account_bp.route('/deactivate_user', methods=['GET', 'POST'])
+@cross_origin(supports_credentials=True)
+def deactivate_user():
+    if request.method == 'POST':
+        data = request.get_json()
+        user_id = data.get('user_id')
+        role = data.get('role')
+        token = data.get('authtoken')
 
-        if filter_type_building == 'all':
-            users = db_queries.getUserVoid('student', 'true')  # Fetch all users
-        else:
-            bid = db_queries.getBuildingID(filter_type_building)
-            uid_list = db_queries.getUsersFromPermissions(bid)  # Get list of UIDs
-            users = db_queries.getUserVoidFiltered(uid_list, 'student', 'true')  # Pass list of UIDs
-        return render_template("AccountLogic/voiduser.html", users=users, filter_type_building=filter_type_building, buildings=buildings, selected_building=selected_building)
+        uidauthtoken = db_queries.getTokenByUID(user_id)
+        uidauthtoken = uidauthtoken[0] if isinstance(uidauthtoken, list) and uidauthtoken else None
+        if uidauthtoken != token:
+            return jsonify({"error": "Unauthorized"}), 401
+
+        target_id = data.get('target_id')
+        if not target_id:
+            return jsonify({"error": "Missing target user ID"}), 400
+
+        db_queries.deactivateStudentAccount(target_id)
+        return jsonify({"message": "Account deactivated"}), 200
+
+    user_id = request.args.get('user_id')
+    role = request.args.get('role')
+    building_filter = request.args.get('building', 'all')
+
+    if not user_id:
+        return jsonify({"error": "Unauthorized - Missing User ID"}), 401
+
+    if role == 'superadmin':
+        buildings = db_queries.getAllBuildings()
+    elif role == 'admin':
+        buildings = db_queries.getBuildingsFromPermissions(user_id)
+
+    if building_filter == 'all':
+        users = db_queries.getUserVoid('student', 'true')
+    else:
+        bid = db_queries.getBuildingID(building_filter)
+        uid_list = db_queries.getUsersFromPermissions(bid)
+        users = db_queries.getUserVoidFiltered(uid_list, 'student', 'true')
+
+    formatted_users = [
+        {"name": u['username'], "email": u['email'], "building": "N/A", "id": u.get('id', 0)} for u in users
+    ]
+
+    return jsonify({
+        "users": formatted_users,
+        "buildings": buildings,
+        "selected_building": building_filter
+    })

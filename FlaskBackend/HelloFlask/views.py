@@ -152,6 +152,7 @@ def remove_items():
         formAuthToken = data.get('authtoken')
 
         uidauthtoken = db_queries.getTokenByUID(user_id)
+        uidauthtoken = uidauthtoken[0] if isinstance(uidauthtoken, list) and uidauthtoken else None
         if uidauthtoken != formAuthToken:
             return jsonify({"error": "Unauthorized"}), 401
 
@@ -166,7 +167,7 @@ def remove_items():
             return jsonify({"error": "Missing fields"}), 400
 
         db_queries.insert_Claimed_item(item_type, location_found, description, date_found, dateClaimed, lostAndFindLocation)
-        db_queries.deleteItem(item_type, location_found, date_found, description)
+        db_queries.deleteItem(item_type, location_found, description, date_found)
 
         return jsonify({"message": "Item removed successfully"}), 200
 
