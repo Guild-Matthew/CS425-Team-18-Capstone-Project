@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!--Guilherme Cassiano, Shane Petree-->
 <!DOCTYPE html>
 <html lang="en">
@@ -25,31 +26,76 @@
           <li><a routerLink="/map">Map</a></li>
         </ul>
       </nav>
+=======
+<!--Guilherme Cassiano, Shane Petree, Matthew Guild-->
+<div class="add-building">
+    <div class="page-wrapper">
+      <!-- HEADER -->
+      <header class="header">
+        <div class="top-bar">
+          <div class="top-links">
+            <a class="nav-link" routerLink="/map">Map</a>
+            <a class="nav-link" routerLink="/dashboard">Dashboard</a>
+            <a class="nav-link" routerLink="/lost-and-found">Lost & Found</a>
+            <a class="login-button" routerLink="/login">Logout</a>
+          </div>
+        </div>
+  
+        <div class="branding-bar">
+          <!-- ✅ External SVG logo with classes and fixed size -->
+          <img class="university-logo-large-img align-image-bottom"
+               alt="University of Nevada, Reno"
+               src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg"
+               width="65" height="65" />
+          <h1>University of Nevada, Reno</h1>
+          <p>Inspiring Excellence Since 1874</p>
+        </div>
+      </header>
+  
+      <!-- MAIN CONTENT -->
+      <main class="main-content">
+        <section id="add-form">
+          <h2>Add a New Building</h2>
+  
+          <form (ngSubmit)="onSubmit()" #buildingFormRef="ngForm">
+            <!-- Building Code -->
+            <div>
+              <label for="buildingCode">Building Code:</label>
+              <input
+                id="buildingCode"
+                name="BuildingCode"
+                [(ngModel)]="building.BuildingCode"
+                required
+              />
+            </div>
+  
+            <!-- Coordinates -->
+            <div>
+              <label for="coordinates">Coordinates:</label>
+              <input
+                id="coordinates"
+                name="coordinates"
+                [(ngModel)]="building.coordinates"
+                required
+              />
+            </div>
+  
+            
+  
+            <!-- Submit Button -->
+            <div class="add-item-button-wrapper">
+              <button type="submit" class="add-item-button">Submit</button>
+            </div>
+          </form>
+        </section>
+      </main>
+  
+      <!-- FOOTER -->
+      <footer>
+        <p>&copy; 2025 University of Nevada, Reno. Building Management Service.</p>
+      </footer>
+>>>>>>> caaefc2710e1e5e9ac9505988b31abfd023576f9
     </div>
-  </header>
-
-  <section class="add-building-form">
-    <h2>Add a Building</h2>
-    <form (ngSubmit)="onSubmit()" enctype="multipart/form-data">
-      <!-- Building Information -->
-      <label for="BuildingCode">Enter the building code in the building code format (SEM,AB,DMSC etc)</label>
-      <input type="text" id="BuildingCode" name="BuildingCode" [(ngModel)]="building.BuildingCode" required>
-
-      <label for="coordinates">Enter Coordinates (Lat, Lng):</label>
-      <input type="text" id="coordinates" name="coordinates" [(ngModel)]="building.coordinates" required>
-
-      <!-- Submit Button -->
-      <button type="submit">Add building</button>
-    </form>
-  </section>
-
-  <!--Footer section-->
-  <footer>
-    <p>&copy; 2024 University of Nevada, Reno. Lost and Found Service.</p>
-  </footer>
-
-  <!--<script src="addUser.js"></script>-->
-</body>
-
-</html>
+  </div>
+  
 
