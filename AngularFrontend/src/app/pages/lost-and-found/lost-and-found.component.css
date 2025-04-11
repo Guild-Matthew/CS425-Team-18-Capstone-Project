@@ -34,36 +34,36 @@ header {
   gap: 1.5rem;
 }
 
-.top-links .nav-link {
-  color: white;
-  text-transform: uppercase;
-  font-weight: bold;
-  text-decoration: none;
-  font-size: 0.85rem;
-  padding: 0.4rem 0.8rem;
-  border-radius: 4px;
-  transition: background-color 0.2s ease-in-out;
-}
+  .top-links .nav-link {
+    color: white;
+    text-transform: uppercase;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    transition: background-color 0.2s ease-in-out;
+  }
 
-.top-links .nav-link:hover {
-  background-color: rgba(255, 255, 255, 0.15);
-}
+    .top-links .nav-link:hover {
+      background-color: rgba(255, 255, 255, 0.15);
+    }
 
-.top-links .login-button {
-  background-color: #78be20;
-  color: black;
-  font-weight: bold;
-  padding: 0.4rem 1rem;
-  border-radius: 5px;
-  text-decoration: none;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  transition: background-color 0.2s ease;
-}
+  .top-links .login-button {
+    background-color: #78be20;
+    color: black;
+    font-weight: bold;
+    padding: 0.4rem 1rem;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    transition: background-color 0.2s ease;
+  }
 
-.top-links .login-button:hover {
-  background-color: #65a718;
-}
+    .top-links .login-button:hover {
+      background-color: #65a718;
+    }
 
 .branding-bar {
   background-color: #041E42;
@@ -72,21 +72,21 @@ header {
   color: white;
 }
 
-.branding-bar img {
-  height: 60px;
-  margin-bottom: 0.5rem;
-}
+  .branding-bar img {
+    height: 60px;
+    margin-bottom: 0.5rem;
+  }
 
-.branding-bar h1 {
-  margin: 0;
-  font-size: 1.8rem;
-}
+  .branding-bar h1 {
+    margin: 0;
+    font-size: 1.8rem;
+  }
 
-.branding-bar p {
-  margin: 0;
-  font-size: 0.95rem;
-  color: #ccc;
-}
+  .branding-bar p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #ccc;
+  }
 
 /* MAIN CONTENT */
 .main-content {
@@ -113,21 +113,21 @@ header {
   margin-top: 60px;
 }
 
-.sidebar h2 {
-  font-size: 1.5rem;
-  margin-bottom: 15px;
-}
+  .sidebar h2 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+  }
 
 .filter-section {
   margin-bottom: 20px;
 }
 
-.filter-section label,
-.filter-section select {
-  display: block;
-  width: 100%;
-  margin-bottom: 10px;
-}
+  .filter-section label,
+  .filter-section select {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+  }
 
 #products {
   flex: 1;
@@ -135,10 +135,10 @@ header {
   margin: 60px auto 20px auto;
 }
 
-#products h2 {
-  text-align: left;
-  margin-bottom: 20px;
-}
+  #products h2 {
+    text-align: left;
+    margin-bottom: 20px;
+  }
 
 .product-grid {
   display: flex;
@@ -158,10 +158,10 @@ header {
   max-width: 400px;
 }
 
-.product:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
+  .product:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
 
 /* Footer */
 footer {
@@ -180,33 +180,56 @@ footer {
 }
 
 /* Add Item Button */
-.add-item-button-wrapper {
+.add-item-section {
   display: flex;
   justify-content: flex-end;
-  margin: 20px 0;
+  margin-bottom: 15px; /* Ensures spacing above the button */
 }
 
-.add-item-button {
-  background-color: #78be20;
+.main-content-button {
+  background-color: #041E42;
   color: white;
   font-weight: bold;
   text-transform: uppercase;
-  padding: 0.5rem 1.2rem;
-  border-radius: 5px;
+  padding: .6rem 1.2rem; /* Adjust padding */
+  border-radius: 6px;
   border: none;
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.add-item-button:hover {
-  background-color: #65a718;
-  transform: translateY(-2px);
+  .main-content-button:hover {
+    background-color: #041E42; /* Hover effect */
+    transform: translateY(-2px); /* Slight lift on hover */
+  }
+
+  .main-content-button:focus {
+    outline: none;
+  }
+
+
+.add-item-button {
+  background-color: #041E42;
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.add-item-button:focus {
-  outline: none;
-}
+  .add-item-button:hover {
+    background-color: #041E42;
+    transform: translateY(-2px);
+  }
+
+  .add-item-button:focus {
+    outline: none;
+  }
 
 /* Responsive */
 @media (max-width: 1024px) {

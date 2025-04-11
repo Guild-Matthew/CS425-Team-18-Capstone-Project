@@ -10,12 +10,14 @@ import { FormsModule } from '@angular/forms';
 
 // Define structure of a Lost & Found item
 interface Item {
+  id: number;
   type: string;
   location: string;
   dateFound: string;
   description: string;
   imageUrl?: string;
   imageVisible: boolean;
+  claimed?: boolean; // Add claimed status to item structure
 }
 
 @Component({
@@ -51,12 +53,14 @@ export class LostAndFoundComponent implements OnInit {
     this.http.get<any>(url).subscribe(
       data => {
         this.items = data.items.map((item: any) => ({
+          id: item.id,
           type: item[0],
           location: item[1],
           description: item[2],
           dateFound: item[3],
           imageUrl: item[4],
-          imageVisible: false
+          imageVisible: false,
+          claimed: item.claimed || false // Assuming 'claimed' status is included in the response
         }));
         this.buildings = data.buildings;
         this.selectedBuilding = data.selected_building;
@@ -114,5 +118,40 @@ export class LostAndFoundComponent implements OnInit {
 
   trackByFn(index: number, item: Item): any {
     return item.type + item.dateFound + index; // fallback tracking
+  }
+
+  markAsClaimed(item: Item): void {
+    if (item.claimed) {
+      return;
+    }
+
+    const dateClaimed = new Date().toISOString().split('T')[0]; // format as YYYY-MM-DD
+    const body = {
+      itemType: item.type,
+      LocationFound: item.location,
+      itemDescription: item.description,
+      dateFound: item.dateFound,
+      dateClaimed: dateClaimed,
+      LFlocation: this.selectedBuilding
+    };
+
+    const url = `${flask_URL}/L&F/claimItem`;
+    this.http.post<any>(url, body).subscribe({
+      next: (response) => {
+        console.log(`Item "${item.description}" marked as claimed.`);
+        item.claimed = true;
+        this.items = this.items.filter(i =>
+          !(i.type === item.type &&
+            i.location === item.location &&
+            i.description === item.description &&
+            i.dateFound === item.dateFound)
+        );
+        this.applyFilters(); // Refresh filtered view
+      },
+      error: (error) => {
+        console.error('Error marking item as claimed:', error);
+        // Optionally: Show user-facing error or undo `item.claimed = true`
+      }
+    });
   }
 }
