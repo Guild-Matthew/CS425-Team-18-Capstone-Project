@@ -41,7 +41,7 @@ export class LoginComponent {
     const headers = { 'Content-Type': 'application/json' };
 
     // Shane Petree 1 line, updated flask URL in http request
-    this.http.post(flask_URL + '/login', loginData, { headers }).subscribe(
+    this.http.post(flask_URL + '/login', loginData, { headers, withCredentials: true }).subscribe(
       (response: any) => {
 
         if (response.success) {

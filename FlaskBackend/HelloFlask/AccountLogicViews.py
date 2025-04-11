@@ -8,11 +8,12 @@ import tempfile
 from flask_cors import cross_origin
 import json
 import uuid
+from datetime import datetime
+
 # Instance of Queries for database access
 db_queries = Queries()
 account_bp = Blueprint('account', __name__)
 
-# handles the login http request from angular
 @account_bp.route('/login', methods=['POST'])
 @cross_origin(supports_credentials=True) 
 def login():
@@ -28,6 +29,7 @@ def login():
         session['role'] = user['role']
         session['username'] = user['username']
         session.permanent = True 
+        session['last_activity'] = datetime.utcnow().isoformat()        
         authtoken = str(uuid.uuid4())  
         db_queries.updateUserToken(user['uid'], authtoken)
         return jsonify({
@@ -150,43 +152,37 @@ def deactivate_user():
         role = data.get('role')
         token = data.get('authtoken')
 
-        uidauthtoken = db_queries.getTokenByUID(user_id)
-        uidauthtoken = uidauthtoken[0] if isinstance(uidauthtoken, list) and uidauthtoken else None
-        if uidauthtoken != token:
-            return jsonify({"error": "Unauthorized"}), 401
+        if filter_type_building == 'all':
+            users = db_queries.getUserVoid('student', 'true')  # Fetch all users
+        else:
+            bid = db_queries.getBuildingID(filter_type_building)
+            uid_list = db_queries.getUsersFromPermissions(bid)  # Get list of UIDs
+            users = db_queries.getUserVoidFiltered(uid_list, 'student', 'true')  # Pass list of UIDs
+        return render_template("AccountLogic/voiduser.html", users=users, filter_type_building=filter_type_building, buildings=buildings, selected_building=selected_building)
 
-        target_id = data.get('target_id')
-        if not target_id:
-            return jsonify({"error": "Missing target user ID"}), 400
+# Session timeout check function
+@account_bp.before_request
+def session_timeout_check():
+    session.permanent = True
+    now = datetime.utcnow()
 
-        db_queries.deactivateStudentAccount(target_id)
-        return jsonify({"message": "Account deactivated"}), 200
+    if 'user_id' in session:
+        last_activity_str = session.get('last_activity')
+        if last_activity_str:
+            try:
+                last_activity = datetime.fromisoformat(last_activity_str)
+                inactive_duration = (now - last_activity).total_seconds()
+                timeout = session._get_current_object().config['PERMANENT_SESSION_LIFETIME'].total_seconds()  # Corrected
+                if inactive_duration > timeout:
+                    session.clear()
+                    if 'application/json' in str(request.accept_mimetypes):
+                        return jsonify({'error': 'Session timed out'}), 401
+                    else:
+                        return redirect(url_for('account.login'))
+            except ValueError:
+                # malformed date, clear session for safety
+                session.clear()
+                return redirect(url_for('account.login'))
 
-    user_id = request.args.get('user_id')
-    role = request.args.get('role')
-    building_filter = request.args.get('building', 'all')
-
-    if not user_id:
-        return jsonify({"error": "Unauthorized - Missing User ID"}), 401
-
-    if role == 'superadmin':
-        buildings = db_queries.getAllBuildings()
-    elif role == 'admin':
-        buildings = db_queries.getBuildingsFromPermissions(user_id)
-
-    if building_filter == 'all':
-        users = db_queries.getUserVoid('student', 'true')
-    else:
-        bid = db_queries.getBuildingID(building_filter)
-        uid_list = db_queries.getUsersFromPermissions(bid)
-        users = db_queries.getUserVoidFiltered(uid_list, 'student', 'true')
-
-    formatted_users = [
-        {"name": u['username'], "email": u['email'], "building": "N/A", "id": u.get('id', 0)} for u in users
-    ]
-
-    return jsonify({
-        "users": formatted_users,
-        "buildings": buildings,
-        "selected_building": building_filter
-    })
+        # Always update activity timestamp
+        session['last_activity'] = now.isoformat()
