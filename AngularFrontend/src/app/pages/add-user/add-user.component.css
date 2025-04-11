@@ -1,133 +1,114 @@
 /* Matthew Guild */
 
-/* Ensure the entire page takes at least the full height */
-html, body {
-  height: 100%;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Main content should push the footer to the bottom */
-body {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-/* Main container for dynamic content */
-main {
-  flex: 1; /* Takes up all available space to push footer down */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* Full-width header */
-header {
-  width: 100%;
-  background-color: #041E42;
-  color: white;
-  padding: 15px 0;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-/* Container inside the header */
-.container {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-/* Fix logo alignment */
-.university-logo-large-img {
-  height: 65px;
-  width: auto;
-  margin-right: 10px;
-}
-
-/* Navigation menu */
-nav ul {
-  list-style-type: none;
-  padding: 0;
-  display: flex;
-}
-
-  nav ul li {
-    margin-right: 15px;
+.page-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
   }
-
-    nav ul li a {
-      color: white;
-      text-decoration: none;
-    }
-
-/* Center the form properly */
-.add-item-form {
-  flex: 1;
-  max-width: 500px;
-  margin: 30px auto;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background: #f9f9f9;
-}
-
-/* Form groups for proper alignment */
-.form-group {
-  margin-bottom: 15px;
-}
-
-label {
-  display: block;
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-input[type="text"],
-input[type="password"] {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-/* Ensure checkboxes align properly */
-.building-checkboxes {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 15px;
-}
-
-/* Submit button styles */
-button {
-  width: 100%;
-  padding: 10px;
-  background-color: #041E42;
-  color: white;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-  button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
+  
+  
+  header {
+    background-color: #041e42;
+    color: white;
+    width: 100%;
   }
-
-/* Footer stays at the bottom of the content, but not fixed */
-footer {
-  width: 100%;
-  background-color: #041E42;
-  color: white;
-  text-align: center;
-  padding: 10px 0;
-  margin-top: auto; /* Pushes the footer down when there is little content */
-}
+  .top-bar {
+    padding: 0.5rem 1rem;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .top-links {
+    display: flex;
+    gap: 1.5rem;
+  }
+  .nav-link {
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+  }
+  .login-button {
+    background-color: #78be20;
+    color: black;
+    padding: 0.4rem 1rem;
+    border-radius: 5px;
+    text-decoration: none;
+  }
+  .branding-bar {
+    text-align: center;
+    padding: 1.5rem 1rem;
+  }
+  .branding-bar img {
+    height: 60px;
+  }
+  .branding-bar h1 {
+    margin: 0;
+    font-size: 1.8rem;
+  }
+  .branding-bar p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #ccc;
+  }
+  
+  /* MAIN CONTENT */
+  .main-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    flex-grow: 1;
+  }
+  .form-card {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  .form-card h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .form-card label {
+    font-weight: bold;
+    display: block;
+    margin-top: 15px;
+  }
+  .form-card input,
+  .form-card select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  .add-item-button-wrapper {
+    margin-top: 20px;
+  }
+  .add-item-button {
+    background-color: #041e42;
+    color: white;
+    font-weight: bold;
+    padding: 0.6rem 1.2rem;
+    width: 100%;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .add-item-button:hover {
+    background-color: #023267;
+  }
+  
+  /* FOOTER */
+  footer {
+    background-color: #041e42;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    background-image: url("../../assets/site-footer-bg.jpg");
+    background-size: cover;
+    background-position: center;
+  }
+  
