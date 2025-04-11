@@ -1,68 +1,71 @@
-//Guilherme Cassiano, Matthew Guild
+// Guilherme Cassiano, Shane Petree, Matthew Guild
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  ReactiveFormsModule,
-  FormsModule
-} from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { flask_URL } from '../../app.config';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-add-building',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './add-building.component.html',
   styleUrls: ['./add-building.component.css']
 })
 export class AddBuildingComponent {
-  buildingForm: FormGroup;
-  imageFile: File | null = null;
-
-  building = {
+  building: any = {
     BuildingCode: '',
     coordinates: ''
   };
 
-  constructor(
-    private fb: FormBuilder,
-    private router: Router,
-    private snackBar: MatSnackBar
-  ) {
-    this.buildingForm = this.fb.group({
-      name: ['', Validators.required],
-      description: ['', Validators.required],
-      coordinates: ['', Validators.required],
-      image: [null]
-    });
-  }
+  authToken: string | null = null;
 
-  onFileChange(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      this.imageFile = input.files[0];
-    }
-  }
+  constructor(private http: HttpClient, private router: Router) { }
 
   onSubmit(): void {
-    if (this.buildingForm.invalid) {
-      this.snackBar.open('Please fill in all required fields.', 'Close', { duration: 3000 });
+    const userId = localStorage.getItem('user_id');
+    const role = localStorage.getItem('role');
+    const authToken = localStorage.getItem('authtoken');
+
+    if (!userId) {
+      console.error("No user ID found. Redirecting to login.");
+      this.router.navigate(['/login']);
       return;
     }
 
-  
-    console.log('Submitted building:', {
-      formValues: this.buildingForm.value,
-      modelValues: this.building,
-      file: this.imageFile
-    });
+    if (!this.building.coordinates || !this.building.coordinates.includes(',')) {
+      alert("Invalid coordinates format! Please enter: Latitude, Longitude");
+      return;
+    }
 
-    this.snackBar.open('Building saved locally (no backend)', 'Close', { duration: 3000 });
+    const [latitude, longitude] = this.building.coordinates.split(',').map(coord => coord.trim());
 
-    // Optional navigation
-    this.router.navigate(['/']);
+    const formData = new FormData();
+    formData.append('user_id', userId);
+    formData.append('role', role || '');
+    formData.append('BuildingCode', this.building.BuildingCode);
+    formData.append('Latitude', latitude);
+    formData.append('Longitude', longitude);
+    formData.append('authtoken', authToken || '');
+
+    this.http.post(`${flask_URL}/addBuilding`, formData, { withCredentials: true }).subscribe(
+      (response: any) => {
+        alert('Building successfully added!');
+        this.resetForm();
+      },
+      error => {
+        console.error("Error adding building:", error);
+        alert('Error adding building!');
+      }
+    );
+  }
+
+  resetForm(): void {
+    this.building = {
+      BuildingCode: '',
+      coordinates: ''
+    };
   }
 }

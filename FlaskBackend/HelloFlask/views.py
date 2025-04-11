@@ -240,6 +240,7 @@ def addBuilding():
         Longitude = request.form.get('Longitude')
 
         uidauthtoken = db_queries.getTokenByUID(user_id)
+        uidauthtoken = uidauthtoken[0] if isinstance(uidauthtoken, list) and uidauthtoken else None
         if uidauthtoken != formAuthToken:
             return jsonify({"error": "Unauthorized"}), 401
 
