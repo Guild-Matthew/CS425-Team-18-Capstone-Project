@@ -21,12 +21,21 @@ class Queries:
         self.conn.close()
 
     # Query to insert an item into the "items" table
-    def insert_item(self, itemType, LocationFound, itemDescription, dateFound, LFlocation,  image_path): #*
-        query = """
-        INSERT INTO items (itemType, LocationFound, itemDescription, dateFound, LFlocation, image_path)
-        VALUES (%s, %s, %s, %s, %s, %s)
+    def insert_item(self, itemType, LocationFound, itemDescription, dateFound, LFlocation, image_path, performed_by="system"):
+        # Insert the item
+        insert_query = """
+            INSERT INTO items (itemType, LocationFound, itemDescription, dateFound, LFlocation, image_path)
+            VALUES (%s, %s, %s, %s, %s, %s)
         """
-        self.cursor.execute(query, (itemType, LocationFound, itemDescription, dateFound, LFlocation,  image_path))
+        self.cursor.execute(insert_query, (itemType, LocationFound, itemDescription, dateFound, LFlocation, image_path))
+        self.conn.commit()
+
+        # Log the operation
+        log_query = """
+            INSERT INTO operationslogitems (actiontype, itemtype, locationfound, description, datefound, performedby)
+            VALUES ('INSERT', %s, %s, %s, %s, %s)
+        """
+        self.cursor.execute(log_query, (itemType, LocationFound, itemDescription, dateFound, performed_by))
         self.conn.commit()
 
     # Query to insert an item into the "Claimed items" table
@@ -194,13 +203,33 @@ class Queries:
         self.conn.commit()
 
     # Query to remove an item from the "items" table (removing an item from the L&F)
-    def deleteItem(self, itemType, LocationFound, itemDescription, dateFound):#*
-        query = """
-        DELETE FROM items
-        WHERE itemType = %s AND LocationFound = %s AND dateFound = %s AND itemDescription = %s
+    def deleteItem(self, itemType, LocationFound, itemDescription, dateFound, performed_by="system"):
+        # Fetch the item before deletion (optional, but ensures it exists)
+        fetch_query = """
+            SELECT itemType, LocationFound, itemDescription, dateFound
+            FROM items
+            WHERE itemType = %s AND LocationFound = %s AND dateFound = %s AND itemDescription = %s
         """
-        self.cursor.execute(query, (itemType, LocationFound, itemDescription, dateFound))
-        self.conn.commit()
+        self.cursor.execute(fetch_query, (itemType, LocationFound, dateFound, itemDescription))
+        item = self.cursor.fetchone()
+
+        if item:
+            # Perform deletion
+            delete_query = """
+                DELETE FROM items
+                WHERE itemType = %s AND LocationFound = %s AND dateFound = %s AND itemDescription = %s
+            """
+            self.cursor.execute(delete_query, (itemType, LocationFound, dateFound, itemDescription))
+            self.conn.commit()
+
+            # Log deletion
+            log_query = """
+                INSERT INTO operations_log operationslogitems (actiontype, itemtype, locationfound, description, datefound, performedby)
+                VALUES ('DELETE', %s, %s, %s, %s, %s)
+            """
+            self.cursor.execute(log_query, (itemType, LocationFound, itemDescription, dateFound, performed_by))
+            self.conn.commit()
+
 
     # Query to create a new building to be displayed on the map
     def createBuilding(self, buildingCode, latitude, longitude):#*
@@ -374,6 +403,30 @@ class Queries:
         self.cursor.execute(query)
         rows = self.cursor.fetchall()
         return [{'buildingcode': row[0], 'latitude': row[1], 'longitude':row[2]} for row in rows]
+
+    def get_operation_logs(self):
+        query = """
+            SELECT actiontype, itemtype, locationfound, description, datefound, performedby, dateperformed
+            FROM operationslogitems
+            ORDER BY dateperformed DESC
+        """
+        self.cursor.execute(query)
+        rows = self.cursor.fetchall()
+        columns = [desc[0] for desc in self.cursor.description]
+        return [dict(zip(columns, row)) for row in rows]
+
+    def get_operation_logs_by_type(self, action_type):
+        query = """
+            SELECT actiontype, itemtype, locationfound, description, datefound, performedby, dateperformed
+            FROM operationslogitems
+            WHERE actiontype = %s
+            ORDER BY dateperformed DESC
+        """
+        self.cursor.execute(query, (action_type,))
+        rows = self.cursor.fetchall()
+        columns = [desc[0] for desc in self.cursor.description]
+        return [dict(zip(columns, row)) for row in rows]
+
 
 
 

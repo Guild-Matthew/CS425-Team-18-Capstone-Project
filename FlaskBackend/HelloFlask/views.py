@@ -11,6 +11,18 @@ from flask_cors import cross_origin
 db_queries = Queries()
 main_bp = Blueprint('main', __name__)
 
+@main_bp.route('/ItemOperationLogs', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def get_operation_logs():
+    filter_type = request.args.get('filterType', None)  
+
+    if filter_type and filter_type.upper() in ['INSERT', 'DELETE']:
+        logs = db_queries.get_operation_logs_by_type(filter_type.upper())
+        print(logs)
+    else:
+        logs = db_queries.get_operation_logs()
+        print(logs)
+    return jsonify(logs)
 
 @main_bp.route('/', methods=['GET'])
 def home():

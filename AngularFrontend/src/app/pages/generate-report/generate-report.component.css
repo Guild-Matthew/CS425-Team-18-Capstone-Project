@@ -1,0 +1,246 @@
+/* Mary Cottier and Matthew Guild*/
+/* Styling */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f3f4f6;
+  color: #000000;
+}
+
+/* HEADER */
+header {
+  font-family: Arial, sans-serif;
+  width: 100%;
+  background-color: #002244;
+  color: white;
+}
+
+.top-bar {
+  background-color: #002244;
+  padding: 0.5rem 1rem;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.top-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+  .top-links .nav-link {
+    color: white;
+    text-transform: uppercase;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    transition: background-color 0.2s ease-in-out;
+  }
+
+    .top-links .nav-link:hover {
+      background-color: rgba(255, 255, 255, 0.15);
+    }
+
+  .top-links .login-button {
+    background-color: #78be20;
+    color: black;
+    font-weight: bold;
+    padding: 0.4rem 1rem;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    transition: background-color 0.2s ease;
+  }
+
+    .top-links .login-button:hover {
+      background-color: #65a718;
+    }
+
+.branding-bar {
+  background-color: #002244;
+  text-align: center;
+  padding: 1.5rem 1rem;
+  color: white;
+}
+
+  .branding-bar img {
+    height: 60px;
+    margin-bottom: 0.5rem;
+  }
+
+  .branding-bar h1 {
+    margin: 0;
+    font-size: 1.8rem;
+  }
+
+  .branding-bar p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #ccc;
+  }
+
+/* MAIN CONTENT */
+.main-content {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 20px;
+  margin: 40px auto;
+  max-width: 1200px;
+  padding: 0 20px;
+}
+
+.sidebar {
+  flex: 0 0 220px;
+  position: sticky;
+  top: 0;
+  height: auto;
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-left: 0;
+  margin-right: 20px;
+  margin-top: 60px;
+}
+
+  .sidebar h2 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+  }
+
+.filter-section {
+  margin-bottom: 20px;
+}
+
+  .filter-section label,
+  .filter-section select {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+#products {
+  flex: 1;
+  max-width: 900px;
+  margin: 60px auto 20px auto;
+}
+
+  #products h2 {
+    text-align: left;
+    margin-bottom: 20px;
+  }
+
+.product-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.product {
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: left;
+  transition: transform 0.3s ease;
+  width: 100%;
+  max-width: 400px;
+}
+
+  .product:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+/* Footer */
+footer {
+  background-color: #002244;
+  color: white;
+  text-align: center;
+  padding: 1.5rem 1rem;
+  font-size: 0.9em;
+  font-family: Arial, sans-serif;
+  background-image: url("/assets/site-footer-bg.jpg");
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  bottom: 0;
+  width: 100%;
+}
+
+/* Add Item Button */
+.add-item-button-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin: 20px 0;
+}
+
+.add-item-button {
+  background-color: #78be20;
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding: 0.5rem 1.2rem;
+  border-radius: 5px;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+  .add-item-button:hover {
+    background-color: #65a718;
+    transform: translateY(-2px);
+  }
+
+  .add-item-button:focus {
+    outline: none;
+  }
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .top-links {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .branding-bar img {
+    height: 48px;
+  }
+
+  .branding-bar h1 {
+    font-size: 1.5rem;
+  }
+
+  .main-content {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .sidebar {
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 20px;
+    width: 100%;
+  }
+
+  #products {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .product-grid {
+    justify-content: center;
+  }
+}
