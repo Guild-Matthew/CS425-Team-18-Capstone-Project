@@ -1,0 +1,224 @@
+/* Base layout */
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.content-area {
+  flex: 1;
+  padding: 2rem;
+}
+
+.content-wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 3rem;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 250px;
+  background-color: #ffffff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.filter-section label {
+  font-weight: 600;
+}
+
+.filter-section select {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* User cards */
+.user-section {
+  flex: 1;
+}
+
+.user-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.user-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+}
+
+.user-card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 1rem 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+  .user-card p {
+    margin: 0.25rem 0;
+  }
+
+  .user-card button {
+    margin-top: 0.5rem;
+    padding: 0.4rem 1rem;
+    background-color: #c62828;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+    .user-card button:hover {
+      background-color: #b71c1c;
+    }
+
+/* Add User Button */
+.main-content-button {
+  background-color: #002147;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+  .main-content-button:hover {
+    background-color: #001730;
+  }
+
+/* Footer */
+.footer {
+  background-color: #002244;
+  color: white;
+  text-align: center;
+  padding: 1.5rem 1rem;
+  background-image: url("/assets/site-footer-bg.jpg");
+  background-size: cover;
+  background-position: center;
+  font-family: Arial, sans-serif;
+}
+
+  .footer p {
+    margin: 0;
+    font-size: 0.95rem;
+  }
+
+/* ===== Restored Centered Header Layout ===== */
+.header {
+  font-family: Arial, sans-serif;
+  width: 100%;
+}
+
+/* Top nav bar (MAP, DASHBOARD, etc.) */
+.top-bar {
+  background-color: #002244;
+  padding: 0.5rem 1rem;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.top-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+  .top-links .nav-link {
+    color: white;
+    text-transform: uppercase;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    transition: background-color 0.2s ease-in-out;
+  }
+
+    .top-links .nav-link:hover {
+      background-color: rgba(255, 255, 255, 0.15);
+    }
+
+  /* Optional LOGIN button */
+  .top-links .login-button {
+    background-color: #78be20;
+    color: black;
+    font-weight: bold;
+    padding: 0.4rem 1rem;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    transition: background-color 0.2s ease;
+  }
+
+    .top-links .login-button:hover {
+      background-color: #65a718;
+    }
+
+/* Centered branding */
+.branding-bar {
+  background-color: #002244;
+  text-align: center;
+  padding: 1.5rem 1rem;
+  color: white;
+}
+
+  .branding-bar img {
+    height: 60px;
+    margin-bottom: 0.5rem;
+  }
+
+  .branding-bar h1 {
+    margin: 0;
+    font-size: 1.8rem;
+  }
+
+  .branding-bar p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #ccc;
+  }
+
+/* ===== Responsive Styles ===== */
+@media (max-width: 1024px) {
+  .content-wrapper {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    margin-bottom: 2rem;
+  }
+
+  .user-section {
+    width: 100%;
+  }
+
+  .user-card-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+
+  .top-links {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .branding-bar img {
+    height: 48px;
+  }
+
+  .branding-bar h1 {
+    font-size: 1.5rem;
+  }
+}

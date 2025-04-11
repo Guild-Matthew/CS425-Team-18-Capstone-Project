@@ -1,11 +1,4 @@
-
-/* ===== Restored Centered Header Layout ===== */
-.header {
-  font-family: Arial, sans-serif;
-  width: 100%;
-}
-
-
+/* Matt Guild, Shane Petree*/
 /* ===== Restored Centered Header Layout ===== */
 .header {
   font-family: Arial, sans-serif;
@@ -83,10 +76,6 @@
   color: #ccc;
 }
 
-
-
-
-
 :host {
   position: fixed;
   top: 0;
@@ -97,12 +86,14 @@
   height: 100%;
   z-index: 0;
 }
+
 /* Ensure the page wrapper takes full viewport height and doesn't center */
 .page-wrapper {
   display: flex;
   flex-direction: column;
   height: 100vh;  /* Full viewport height */
-  align-items: center;
+  width: 100%;
+  overflow: auto;
 }
 
 .header {
@@ -110,24 +101,44 @@
   position: relative;  /* Ensure header stays at the top */
 }
 
-/* Google map styling */
-.google-map {
-  flex-grow: 1;  /* Allow the map to grow and fill the remaining space */
+#map-container {
+  position: relative;
+  display: flex;
+  flex-grow: 1;
+  min-height: 40vh;
+/*  max-height: 65vh;*/
   width: 100%;
-  height: 100%;  /* Full height of the remaining space between header and footer */
-  display: block;
+  margin: 0;
+  padding: 0;
+  resize: vertical;
 }
 
-/* Footer styles */
+/* Google map styling */
+#google-map {
+/*  position: relative;*/
+  flex-grow: 1; /* Allow the map to grow and fill the remaining space */
+  width: 100%;
+  height: auto;
+  max-height: 100vh; /* Full height of the remaining space between header and footer */
+  display: block;
+/*  resize: vertical;*/
+/*  overflow: scroll;*/
+/*  display: flex;*/
+}
+
+/* Footer */
 .footer {
   background-color: #041E42;
   color: white;
   text-align: center;
+  padding: 1.5rem 1rem;
   background-image: url("/assets/site-footer-bg.jpg");
   background-size: cover;
   background-position: center;
   font-family: Arial, sans-serif;
-  width: 100%;  /* Ensure footer spans the entire width */
-  padding: 1.5rem 1rem;
-  position: relative;  /* Ensure footer stays at the bottom */
 }
+
+  .footer p {
+    margin: 0;
+    font-size: 0.95rem;
+  }
