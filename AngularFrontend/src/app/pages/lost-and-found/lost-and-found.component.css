@@ -187,18 +187,12 @@ footer {
 }
 
 .main-content-button {
-<<<<<<< HEAD
-  background-color: #041E42;
-=======
   background-color: #041E42; 
->>>>>>> 38a0cc37ea196aa3ea9719008ad3a3472b45b1cd
   color: white;
   font-weight: bold;
   text-transform: uppercase;
   padding: .6rem 1.2rem; /* Adjust padding */
   border-radius: 6px;
-<<<<<<< HEAD
-=======
   border: none;
   font-size: 1rem;
   cursor: pointer;
@@ -222,46 +216,16 @@ footer {
   text-transform: uppercase;
   padding: 0.6rem 1.2rem;
   border-radius: 6px;
->>>>>>> 38a0cc37ea196aa3ea9719008ad3a3472b45b1cd
   border: none;
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-<<<<<<< HEAD
-  .main-content-button:hover {
-    background-color: #041E42; /* Hover effect */
-    transform: translateY(-2px); /* Slight lift on hover */
-  }
-
-  .main-content-button:focus {
-    outline: none;
-  }
-
-
-.add-item-button {
-  background-color: #041E42;
-  color: white;
-  font-weight: bold;
-  text-transform: uppercase;
-  padding: 0.6rem 1.2rem;
-  border-radius: 6px;
-  border: none;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-=======
 .add-item-button:hover {
   background-color: #041E42;
   transform: translateY(-2px);
->>>>>>> 38a0cc37ea196aa3ea9719008ad3a3472b45b1cd
 }
-
-  .add-item-button:hover {
-    background-color: #041E42;
-    transform: translateY(-2px);
-  }
 
   .add-item-button:focus {
     outline: none;
