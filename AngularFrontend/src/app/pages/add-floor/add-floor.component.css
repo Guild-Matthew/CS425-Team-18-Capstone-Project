@@ -195,7 +195,7 @@
     text-align: center;
     padding: 1.5rem 1rem;
     font-size: 0.9em;
-    background-image: url("../../assets/site-footer-bg.jpg");
+    background-image: url("/assets/site-footer-bg.jpg");
     background-size: cover;
     background-position: center;
     position: relative;

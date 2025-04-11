@@ -152,17 +152,22 @@ class Queries:
     def getUserVoidFiltered(self, uid_list, role, active):  
         if not uid_list: 
             return "none"  
+    
         placeholders = ', '.join(['%s'] * len(uid_list))  
         query = f"""
-            SELECT username, email, active, role
+            SELECT uid, username, email, active, role
             FROM users 
             WHERE uid IN ({placeholders}) AND role = %s AND active = %s
         """
         self.cursor.execute(query, tuple(uid_list) + (role,) + (active,))  
         rows = self.cursor.fetchall()
+    
         if not rows: 
             return "none"
-        return [{"username": row[0], "email": row[1], "active": row[2], "role": row[3]} for row in rows]
+    
+        return [{"id": row[0], "username": row[1], "email": row[2], "active": row[3], "role": row[4]} for row in rows]
+
+
 
     #task this function throws an error when changing the building in the dropdown on super admin deactivate account page
     def getUserVoidFilteredSuper(self, uid_list, role, role2, active):  

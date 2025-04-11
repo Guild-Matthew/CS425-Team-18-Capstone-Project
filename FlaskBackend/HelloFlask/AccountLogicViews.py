@@ -10,6 +10,7 @@ import json
 import uuid
 from datetime import datetime
 
+from collections import defaultdict
 # Instance of Queries for database access
 db_queries = Queries()
 account_bp = Blueprint('account', __name__)

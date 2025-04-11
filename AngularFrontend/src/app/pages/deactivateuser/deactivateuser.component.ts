@@ -51,6 +51,8 @@ export class DeactivateUserComponent implements OnInit {
     } else {
       this.selectedBuildings.delete(building);
     }
+
+    this.filterUsersByBuildings(); 
   }
 
   toggleSelectAll(event: any): void {
@@ -60,6 +62,8 @@ export class DeactivateUserComponent implements OnInit {
     } else {
       this.selectedBuildings.clear();
     }
+
+    this.filterUsersByBuildings();
   }
 
   deactivateUser(userId: number): void {
@@ -90,6 +94,31 @@ export class DeactivateUserComponent implements OnInit {
     if (this.selectedBuildings.size === 0) {
       return this.users;
     }
-    return this.users.filter(user => this.selectedBuildings.has(user.building));
+    return this.users.filter(user =>
+      user.buildings.some((b: string) => this.selectedBuildings.has(b))
+    );
   }
+
+  filterUsersByBuildings(): void {
+    const userId = localStorage.getItem('user_id');
+    const role = localStorage.getItem('role');
+
+    let params = new HttpParams()
+      .set('user_id', userId || '')
+      .set('role', role || '');
+
+    this.selectedBuildings.forEach(building => {
+      params = params.append('building', building);
+    });
+
+    this.http.get<any>(`${flask_URL}/deactivate_user`, { params }).subscribe(
+      response => {
+        this.users = response.users;
+      },
+      error => {
+        console.error('Error fetching filtered users:', error);
+      }
+    );
+  }
+
 }
