@@ -8,9 +8,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
-import { HttpClient, HttpHeaders} from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http'; 
+import { HttpClientModule } from '@angular/common/http';
 import { flask_URL } from '../../app.config';
 
 @Component({
@@ -33,15 +33,15 @@ export class LoginComponent {
   netId: string = '';
   password: string = '';
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) { }
 
   onSubmit() {
     const loginData = { NetId: this.netId, password: this.password };
-  
+
     const headers = { 'Content-Type': 'application/json' };
 
     // Shane Petree 1 line, updated flask URL in http request
-    this.http.post(flask_URL + '/login', loginData, { headers }).subscribe(
+    this.http.post(flask_URL + '/login', loginData, { headers, withCredentials: true }).subscribe(
       (response: any) => {
 
         if (response.success) {

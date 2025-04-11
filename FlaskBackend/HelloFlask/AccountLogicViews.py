@@ -9,6 +9,7 @@ from flask_cors import cross_origin
 import json
 import uuid
 from collections import defaultdict
+from datetime import datetime
 # Instance of Queries for database access
 db_queries = Queries()
 account_bp = Blueprint('account', __name__)
@@ -29,6 +30,7 @@ def login():
         session['role'] = user['role']
         session['username'] = user['username']
         session.permanent = True 
+        session['last_activity'] = datetime.utcnow().isoformat()  
         authtoken = str(uuid.uuid4())  
         db_queries.updateUserToken(user['uid'], authtoken)
         return jsonify({
@@ -221,3 +223,31 @@ def deactivate_user():
         "buildings": all_buildings,
         "selected_building": selected_buildings
     })
+
+
+
+# @account_bp.before_request
+# def session_timeout_check():
+#     session.permanent = True
+#     now = datetime.utcnow()
+ 
+#     if 'user_id' in session:
+#         last_activity_str = session.get('last_activity')
+#         if last_activity_str:
+#             try:
+#                 last_activity = datetime.fromisoformat(last_activity_str)
+#                 inactive_duration = (now - last_activity).total_seconds()
+#                 timeout = session._get_current_object().config['PERMANENT_SESSION_LIFETIME'].total_seconds()  # Corrected
+#                 if inactive_duration > timeout:
+#                     session.clear()
+#                     if 'application/json' in str(request.accept_mimetypes):
+#                         return jsonify({'error': 'Session timed out'}), 401
+#                     else:
+#                         return redirect(url_for('account.login'))
+#             except ValueError:
+#                 # malformed date, clear session for safety
+#                 session.clear()
+#                 return redirect(url_for('account.login'))
+ 
+#         # Always update activity timestamp
+#         session['last_activity'] = now.isoformat()
