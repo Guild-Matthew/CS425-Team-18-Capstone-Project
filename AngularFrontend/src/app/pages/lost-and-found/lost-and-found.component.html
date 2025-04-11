@@ -1,22 +1,22 @@
 <!--Mary Cottier, Shane Petree, Guilherme Cassiano, Matthew Guild-->
 <div class="lost-and-found">
-    <div class="page-wrapper">
-      <!-- HEADER -->
-      <header class="header">
-        <div class="top-bar">
-          <div class="top-links">
-            <a class="nav-link" routerLink="/map">Map</a>
-            <a class="nav-link" routerLink="/dashboard">Dashboard</a>
-            <a class="nav-link" routerLink="/lost-and-found">Lost & Found</a>
-            <a class="login-button" routerLink="/login">Logout</a>   
-          </div>
+  <div class="page-wrapper">
+    <!-- HEADER -->
+    <header class="header">
+      <div class="top-bar">
+        <div class="top-links">
+          <a class="nav-link" routerLink="/map">Map</a>
+          <a class="nav-link" routerLink="/dashboard">Dashboard</a>
+          <a class="nav-link" routerLink="/lost-and-found">Lost & Found</a>
+          <a class="login-button" routerLink="/login">Logout</a>   
         </div>
-  
-        <div class="branding-bar">
-          <img src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg" alt="University Logo" />
-          <h1>University of Nevada, Reno</h1>
-          <p>Inspiring Excellence Since 1874</p>
-        </div>
+      </div>
+
+      <div class="branding-bar">
+        <img src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg" alt="University Logo" />
+        <h1>University of Nevada, Reno</h1>
+        <p>Inspiring Excellence Since 1874</p>
+      </div>
     </header>
 
     <div class="main-content">
@@ -43,12 +43,25 @@
             <option value="other">Other/Misc</option>
           </select>
         </div>
+
+        <!-- Building Filter (integrated into sidebar) -->
+        <div class="filter-section">
+          <label for="building">Lost and Found Location:</label>
+          <select id="building" [(ngModel)]="selectedBuilding" (change)="onBuildingChange()">
+            <option *ngFor="let b of buildings" [value]="b">{{ b }}</option>
+          </select>
+        </div>
       </aside>
 
       <!-- Products Section -->
       <section id="products">
         <h2>Items will be kept until December 29th, 2024</h2>
         <h2>Found Items in Building: {{ selectedBuilding }}</h2>
+
+        <!-- Add Item Button -->
+        <div class="add-item-section">
+          <button class="main-content-button" [routerLink]="'/add-item'">Add Item</button>
+        </div>
 
         <!-- Display error message if any -->
         <div *ngIf="errorMessage" class="error-message">
@@ -64,24 +77,20 @@
             <div *ngIf="item.imageUrl">
               <img [src]="item.imageUrl" alt="Photo of {{ item.type }}" style="max-width: 200px;">
             </div>
+            
+            <!-- Mark as Claimed Button -->
+            <div class="claim-button-section">
+              <button class="main-content-button" (click)="markAsClaimed(item)">Mark as Claimed</button>
+            </div>
           </div>
         </div>
       </section>
-
-      <!-- Building Filter -->
-      <div class="filter-section">
-        <label for="building">Lost and Found Location:</label>
-        <select id="building" [(ngModel)]="selectedBuilding" (change)="onBuildingChange()">
-          <option *ngFor="let b of buildings" [value]="b">{{ b }}</option>
-        </select>
-      </div>
 
     </div>
 
     <!-- Footer Section -->
     <footer>
-        <p>&copy; 2025 University of Nevada, Reno. Lost and Found Service.</p>
-      </footer>
-    </div>
+      <p>&copy; 2025 University of Nevada, Reno. Lost and Found Service.</p>
+    </footer>
   </div>
-  
+</div>

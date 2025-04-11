@@ -180,19 +180,42 @@ footer {
 }
 
 /* Add Item Button */
-.add-item-button-wrapper {
+.add-item-section {
   display: flex;
   justify-content: flex-end;
-  margin: 20px 0;
+  margin-bottom: 15px; /* Ensures spacing above the button */
 }
 
-.add-item-button {
-  background-color: #78be20;
+.main-content-button {
+  background-color: #041E42; 
   color: white;
   font-weight: bold;
   text-transform: uppercase;
-  padding: 0.5rem 1.2rem;
-  border-radius: 5px;
+  padding: .6rem 1.2rem; /* Adjust padding */
+  border-radius: 6px;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.main-content-button:hover {
+  background-color: #041E42; /* Hover effect */
+  transform: translateY(-2px); /* Slight lift on hover */
+}
+
+.main-content-button:focus {
+  outline: none;
+}
+
+
+.add-item-button {
+  background-color: #041E42;
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
   border: none;
   font-size: 1rem;
   cursor: pointer;
@@ -200,7 +223,7 @@ footer {
 }
 
 .add-item-button:hover {
-  background-color: #65a718;
+  background-color: #041E42;
   transform: translateY(-2px);
 }
 
