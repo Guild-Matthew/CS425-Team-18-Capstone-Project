@@ -8,6 +8,7 @@ import tempfile
 from flask_cors import cross_origin
 import json
 import uuid
+from collections import defaultdict
 # Instance of Queries for database access
 db_queries = Queries()
 account_bp = Blueprint('account', __name__)
@@ -164,29 +165,59 @@ def deactivate_user():
 
     user_id = request.args.get('user_id')
     role = request.args.get('role')
-    building_filter = request.args.get('building', 'all')
+    buildings_param = request.args.getlist('building')
 
     if not user_id:
         return jsonify({"error": "Unauthorized - Missing User ID"}), 401
 
+    # Determine accessible buildings based on role
     if role == 'superadmin':
-        buildings = db_queries.getAllBuildings()
+        all_buildings = db_queries.getAllBuildings()
     elif role == 'admin':
-        buildings = db_queries.getBuildingsFromPermissions(user_id)
-
-    if building_filter == 'all':
-        users = db_queries.getUserVoid('student', 'true')
+        all_buildings = db_queries.getBuildingsFromPermissions(user_id)
     else:
-        bid = db_queries.getBuildingID(building_filter)
-        uid_list = db_queries.getUsersFromPermissions(bid)
-        users = db_queries.getUserVoidFiltered(uid_list, 'student', 'true')
+        return jsonify({"error": "Unauthorized role"}), 403
 
-    formatted_users = [
-        {"name": u['username'], "email": u['email'], "building": "N/A", "id": u.get('id', 0)} for u in users
-    ]
+    # Fix: handle 'all' or empty selection
+    selected_buildings = buildings_param if buildings_param and buildings_param != ['all'] else all_buildings
 
+    # Collect UID list from selected buildings
+    print("Selected buildings:", selected_buildings)
+    uid_lists = []
+    for b in selected_buildings:
+        bid = db_queries.getBuildingID(b)
+        uids = db_queries.getUsersFromPermissions(bid)
+        uid_lists.extend(uids)
+
+    uid_lists = list(set(uid_lists))  # Remove duplicates
+    print("UID lists:", uid_lists)
+    users = db_queries.getUserVoidFiltered(uid_lists, 'student', 'true')
+    print("Users", users)
+    formatted_users = []
+    user_map = {}
+
+    for b in selected_buildings:
+        bid = db_queries.getBuildingID(b)
+        uids = db_queries.getUsersFromPermissions(bid)
+        users = db_queries.getUserVoidFiltered(uids, 'student', 'true')
+    
+        if users != "none":
+            for u in users:
+                uid = u.get('id', 0)
+                if uid not in user_map:
+                    user_map[uid] = {
+                    "name": u['username'],
+                    "email": u['email'],
+                    "role": u['role'],
+                    "id": uid,
+                    "buildings": [b]
+                    }
+                else:
+                    user_map[uid]["buildings"].append(b)
+    formatted_users = list(user_map.values())
+    print("Formatted users", formatted_users)
     return jsonify({
         "users": formatted_users,
-        "buildings": buildings,
-        "selected_building": building_filter
+        "buildings": all_buildings,
+        "selected_building": selected_buildings
     })

@@ -1,3 +1,4 @@
+//Matthew Guild, Guilherme Cassiano
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { flask_URL } from '../../app.config';
