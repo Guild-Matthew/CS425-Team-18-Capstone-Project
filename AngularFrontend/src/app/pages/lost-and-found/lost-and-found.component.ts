@@ -124,7 +124,11 @@ export class LostAndFoundComponent implements OnInit {
     if (item.claimed) {
       return;
     }
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 38a0cc37ea196aa3ea9719008ad3a3472b45b1cd
     const dateClaimed = new Date().toISOString().split('T')[0]; // format as YYYY-MM-DD
     const body = {
       itemType: item.type,
@@ -134,7 +138,11 @@ export class LostAndFoundComponent implements OnInit {
       dateClaimed: dateClaimed,
       LFlocation: this.selectedBuilding
     };
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 38a0cc37ea196aa3ea9719008ad3a3472b45b1cd
     const url = `${flask_URL}/L&F/claimItem`;
     this.http.post<any>(url, body).subscribe({
       next: (response) => {
@@ -153,5 +161,9 @@ export class LostAndFoundComponent implements OnInit {
         // Optionally: Show user-facing error or undo `item.claimed = true`
       }
     });
+<<<<<<< HEAD
   }
+=======
+  }  
+>>>>>>> 38a0cc37ea196aa3ea9719008ad3a3472b45b1cd
 }

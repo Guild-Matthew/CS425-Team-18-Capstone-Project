@@ -1,3 +1,92 @@
+
+/* ===== Restored Centered Header Layout ===== */
+.header {
+  font-family: Arial, sans-serif;
+  width: 100%;
+}
+
+
+/* ===== Restored Centered Header Layout ===== */
+.header {
+  font-family: Arial, sans-serif;
+  width: 100%;
+}
+
+/* Top nav bar (MAP, DASHBOARD, etc.) */
+.top-bar {
+  background-color: #041E42;
+  padding: 0.5rem 1rem;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.top-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.top-links .nav-link {
+  color: white;
+  text-transform: uppercase;
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.top-links .nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Optional LOGIN button */
+.top-links .login-button {
+  background-color: #78be20;
+  color: black;
+  font-weight: bold;
+  padding: 0.4rem 1rem;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  transition: background-color 0.2s ease;
+}
+
+.top-links .login-button:hover {
+  background-color: #65a718;
+}
+
+/* Centered branding */
+.branding-bar {
+  background-color: #041E42;
+  text-align: center;
+  padding: 1.5rem 1rem;
+  color: white;
+}
+
+.branding-bar img {
+  height: 60px;
+  margin-bottom: 0.5rem;
+}
+
+.branding-bar h1 {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.branding-bar p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #ccc;
+}
+
+
+
+
+
 :host {
   position: fixed;
   top: 0;
@@ -8,9 +97,37 @@
   height: 100%;
   z-index: 0;
 }
+/* Ensure the page wrapper takes full viewport height and doesn't center */
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;  /* Full viewport height */
+  align-items: center;
+}
 
-.google-map {
+.header {
   width: 100%;
-  height: 100%;
+  position: relative;  /* Ensure header stays at the top */
+}
+
+/* Google map styling */
+.google-map {
+  flex-grow: 1;  /* Allow the map to grow and fill the remaining space */
+  width: 100%;
+  height: 100%;  /* Full height of the remaining space between header and footer */
   display: block;
+}
+
+/* Footer styles */
+.footer {
+  background-color: #041E42;
+  color: white;
+  text-align: center;
+  background-image: url("/assets/site-footer-bg.jpg");
+  background-size: cover;
+  background-position: center;
+  font-family: Arial, sans-serif;
+  width: 100%;  /* Ensure footer spans the entire width */
+  padding: 1.5rem 1rem;
+  position: relative;  /* Ensure footer stays at the bottom */
 }
