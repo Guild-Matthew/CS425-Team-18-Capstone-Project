@@ -1,152 +1,221 @@
-/* Mary Cottier */
+/* Mary Cottier, Matthew Guild */
 /* Styling */
 * {
-  box-sizing: border-box;
-}
-
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f3f4f6;
-  color: #000000;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-  display: flex;
-}
-
-/* header Styles */
-header {
-  background-color: #041E42;
-  color: #ffffff;
-  padding: 20px 0;
-  margin-bottom: 20px;
-  width: 100%;
-  border-radius: 0px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.logo-group {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-header h1 {
-  font-size: 2.5rem;
-  margin: 0;
-}
-
-header nav ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  gap: 25px;
-}
-
-  header nav ul li a {
-    color: #ffffff;
-    text-decoration: none;
-    font-size: 1.2rem;
-    transition: color 0.3s ease;
+    box-sizing: border-box;
   }
-
-    header nav ul li a:hover {
-      color: #f3f4f6;
-    }
-
-/* Sidebar sort and filter styles */
-.main-content {
-  display: flex;
-  align-items: flex-start;
-  gap: 20px; /* Adds space between sidebar and products */
-}
-
-.sidebar {
-  flex: 0 0 250px; /* Fixes sidebar width */
-  position: sticky; /* Ensures it stays fixed when scrolling */
-  top: 0; /* Sticks to the top of the container */
-  height: auto; /* Adjusts height dynamically */
-  background-color: #ffffff;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-right: 100px;
-  margin-left: 200px;
-  margin-top: 60px;
-}
-
-
-  .sidebar h2 {
-    font-size: 1.5rem;
-    margin-bottom: 15px;
+  
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f3f4f6;
+    color: #000000;
   }
-
-.filter-section {
-  margin-bottom: 20px;
-}
-
-  .filter-section label,
-  .filter-section select {
-    display: block;
+  
+  /* HEADER */
+  header {
+    background-color: #041E42;
+    color: white;
     width: 100%;
-    margin-bottom: 10px;
   }
-
-/* Product(items) Styles */
-#products {
-  margin-bottom: 20px;
-  margin-left: 200px;
-}
-
-  #products h2 {
-    text-align: left; /* Aligns the subheader to the left */
-    margin-bottom: 20px; /* Adds space between the subheader and the grid */
+  
+  .top-bar {
+    background-color: #041E42;
+    padding: 0.5rem 1rem;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
   }
-
-.product h3 span {
-  font-weight: normal; /* Set non-bold font weight */
-}
-
-.product {
-  background-color: #ffffff; /* White background for the box */
-  border-radius: 10px; /* Rounded corners */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-  padding: 20px; /* Space inside the box */
-  text-align: left; /* Align text to the left inside the box */
-  transition: transform 0.3s ease; /* Smooth hover effect */
-}
-
+  
+  .top-links {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  
+  .top-links .nav-link {
+    color: white;
+    text-transform: uppercase;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  .top-links .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+  
+  .top-links .login-button {
+    background-color: #78be20;
+    color: black;
+    font-weight: bold;
+    padding: 0.4rem 1rem;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    transition: background-color 0.2s ease;
+  }
+  
+  .top-links .login-button:hover {
+    background-color: #65a718;
+  }
+  
+  .branding-bar {
+    background-color: #041E42;
+    text-align: center;
+    padding: 1.5rem 1rem;
+    color: white;
+  }
+  
+  .branding-bar img {
+    height: 60px;
+    margin-bottom: 0.5rem;
+  }
+  
+  .branding-bar h1 {
+    margin: 0;
+    font-size: 1.8rem;
+  }
+  
+  .branding-bar p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #ccc;
+  }
+  
+  /* MAIN CONTENT */
+  .main-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 40px auto;
+    max-width: 900px;
+    padding: 0 20px;
+  }
+  
+  /* Card Form Layout */
+  .form-card {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  
+  .form-card label {
+    display: block;
+    text-align: left;
+    margin-bottom: 8px;
+    font-weight: bold;
+  }
+  
+  .form-card input,
+  .form-card select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+  }
+  
+  /* Submit Button */
+  .add-item-button-wrapper {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .add-item-button {
+    background-color: #041E42;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 0.5rem 1.2rem;
+    border-radius: 5px;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .add-item-button:hover {
+    background-color: #023267;
+    transform: translateY(-2px);
+  }
+  
+  .add-item-button:focus {
+    outline: none;
+  }
+  
+  /* Product/Floor List */
+  #products {
+    width: 100%;
+    max-width: 900px;
+  }
+  
+  #products h3 {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .product-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  .product {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: left;
+    transition: transform 0.3s ease;
+    width: 100%;
+    max-width: 300px;
+  }
+  
   .product:hover {
-    transform: translateY(-5px); /* Move up slightly */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
-
-.product-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr; /* Two equal columns */
-  gap: 20px; /* Space between items */
-}
-
-/* Footer Styles */
-footer {
-  background-color: #041E42;
-  color: white;
-  text-align: center;
-  padding: 10px 0;
-  font-size: 0.9em;
-}
+  
+  /* Footer */
+  footer {
+    background-color: #041E42;
+    color: white;
+    text-align: center;
+    padding: 1.5rem 1rem;
+    font-size: 0.9em;
+    background-image: url("../../assets/site-footer-bg.jpg");
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .form-card {
+      padding: 20px;
+    }
+  
+    .branding-bar h1 {
+      font-size: 1.4rem;
+    }
+  
+    .top-links {
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+  }
+  
