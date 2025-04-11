@@ -6,7 +6,8 @@
         <a class="nav-link" routerLink="/map">Map</a>
         <a class="nav-link" routerLink="/dashboard">Dashboard</a>
         <a class="nav-link" routerLink="/lost-and-found">Lost & Found</a>
-        <a class="login-button" routerLink="/login">Logout</a>            
+        <!--<a class="login-button" routerLink="/login">Login</a>-->
+        <a *ngIf="!role" class="login-button" routerLink="/login">Login</a>
       </div>
     </div>
   
