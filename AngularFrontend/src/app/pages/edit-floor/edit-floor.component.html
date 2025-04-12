@@ -1,7 +1,7 @@
 <!--Shane Petree -->
 
 <div class="main-container" *ngIf="role === 'admin' || role === 'superadmin'">
-  <header>
+  <!--<header>
     <div class="container">
       <div class="logo-group">
         <img class="university-logo-large-img align-image-bottom" alt="University of Nevada, Reno" src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg" width="65" height="65">
@@ -16,7 +16,8 @@
         </ul>
       </nav>
     </div>
-  </header>
+  </header>-->
+  <app-nav-bar></app-nav-bar>
 
   <section class="edit-floor-form">
     <h2>Add a Room</h2>
@@ -76,7 +77,7 @@
   </section>
 
 
-  <footer>
+  <footer class="footer">
     <p>&copy; 2025 University of Nevada, Reno. Lost and Found Service.</p>
   </footer>
 </div>

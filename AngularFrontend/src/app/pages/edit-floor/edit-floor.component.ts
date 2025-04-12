@@ -11,6 +11,7 @@ import { MatInput } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButton } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list'
+import { NavBarComponent } from '../../nav-bar/nav-bar.component';
 
 @Component({
   selector: 'app-add-room',
@@ -24,7 +25,8 @@ import { MatListModule } from '@angular/material/list'
     MatOption,
     MatButton,
     MatListModule,
-    RouterLink
+    RouterLink,
+    NavBarComponent
   ],
   templateUrl: './edit-floor.component.html',
   styleUrl: './edit-floor.component.css'
@@ -202,6 +204,7 @@ export class EditFloorComponent implements OnInit {
       for (const room of this.rooms) {
         if (room == this.selected_room) {
           console.error(`Room ${this.selected_room} already exists.`);
+          alert(`Room ${this.selected_room} already exists.`);
           return;
         }
       }
@@ -259,6 +262,7 @@ export class EditFloorComponent implements OnInit {
 
       if (!roomExists) {
         console.error(`Room ${this.selected_room} does not exist.`);
+        alert(`Room ${this.selected_room} does not exist.`);
         return;
       }
 

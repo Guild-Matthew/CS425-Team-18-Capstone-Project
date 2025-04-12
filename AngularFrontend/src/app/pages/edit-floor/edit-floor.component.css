@@ -163,11 +163,19 @@ header nav ul {
       background-color: #003366;
     }
 
-/* Footer Styles */
-footer {
+/* Footer */
+.footer {
   background-color: #041E42;
   color: white;
   text-align: center;
-  padding: 10px 0;
-  font-size: 0.9em;
+  padding: 1.5rem 1rem;
+  background-image: url("/assets/site-footer-bg.jpg");
+  background-size: cover;
+  background-position: center;
+  font-family: Arial, sans-serif;
 }
+
+  .footer p {
+    margin: 0;
+    font-size: 0.95rem;
+  }
