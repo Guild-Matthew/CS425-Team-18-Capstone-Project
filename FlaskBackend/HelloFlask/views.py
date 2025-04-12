@@ -253,8 +253,9 @@ def addBuilding():
 
         return jsonify({"message": "Building added successfully!"}), 200
 
+# to edit and fetch floors of a building
 @main_bp.route('/editBuilding', methods=['GET', 'POST'])
-@cross_origin(supports_credentials=True) 
+@cross_origin(supports_credentials=True)
 def EditBuilding():
         user_id = request.args.get('user_id')  
         print(user_id)
@@ -302,49 +303,67 @@ def EditBuilding():
             "floors": floors
         })
 
+# to edit and fetch rooms of a floor of a building
 @main_bp.route('/editFloor', methods=['GET', 'POST'])
+@cross_origin(supports_credentials=True)
 def EditFloor():
-    if 'user_id' in session:
-        buildings = db_queries.getAllBuildings()
-        if request.method == 'POST':
-            selected_building = request.form.get('selected_building') #had to do this because when query was submited it would send stuff to the first building on the list (AB)
-        else:
-            selected_building = request.args.get('building')  
+    user_id = request.args.get('user_id')
+    print(user_id)
+    role = request.args.get('role')
+    formAuthToken = request.args.get('token')
+    uidauthtoken = db_queries.getTokenByUID(user_id)
+    uidauthtoken = uidauthtoken[0] if isinstance(uidauthtoken, list) and uidauthtoken else None
 
-        if request.method == 'POST':
-            selected_floor = request.form.get('selected_floor') #had to do this because when query was submited it would send stuff to the first building on the list (AB)
-        else:
-            selected_floor = request.args.get('floor')  
+    # return error if user does not have an active session authtoken
+    if uidauthtoken != formAuthToken:
+        return jsonify({"error": "Unauthorized"}), 401
 
-        # Default to the first building if none is selected
-        if selected_building is None or selected_building == '':
-            if buildings:
-                selected_building = buildings[0]
-        # Fetch floors for the selected building
-        bid = db_queries.getBuildingID(selected_building)
-        rooms = db_queries.getRooms(bid, selected_floor)  
-        floors = db_queries.getFloors(bid) 
+    buildingsPermissions = []
 
-        if selected_floor:
-           selected_floor = int(selected_floor)
-        if selected_floor is None or selected_floor == '' or selected_floor not in floors:
-            if floors:
-                selected_floor = floors[0]
-        if request.method == 'POST':
-            action = request.form.get('action') 
-            if action == 'add_room':
-                roomNumber = request.form['roomNumber']
-                db_queries.addRoom(bid, roomNumber, selected_floor)
-                rooms = db_queries.getRooms(bid, selected_floor)
-            elif action == 'remove_room':
-                room_number = request.form.get('room_number') 
-                db_queries.removeRoom(bid, room_number)
-                rooms = db_queries.getRooms(bid, selected_floor)
+    # get buildings based off user role
+    if role == 'superadmin':
+        buildingsPermissions = db_queries.getAllBuildings()
+    elif role == 'admin':
+        buildingsPermissions = db_queries.getBuildingsFromPermissions(user_id)
 
-        return render_template("editFloor.html", buildings=buildings, selected_building=selected_building, rooms=rooms, floors=floors, selected_floor=selected_floor)
+    if request.method == 'POST':
+        selected_building = request.form.get('selected_building', buildingsPermissions[0] if buildingsPermissions else None)
     else:
-        session['next_url'] = request.url
-        return redirect(url_for('account.login'))
+        selected_building = request.args.get('selected_building', buildingsPermissions[0] if buildingsPermissions else None)
+
+    # Fetch floors for the selected building
+    bid = db_queries.getBuildingID(selected_building)
+    floors = db_queries.getFloors(bid)
+
+    if request.method == 'POST':
+        selected_floor = request.form.get('selected_floor', floors[0] if floors else None)
+    else:
+        selected_floor = request.args.get('selected_floor', floors[0] if floors else None)
+
+    # fetch rooms for the selected building and floor
+    rooms = db_queries.getRooms(bid, selected_floor)
+
+    if request.method == 'POST':
+        selected_room = request.form.get('selected_room', rooms[0] if rooms else None)
+    else:
+        selected_room = request.args.get('selected_room', rooms[0] if rooms else None)
+
+    if request.method == 'POST':
+        action = request.form.get('action')
+        if action == 'add_room':
+            db_queries.addRoom(bid, selected_room, selected_floor)
+            rooms = db_queries.getRooms(bid, selected_floor)
+        elif action == 'remove_room':
+            db_queries.removeRoom(bid, selected_room)
+            rooms = db_queries.getRooms(bid, selected_floor)
+
+    return jsonify({
+        "buildings": buildingsPermissions,
+        "selected_building": selected_building,
+        "floors": floors,
+        "selected_floor": selected_floor,
+        "rooms": rooms
+    })
 
 @main_bp.route('/RedirectDashboard')
 def RedirectDashboard():
@@ -354,11 +373,9 @@ def RedirectDashboard():
         # Redirect to the admin dashboard if logged in as an admin
             return redirect(url_for('account.admDashboard'))
 
-    # START Shane Petree
         if role == 'superadmin':
             # Redirect to the super-admin dashboard if the user is a super-admin
             return redirect(url_for('account.superDashboard'))
-    # END Shane Petree
 
         if role == 'student':
         # Redirect to the user dashboard if logged in as an user

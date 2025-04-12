@@ -32,20 +32,25 @@
 
       <div class="hero-buttons">
         <!-- Student buttons -->
-        <a *ngIf="role === 'student' || role === 'admin' || role === 'superadmin'" routerLink="/lost-and-found" class="hero-button">View All Items</a>
-        <a *ngIf="role === 'student' || role === 'admin' || role === 'superadmin'" routerLink="/claimed-items" class="hero-button">View Claimed Items</a>
-        <a *ngIf="role === 'student' || role === 'admin' || role === 'superadmin'" routerLink="/remove-item" class="hero-button">Remove Items</a>
-        <a *ngIf="role === 'student' || role === 'admin' || role === 'superadmin'" routerLink="/generate-report" class="hero-button">Generate Report</a>
+        <span class="hero-buttons" *ngIf="role === 'student' || role === 'admin' || role === 'superadmin'">
+          <a routerLink="/lost-and-found" class="hero-button">View All Items</a>
+          <a routerLink="/claimed-items" class="hero-button">View Claimed Items</a>
+          <a routerLink="/remove-item" class="hero-button">Remove Items</a>
+          <a routerLink="/generate-report" class="hero-button">Generate Report</a>
+        </span>
         <!-- Admin and Superadmin buttons -->
-        <a *ngIf="role === 'admin' || role === 'superadmin'" routerLink="/deactivateuser" class="hero-button">Edit Access</a>
-        <a *ngIf="role === 'admin' || role === 'superadmin'" routerLink="/add-building" class="hero-button">Add Buildings</a>
-        <a *ngIf="role === 'admin' || role === 'superadmin'" routerLink="/add-floor" class="hero-button">Edit Buildings</a>
+        <span class="hero-buttons" *ngIf="role === 'admin' || role === 'superadmin'">
+          <a routerLink="/deactivateuser" class="hero-button">Edit Access</a>
+          <a routerLink="/add-building" class="hero-button">Add Buildings</a>
+          <a routerLink="/add-floor" class="hero-button">Edit Buildings</a>
+          <a routerLink="/edit-floor" class="hero-button">Edit Floor</a>
+        </span>
       </div>
     </div>
   </section>
 
   <!-- Footer -->
-  <footer>
+  <footer class="footer">
     <p>&copy; 2025 University of Nevada, Reno. Lost and Found Service.</p>
   </footer>
 </div>
