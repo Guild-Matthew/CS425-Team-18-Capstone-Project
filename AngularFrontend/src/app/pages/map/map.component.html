@@ -1,26 +1,9 @@
+<!--Guilherme Cassiano, Shane Petree-->
 <div class="page-wrapper">
-  <!-- HEADER -->
-  <header class="header">
-    <div class="top-bar">
-      <div class="top-links">
-        <a class="nav-link" routerLink="/map">Map</a>
-        <a class="nav-link" routerLink="/dashboard">Dashboard</a>
-        <a class="nav-link" routerLink="/lost-and-found">Lost & Found</a>
-        <!--<a class="login-button" routerLink="/login">Login</a>-->
-        <a *ngIf="!role" class="login-button" routerLink="/login">Login</a>
-      </div>
-    </div>
-  
-    <div class="branding-bar">
-      <img class="university-logo-large-img align-image-bottom" alt="University of Nevada, Reno"
-           src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg" width="65" height="65">
-      <h1>University of Nevada, Reno</h1>
-      <p>Inspiring Excellence Since 1874</p>
-    </div>
-  </header>
 
+  <app-nav-bar class="header"></app-nav-bar>
 
-  <google-map *ngIf="center" [center]="center" [zoom]="zoom" [options]="mapOptions">
+  <google-map id="map-container" *ngIf="center" [center]="center" width="inherit" height="inherit" [zoom]="zoom" [options]="mapOptions">
     <map-marker *ngFor="let marker of markers"
                 [position]="marker"
                 [title]="marker.title"
@@ -28,12 +11,8 @@
     </map-marker>
   </google-map>
 
-
-
-
-
-  <!-- FOOTER -->
   <footer class="footer">
     <p>&copy; 2025 University of Nevada, Reno. Lost and Found Service.</p>
   </footer>
+
 </div>

@@ -1,11 +1,14 @@
+// Guilherme Cassiano, Shane Petree
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, FormatWidth } from '@angular/common';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { Router, RouterLink } from '@angular/router';
+import { NavBarComponent } from '../../nav-bar/nav-bar.component';
+
 @Component({
   selector: 'app-map',
   standalone: true,
-  imports: [CommonModule, GoogleMapsModule, RouterLink],
+  imports: [CommonModule, GoogleMapsModule, RouterLink, NavBarComponent],
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css']
 })
@@ -84,11 +87,7 @@ export class MapComponent implements OnInit {
   }
   checkLoginStatus() {
     this.role = localStorage.getItem('role');  
-    const userData = localStorage.getItem('user');
+    const userData = localStorage.getItem('user_id');
     this.user = userData ? JSON.parse(userData) : null;
-  }
-  logout() {
-    localStorage.removeItem('user'); 
-    this.router.navigate(['/login']);  
   }
 }
