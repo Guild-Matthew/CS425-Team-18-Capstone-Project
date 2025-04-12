@@ -1,3 +1,4 @@
+//Matthew Guild, Guilherme Cassiano
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { flask_URL } from '../../app.config';
@@ -12,7 +13,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [CommonModule, RouterLink, HttpClientModule, FormsModule],
   templateUrl: './add-floor.component.html',
-  styleUrl: './add-floor.component.css'
+  styleUrls: ['./add-floor.component.css']
 })
 export class AddFloorComponent implements OnInit {
   items: any[] = [];
@@ -85,10 +86,12 @@ export class AddFloorComponent implements OnInit {
       response => {
         console.log("Floor added successfully", response);
         this.newFloorNumber = null;
+        alert('Floor added successfully');
         this.fetchItems();
       },
       error => {
         console.error("Error adding floor:", error);
+        alert('Error adding floor');
       }
     );
   }
@@ -114,10 +117,12 @@ export class AddFloorComponent implements OnInit {
     this.http.post(`${flask_URL}/editBuilding`, formData, { withCredentials: true }).subscribe(
       response => {
         console.log(`Floor ${floor} removed successfully`, response);
+        alert('Floor removed succesfully');
         this.fetchItems();
       },
       error => {
         console.error("Error removing floor:", error);
+        alert('Error removing floor');
       }
     );
   }

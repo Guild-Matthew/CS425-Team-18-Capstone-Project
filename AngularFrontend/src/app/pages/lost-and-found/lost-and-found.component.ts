@@ -2,13 +2,12 @@
 
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, ActivatedRoute } from '@angular/router';
+import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { flask_URL } from '../../app.config';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
-// Define structure of a Lost & Found item
 interface Item {
   id: number;
   type: string;
@@ -17,7 +16,7 @@ interface Item {
   description: string;
   imageUrl?: string;
   imageVisible: boolean;
-  claimed?: boolean; // Add claimed status to item structure
+  claimed?: boolean;
 }
 
 @Component({
@@ -36,14 +35,23 @@ export class LostAndFoundComponent implements OnInit {
   buildings: string[] = [];
   errorMessage: string = '';
   closestSuggestedBuilding: string = '';
+  role: string | null = null;
 
-  constructor(private http: HttpClient, private route: ActivatedRoute) { }
+  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
+    this.checkLoginStatus();
     this.route.queryParams.subscribe(params => {
       this.selectedBuilding = params['building'] || '';
       this.fetchItems();
     });
+  }
+
+  checkLoginStatus(): void {
+    this.role = localStorage.getItem('role');
+    if (!this.role || !['student', 'admin', 'superadmin'].includes(this.role)) {
+      console.log(`User is logged in as: ${this.role}`);
+    }
   }
 
   fetchItems(): void {
@@ -60,7 +68,7 @@ export class LostAndFoundComponent implements OnInit {
           dateFound: item[3],
           imageUrl: item[4],
           imageVisible: false,
-          claimed: item.claimed || false // Assuming 'claimed' status is included in the response
+          claimed: item.claimed || false
         }));
         this.buildings = data.buildings;
         this.selectedBuilding = data.selected_building;
@@ -117,15 +125,13 @@ export class LostAndFoundComponent implements OnInit {
   }
 
   trackByFn(index: number, item: Item): any {
-    return item.type + item.dateFound + index; // fallback tracking
+    return item.type + item.dateFound + index;
   }
 
   markAsClaimed(item: Item): void {
-    if (item.claimed) {
-      return;
-    }
-  
-    const dateClaimed = new Date().toISOString().split('T')[0]; // format as YYYY-MM-DD
+    if (item.claimed) return;
+
+    const dateClaimed = new Date().toISOString().split('T')[0];
     const body = {
       itemType: item.type,
       LocationFound: item.location,
@@ -134,10 +140,10 @@ export class LostAndFoundComponent implements OnInit {
       dateClaimed: dateClaimed,
       LFlocation: this.selectedBuilding
     };
-  
+
     const url = `${flask_URL}/L&F/claimItem`;
     this.http.post<any>(url, body).subscribe({
-      next: (response) => {
+      next: () => {
         console.log(`Item "${item.description}" marked as claimed.`);
         item.claimed = true;
         this.items = this.items.filter(i =>
@@ -146,12 +152,11 @@ export class LostAndFoundComponent implements OnInit {
             i.description === item.description &&
             i.dateFound === item.dateFound)
         );
-        this.applyFilters(); // Refresh filtered view
+        this.applyFilters();
       },
-      error: (error) => {
+      error: error => {
         console.error('Error marking item as claimed:', error);
-        // Optionally: Show user-facing error or undo `item.claimed = true`
       }
     });
-  }  
+  }
 }

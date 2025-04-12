@@ -22,7 +22,6 @@ class Queries:
 
     # Query to insert an item into the "items" table
     def insert_item(self, itemType, LocationFound, itemDescription, dateFound, LFlocation, image_path, performed_by="system"):
-        # Insert the item
         insert_query = """
             INSERT INTO items (itemType, LocationFound, itemDescription, dateFound, LFlocation, image_path)
             VALUES (%s, %s, %s, %s, %s, %s)
@@ -30,7 +29,6 @@ class Queries:
         self.cursor.execute(insert_query, (itemType, LocationFound, itemDescription, dateFound, LFlocation, image_path))
         self.conn.commit()
 
-        # Log the operation
         log_query = """
             INSERT INTO operationslogitems (actiontype, itemtype, locationfound, description, datefound, performedby)
             VALUES ('INSERT', %s, %s, %s, %s, %s)
@@ -154,17 +152,22 @@ class Queries:
     def getUserVoidFiltered(self, uid_list, role, active):  
         if not uid_list: 
             return "none"  
+    
         placeholders = ', '.join(['%s'] * len(uid_list))  
         query = f"""
-            SELECT username, email, active, role
+            SELECT uid, username, email, active, role
             FROM users 
             WHERE uid IN ({placeholders}) AND role = %s AND active = %s
         """
         self.cursor.execute(query, tuple(uid_list) + (role,) + (active,))  
         rows = self.cursor.fetchall()
+    
         if not rows: 
             return "none"
-        return [{"username": row[0], "email": row[1], "active": row[2], "role": row[3]} for row in rows]
+    
+        return [{"id": row[0], "username": row[1], "email": row[2], "active": row[3], "role": row[4]} for row in rows]
+
+
 
     #task this function throws an error when changing the building in the dropdown on super admin deactivate account page
     def getUserVoidFilteredSuper(self, uid_list, role, role2, active):  
@@ -204,31 +207,20 @@ class Queries:
 
     # Query to remove an item from the "items" table (removing an item from the L&F)
     def deleteItem(self, itemType, LocationFound, itemDescription, dateFound, performed_by="system"):
-        # Fetch the item before deletion (optional, but ensures it exists)
-        fetch_query = """
-            SELECT itemType, LocationFound, itemDescription, dateFound
-            FROM items
-            WHERE itemType = %s AND LocationFound = %s AND dateFound = %s AND itemDescription = %s
-        """
-        self.cursor.execute(fetch_query, (itemType, LocationFound, dateFound, itemDescription))
-        item = self.cursor.fetchone()
-
-        if item:
-            # Perform deletion
-            delete_query = """
-                DELETE FROM items
-                WHERE itemType = %s AND LocationFound = %s AND dateFound = %s AND itemDescription = %s
+        delete_query = """
+            DELETE FROM items
+            WHERE itemType = %s AND LocationFound = %s AND itemDescription = %s AND dateFound = %s
             """
-            self.cursor.execute(delete_query, (itemType, LocationFound, dateFound, itemDescription))
-            self.conn.commit()
+        self.cursor.execute(delete_query, (itemType, LocationFound, itemDescription, dateFound))
+        self.conn.commit()
 
-            # Log deletion
-            log_query = """
-                INSERT INTO operations_log operationslogitems (actiontype, itemtype, locationfound, description, datefound, performedby)
-                VALUES ('DELETE', %s, %s, %s, %s, %s)
+        log_query = """
+            INSERT INTO operationslogitems (actiontype, itemtype, locationfound, description, datefound, performedby)
+            VALUES ('DELETE', %s, %s, %s, %s, %s)
             """
-            self.cursor.execute(log_query, (itemType, LocationFound, itemDescription, dateFound, performed_by))
-            self.conn.commit()
+
+        self.cursor.execute(log_query, (itemType, LocationFound, itemDescription, dateFound, performed_by))
+        self.conn.commit()
 
 
     # Query to create a new building to be displayed on the map

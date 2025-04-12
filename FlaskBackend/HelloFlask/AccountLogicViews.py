@@ -8,6 +8,8 @@ import tempfile
 from flask_cors import cross_origin
 import json
 import uuid
+from collections import defaultdict
+from datetime import datetime
 # Instance of Queries for database access
 db_queries = Queries()
 account_bp = Blueprint('account', __name__)
@@ -28,6 +30,7 @@ def login():
         session['role'] = user['role']
         session['username'] = user['username']
         session.permanent = True 
+        session['last_activity'] = datetime.utcnow().isoformat()  
         authtoken = str(uuid.uuid4())  
         db_queries.updateUserToken(user['uid'], authtoken)
         return jsonify({
@@ -141,31 +144,110 @@ def addUser():
         buildingsPermissions = db_queries.getBuildingsFromPermissions(user_id)
     return jsonify({"buildings": buildingsPermissions})
 
-@account_bp.route('/VoidStudent', methods=['GET', 'POST'])
-def voidUser():
-        if 'user_id' in session:
-            username = session.get('username')
-            uid = db_queries.getUserId(username)
-            buildings = db_queries.getBuildingsFromPermissions(uid)
-            if request.method == 'POST':
-                selected_building = request.form.get('selected_building') 
-            else:
-                selected_building = request.args.get('building')  
-            # Default to the first building if none is selected
-            if selected_building is None or selected_building == '':
-                if buildings:
-                    selected_building = buildings[0]
-            if request.method == 'POST':
-                email = request.form['email']
-                username = request.form['username']
-                db_queries.deleteUser(email, username)
-                return redirect(url_for('account.voidUser'))
-        filter_type_building = request.args.get('building', 'all')  # Default to 'all'
+@account_bp.route('/deactivate_user', methods=['GET', 'POST'])
+@cross_origin(supports_credentials=True)
+def deactivate_user():
+    if request.method == 'POST':
+        data = request.get_json()
+        user_id = data.get('user_id')
+        role = data.get('role')
+        token = data.get('authtoken')
 
-        if filter_type_building == 'all':
-            users = db_queries.getUserVoid('student', 'true')  # Fetch all users
-        else:
-            bid = db_queries.getBuildingID(filter_type_building)
-            uid_list = db_queries.getUsersFromPermissions(bid)  # Get list of UIDs
-            users = db_queries.getUserVoidFiltered(uid_list, 'student', 'true')  # Pass list of UIDs
-        return render_template("AccountLogic/voiduser.html", users=users, filter_type_building=filter_type_building, buildings=buildings, selected_building=selected_building)
+        uidauthtoken = db_queries.getTokenByUID(user_id)
+        uidauthtoken = uidauthtoken[0] if isinstance(uidauthtoken, list) and uidauthtoken else None
+        if uidauthtoken != token:
+            return jsonify({"error": "Unauthorized"}), 401
+
+        target_id = data.get('target_id')
+        if not target_id:
+            return jsonify({"error": "Missing target user ID"}), 400
+
+        db_queries.deactivateStudentAccount(target_id)
+        return jsonify({"message": "Account deactivated"}), 200
+
+    user_id = request.args.get('user_id')
+    role = request.args.get('role')
+    buildings_param = request.args.getlist('building')
+
+    if not user_id:
+        return jsonify({"error": "Unauthorized - Missing User ID"}), 401
+
+    # Determine accessible buildings based on role
+    if role == 'superadmin':
+        all_buildings = db_queries.getAllBuildings()
+    elif role == 'admin':
+        all_buildings = db_queries.getBuildingsFromPermissions(user_id)
+    else:
+        return jsonify({"error": "Unauthorized role"}), 403
+
+    # Fix: handle 'all' or empty selection
+    selected_buildings = buildings_param if buildings_param and buildings_param != ['all'] else all_buildings
+
+    # Collect UID list from selected buildings
+    print("Selected buildings:", selected_buildings)
+    uid_lists = []
+    for b in selected_buildings:
+        bid = db_queries.getBuildingID(b)
+        uids = db_queries.getUsersFromPermissions(bid)
+        uid_lists.extend(uids)
+
+    uid_lists = list(set(uid_lists))  # Remove duplicates
+    print("UID lists:", uid_lists)
+    users = db_queries.getUserVoidFiltered(uid_lists, 'student', 'true')
+    print("Users", users)
+    formatted_users = []
+    user_map = {}
+
+    for b in selected_buildings:
+        bid = db_queries.getBuildingID(b)
+        uids = db_queries.getUsersFromPermissions(bid)
+        users = db_queries.getUserVoidFiltered(uids, 'student', 'true')
+    
+        if users != "none":
+            for u in users:
+                uid = u.get('id', 0)
+                if uid not in user_map:
+                    user_map[uid] = {
+                    "name": u['username'],
+                    "email": u['email'],
+                    "role": u['role'],
+                    "id": uid,
+                    "buildings": [b]
+                    }
+                else:
+                    user_map[uid]["buildings"].append(b)
+    formatted_users = list(user_map.values())
+    print("Formatted users", formatted_users)
+    return jsonify({
+        "users": formatted_users,
+        "buildings": all_buildings,
+        "selected_building": selected_buildings
+    })
+
+
+
+# @account_bp.before_request
+# def session_timeout_check():
+#     session.permanent = True
+#     now = datetime.utcnow()
+ 
+#     if 'user_id' in session:
+#         last_activity_str = session.get('last_activity')
+#         if last_activity_str:
+#             try:
+#                 last_activity = datetime.fromisoformat(last_activity_str)
+#                 inactive_duration = (now - last_activity).total_seconds()
+#                 timeout = session._get_current_object().config['PERMANENT_SESSION_LIFETIME'].total_seconds()  # Corrected
+#                 if inactive_duration > timeout:
+#                     session.clear()
+#                     if 'application/json' in str(request.accept_mimetypes):
+#                         return jsonify({'error': 'Session timed out'}), 401
+#                     else:
+#                         return redirect(url_for('account.login'))
+#             except ValueError:
+#                 # malformed date, clear session for safety
+#                 session.clear()
+#                 return redirect(url_for('account.login'))
+ 
+#         # Always update activity timestamp
+#         session['last_activity'] = now.isoformat()

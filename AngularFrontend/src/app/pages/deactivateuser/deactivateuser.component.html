@@ -1,3 +1,4 @@
+<!--//Guilherme Cassiano, Mary Cottier-->
 <div class="page-wrapper">
   <!-- HEADER -->
   <header class="header">
@@ -6,10 +7,10 @@
         <a class="nav-link" routerLink="/map">Map</a>
         <a class="nav-link" routerLink="/dashboard">Dashboard</a>
         <a class="nav-link" routerLink="/lost-and-found">Lost & Found</a>
-        <a class="login-button" routerLink="/login">Logout</a>            
+        <a class="login-button" routerLink="/login">Logout</a>
       </div>
     </div>
-  
+
     <div class="branding-bar">
       <img class="university-logo-large-img align-image-bottom" alt="University of Nevada, Reno"
            src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg" width="65" height="65">
@@ -41,14 +42,13 @@
             <!-- "Select All" Option -->
             <label>
               <input type="checkbox"
-                [checked]="selectedBuildings.size === accessibleBuildings.length"
-                (change)="toggleSelectAll($event)" />
-                Select All
+                     [checked]="selectedBuildings.size === accessibleBuildings.length"
+                     (change)="toggleSelectAll($event)" />
+              Select All
             </label>
           </div>
         </div> <!-- Close filter-section div here -->
       </div> <!-- Close sidebar div here -->
-
       <!-- Users Section -->
       <div class="user-section">
         <div class="user-header">
@@ -61,7 +61,8 @@
           <div class="user-card" *ngFor="let user of filteredUsers">
             <p><strong>Name:</strong> {{ user.name }}</p>
             <p><strong>Email:</strong> {{ user.email }}</p>
-            <p><strong>Building:</strong> {{ user.building }}</p>
+            <p><strong>Role:</strong> {{ user.role }}</p>
+            <p><strong>Buildings:</strong> {{ user.buildings.join(', ') }}</p>
             <button (click)="deactivateUser(user.id)">Deactivate</button>
           </div>
         </div>

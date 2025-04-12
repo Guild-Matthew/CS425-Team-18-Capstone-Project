@@ -1,4 +1,5 @@
 <!--Mary Cottier, Shane Petree, Guilherme Cassiano, Matthew Guild-->
+
 <div class="lost-and-found">
   <div class="page-wrapper">
     <!-- HEADER -->
@@ -78,10 +79,11 @@
               <img [src]="item.imageUrl" alt="Photo of {{ item.type }}" style="max-width: 200px;">
             </div>
             
-            <!-- Mark as Claimed Button -->
-            <div class="claim-button-section">
-              <button class="main-content-button" (click)="markAsClaimed(item)">Mark as Claimed</button>
-            </div>
+          <!-- Mark as Claimed Button -->
+          <div class="claim-button-section" *ngIf="role === 'student' || role === 'admin' || role === 'superadmin'">
+            <button class="main-content-button" (click)="markAsClaimed(item)">Mark as Claimed</button>
+          </div>
+
           </div>
         </div>
       </section>
