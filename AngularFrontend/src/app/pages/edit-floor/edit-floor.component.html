@@ -1,0 +1,82 @@
+<!--Shane Petree -->
+
+<div class="main-container" *ngIf="role === 'admin' || role === 'superadmin'">
+  <header>
+    <div class="container">
+      <div class="logo-group">
+        <img class="university-logo-large-img align-image-bottom" alt="University of Nevada, Reno" src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg" width="65" height="65">
+        <span class="logo-text-new align-text-middle"> University of Nevada, Reno </span>
+      </div>
+      <h1>Add Room</h1>
+      <nav>
+        <ul>
+          <li><a routerLink="/dashboard">Dashboard</a></li>
+          <li><a routerLink="/map">Map</a></li>
+          <li><a routerLink="/logout">Logout</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <section class="edit-floor-form">
+    <h2>Add a Room</h2>
+    <form [formGroup]="editFloorForm" (ngSubmit)="addRoom()">
+
+      <!--select building section-->
+      <mat-form-field>
+        <mat-label>Select a Building</mat-label>
+        <mat-select formControlName="selected_building" [value]="selected_building" (selectionChange)="fetchFloors($event)" required>
+          <mat-option>None</mat-option>
+
+          <mat-option *ngFor="let building of buildings" [value]="building">
+            {{ building }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <br />
+
+      <!--select floor section-->
+      <mat-form-field>
+        <mat-label>Select a Floor</mat-label>
+        <mat-select formControlName="selected_floor" [value]="selected_floor" (selectionChange)="fetchRooms($event)" required>
+          <mat-option>None</mat-option>
+
+          <mat-option *ngFor="let floor of floors" [value]="floor">
+            {{ floor }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <br />
+
+      <!--list the rooms for the current floor-->
+      <mat-label>Current Rooms</mat-label>
+      <mat-list role="list">
+
+        <mat-list-item *ngIf="rooms[0] == ''">None</mat-list-item>
+
+        <div *ngIf="rooms[0] != ''">
+          <mat-list-item *ngFor="let room of rooms" role="listitem">
+            {{ room }}
+          </mat-list-item>
+        </div>
+      </mat-list>
+      <br />
+
+      <!--input field for the new room-->
+      <mat-form-field>
+        <mat-label>Room Number</mat-label>
+        <input matInput formControlName="selected_room" [value]="selected_room" placeholder="Ex. 101" required>
+      </mat-form-field>
+      <br />
+
+      <button type="submit" mat-flat-button [disabled]="editFloorForm.invalid">Add Room</button>
+      <!--<button type="submit" mat-flat-button [disabled]="editFloorForm.invalid" (click)="removeRoom()">Remove Room</button>-->
+
+    </form>
+  </section>
+
+
+  <footer>
+    <p>&copy; 2025 University of Nevada, Reno. Lost and Found Service.</p>
+  </footer>
+</div>
