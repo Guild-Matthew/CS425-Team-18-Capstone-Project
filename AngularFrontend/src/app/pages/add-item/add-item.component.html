@@ -32,6 +32,7 @@
         <form (ngSubmit)="onSubmit()" #addItemForm="ngForm">
 
           <!-- Item Name -->
+          <label for="image">Item type:</label>
           <input type="text"
                  id="itemName"
                  name="itemName"
@@ -39,23 +40,27 @@
                  required />
 
           <!-- Description -->
+          <label for="image">Item description:</label>
           <textarea id="description"
                     name="description"
                     [(ngModel)]="item.description"
+                    placeholder="Ex: size large green hoodie"
                     required></textarea>
 
           <!-- Location -->
+          <label for="image">Lost and Found location:</label>
           <input type="text"
                  id="location"
                  name="location"
                  [(ngModel)]="item.location"
                  required />
 
-          <!-- Category (can be used as locationFound or similar) -->
+          <label for="image">Location found:</label>
           <input type="text"
                  id="category"
                  name="category"
                  [(ngModel)]="item.locationFound"
+                 placeholder="Ex: 3rd floor men's restroom"
                  required />
 
           <div>
