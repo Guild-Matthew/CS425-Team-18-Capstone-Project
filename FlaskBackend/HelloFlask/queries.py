@@ -21,12 +21,19 @@ class Queries:
         self.conn.close()
 
     # Query to insert an item into the "items" table
-    def insert_item(self, itemType, LocationFound, itemDescription, dateFound, LFlocation,  image_path): #*
-        query = """
-        INSERT INTO items (itemType, LocationFound, itemDescription, dateFound, LFlocation, image_path)
-        VALUES (%s, %s, %s, %s, %s, %s)
+    def insert_item(self, itemType, LocationFound, itemDescription, dateFound, LFlocation, image_path, performed_by="system"):
+        insert_query = """
+            INSERT INTO items (itemType, LocationFound, itemDescription, dateFound, LFlocation, image_path)
+            VALUES (%s, %s, %s, %s, %s, %s)
         """
-        self.cursor.execute(query, (itemType, LocationFound, itemDescription, dateFound, LFlocation,  image_path))
+        self.cursor.execute(insert_query, (itemType, LocationFound, itemDescription, dateFound, LFlocation, image_path))
+        self.conn.commit()
+
+        log_query = """
+            INSERT INTO operationslogitems (actiontype, itemtype, locationfound, description, datefound, performedby)
+            VALUES ('INSERT', %s, %s, %s, %s, %s)
+        """
+        self.cursor.execute(log_query, (itemType, LocationFound, itemDescription, dateFound, performed_by))
         self.conn.commit()
 
     # Query to insert an item into the "Claimed items" table
@@ -145,17 +152,22 @@ class Queries:
     def getUserVoidFiltered(self, uid_list, role, active):  
         if not uid_list: 
             return "none"  
+    
         placeholders = ', '.join(['%s'] * len(uid_list))  
         query = f"""
-            SELECT username, email, active, role
+            SELECT uid, username, email, active, role
             FROM users 
             WHERE uid IN ({placeholders}) AND role = %s AND active = %s
         """
         self.cursor.execute(query, tuple(uid_list) + (role,) + (active,))  
         rows = self.cursor.fetchall()
+    
         if not rows: 
             return "none"
-        return [{"username": row[0], "email": row[1], "active": row[2], "role": row[3]} for row in rows]
+    
+        return [{"id": row[0], "username": row[1], "email": row[2], "active": row[3], "role": row[4]} for row in rows]
+
+
 
     #task this function throws an error when changing the building in the dropdown on super admin deactivate account page
     def getUserVoidFilteredSuper(self, uid_list, role, role2, active):  
@@ -194,13 +206,22 @@ class Queries:
         self.conn.commit()
 
     # Query to remove an item from the "items" table (removing an item from the L&F)
-    def deleteItem(self, itemType, LocationFound, itemDescription, dateFound):#*
-        query = """
-        DELETE FROM items
-        WHERE itemType = %s AND LocationFound = %s AND dateFound = %s AND itemDescription = %s
-        """
-        self.cursor.execute(query, (itemType, LocationFound, itemDescription, dateFound))
+    def deleteItem(self, itemType, LocationFound, itemDescription, dateFound, performed_by="system"):
+        delete_query = """
+            DELETE FROM items
+            WHERE itemType = %s AND LocationFound = %s AND itemDescription = %s AND dateFound = %s
+            """
+        self.cursor.execute(delete_query, (itemType, LocationFound, itemDescription, dateFound))
         self.conn.commit()
+
+        log_query = """
+            INSERT INTO operationslogitems (actiontype, itemtype, locationfound, description, datefound, performedby)
+            VALUES ('DELETE', %s, %s, %s, %s, %s)
+            """
+
+        self.cursor.execute(log_query, (itemType, LocationFound, itemDescription, dateFound, performed_by))
+        self.conn.commit()
+
 
     # Query to create a new building to be displayed on the map
     def createBuilding(self, buildingCode, latitude, longitude):#*
@@ -366,14 +387,46 @@ class Queries:
         self.cursor.execute(query, (UID,))
         self.conn.commit()
 
+    def getBuildingCoordinates(self):
+        query = """
+            SELECT buildingcode, latitude, longitude
+            FROM building
+        """
+        self.cursor.execute(query)
+        rows = self.cursor.fetchall()
+        return [{'buildingcode': row[0], 'latitude': row[1], 'longitude':row[2]} for row in rows]
+
+    def get_operation_logs(self):
+        query = """
+            SELECT actiontype, itemtype, locationfound, description, datefound, performedby, dateperformed
+            FROM operationslogitems
+            ORDER BY dateperformed DESC
+        """
+        self.cursor.execute(query)
+        rows = self.cursor.fetchall()
+        columns = [desc[0] for desc in self.cursor.description]
+        return [dict(zip(columns, row)) for row in rows]
+
+    def get_operation_logs_by_type(self, action_type):
+        query = """
+            SELECT actiontype, itemtype, locationfound, description, datefound, performedby, dateperformed
+            FROM operationslogitems
+            WHERE actiontype = %s
+            ORDER BY dateperformed DESC
+        """
+        self.cursor.execute(query, (action_type,))
+        rows = self.cursor.fetchall()
+        columns = [desc[0] for desc in self.cursor.description]
+        return [dict(zip(columns, row)) for row in rows]
+
+
+
+
 if __name__ == "__main__":
     # Create an instance of Queries
     db_queries = Queries()
     
-    # Call the method and store the result
     
-    db_queries.addRoom(5, 202)
-   
 
     
     # Close the database connection

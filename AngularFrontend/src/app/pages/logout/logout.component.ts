@@ -1,6 +1,6 @@
 // Shane Petree
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-logout',
@@ -8,16 +8,27 @@ import { Router } from '@angular/router';
   imports: [],
   template: '',
 })
-export class LogoutComponent implements OnInit{
-  constructor(private router: Router) { }
+export class LogoutComponent implements OnInit {
+  constructor(private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.logout();
   }
 
   logout(): void {
+    const reason = this.route.snapshot.queryParamMap.get('reason');
+
+    // Clear local storage/session data
     localStorage.clear();
-    alert('Your session has been closed');
+
+    // Show custom message based on logout reason
+    if (reason === 'timeout') {
+      alert('Your session has timed out due to inactivity. Please log in again.');
+    } else {
+      alert('Your session has been closed.');
+    }
+
+    // Redirect to your desired route
     this.router.navigate(['/map']);
   }
 }

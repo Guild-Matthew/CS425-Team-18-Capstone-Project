@@ -1,0 +1,76 @@
+<!-- Guilherme Cassiano, Shane Petree -->
+<!-- Generate Report Page -->
+<div class="lost-and-found">
+  <div class="page-wrapper">
+    <!-- HEADER -->
+    <header class="header">
+      <div class="top-bar">
+        <div class="top-links">
+          <a class="nav-link" routerLink="/map">Map</a>
+          <a class="nav-link" routerLink="/dashboard">Dashboard</a>
+          <a class="nav-link" routerLink="/lost-and-found">Lost & Found</a>
+          <a class="login-button" routerLink="/logout">Logout</a>
+        </div>
+      </div>
+
+      <div class="branding-bar">
+        <!--<img src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg" alt="University Logo" />-->
+        <h1>University of Nevada, Reno</h1>
+        <p>Inspiring Excellence Since 1874</p>
+      </div>
+    </header>
+
+    <div class="main-content">
+      <aside class="sidebar">
+        <h2>Report Filter</h2>
+        <div class="filter-section">
+          <label for="actionType">Action Type:</label>
+          <select id="actionType" [(ngModel)]="filterType" (change)="filterLogs()">
+            <option value="all">All</option>
+            <option value="INSERT">Added</option>
+            <option value="DELETE">Removed</option>
+          </select>
+        </div>
+      </aside>
+
+      <section id="products">
+        <h2>Database Operations Log</h2>
+
+        <div *ngIf="logs.length > 0; else noLogs">
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr>
+                <th>Action</th>
+                <th>Type</th>
+                <th>Location</th>
+                <th>Description</th>
+                <th>Date Found</th>
+                <th>Performed By</th>
+                <th>Performed On</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let log of filteredLogs">
+                <td>{{ log.actiontype }}</td>
+                <td>{{ log.itemtype }}</td>
+                <td>{{ log.locationfound }}</td>
+                <td>{{ log.description }}</td>
+                <td>{{ log.datefound }}</td>
+                <td>{{ log.performedby }}</td>
+                <td>{{ log.dateperformed }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <ng-template #noLogs>
+          <p style="color: red; font-weight: bold;">No operations found for the selected filter.</p>
+        </ng-template>
+      </section>
+    </div>
+
+    <footer>
+      <p>&copy; 2025 University of Nevada, Reno. Lost and Found Service.</p>
+    </footer>
+  </div>
+</div>

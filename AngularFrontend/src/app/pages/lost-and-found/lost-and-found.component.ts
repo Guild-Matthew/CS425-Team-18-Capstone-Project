@@ -1,65 +1,111 @@
-//Mary Cottier, Shane Petree, Guilherme Cassiano
+// Mary Cottier, Shane Petree, Guilherme Cassiano, Matthew Guild
+
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, ActivatedRoute } from '@angular/router';
+import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { flask_URL } from '../../app.config';
 import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+
+interface Item {
+  id: number;
+  type: string;
+  location: string;
+  dateFound: string;
+  description: string;
+  imageUrl?: string;
+  imageVisible: boolean;
+  claimed?: boolean;
+}
 
 @Component({
   selector: 'app-lost-and-found',
   standalone: true,
-  imports: [CommonModule, RouterLink, HttpClientModule],  // Shane Petree
+  imports: [CommonModule, RouterLink, HttpClientModule, FormsModule],
   templateUrl: './lost-and-found.component.html',
   styleUrls: ['./lost-and-found.component.css']
 })
 export class LostAndFoundComponent implements OnInit {
   sortOrder: string = 'oldest';
   filterType: string = 'all';
-  building: string = '';
-  clothingSubTypes: string[] = [];
-  electronicsSubTypes: string[] = [];
-  items: any[] = [];
-  filteredItems: any[] = [];
-  categories: { [key: string]: string[] } = {
-    clothing: ['Shoes', 'Hoodies', 'Shirts', 'Pants', 'Hats'],
-    electronics: ['Phones', 'Computers', 'Headphones', 'Tablets']
-  };
+  items: Item[] = [];
+  filteredItems: Item[] = [];
+  selectedBuilding: string = '';
+  buildings: string[] = [];
+  errorMessage: string = '';
+  closestSuggestedBuilding: string = '';
+  role: string | null = null;
 
-  constructor(private http: HttpClient, private route: ActivatedRoute) { }
+  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
+    this.checkLoginStatus();
     this.route.queryParams.subscribe(params => {
-      this.building = params['building'] || 'Unknown';
+      this.selectedBuilding = params['building'] || '';
       this.fetchItems();
     });
   }
 
-  fetchItems(): void {
-    if (!this.building) {
-      console.error("Building name is missing");
-      return;
+  checkLoginStatus(): void {
+    this.role = localStorage.getItem('role');
+    if (!this.role || !['student', 'admin', 'superadmin'].includes(this.role)) {
+      console.log(`User is logged in as: ${this.role}`);
     }
+  }
 
-    const url = `${flask_URL}/L&F?building=${this.building}&filterType=${this.filterType}&sort=${this.sortOrder}`;
+  fetchItems(): void {
+    this.errorMessage = '';
+    const url = `${flask_URL}/L&F?building=${this.selectedBuilding}&filterType=${this.filterType}&sort=${this.sortOrder}`;
 
-    console.log('Fetching from URL:', url);
-
-    this.http.get<any[]>(url).subscribe(
-      (data) => {  
-        this.items = data.map(item => ({
+    this.http.get<any>(url).subscribe(
+      data => {
+        this.items = data.items.map((item: any) => ({
+          id: item.id,
           type: item[0],
           location: item[1],
           description: item[2],
           dateFound: item[3],
-          imageUrl: item[4]  
+          imageUrl: item[4],
+          imageVisible: false,
+          claimed: item.claimed || false
         }));
+        this.buildings = data.buildings;
+        this.selectedBuilding = data.selected_building;
         this.applyFilters();
       },
-      (error) => {
-        console.error('Error fetching items:', error);
+      error => {
+        if (
+          error.status === 400 &&
+          error.error?.warning &&
+          error.error?.buildings &&
+          error.error?.closest_building
+        ) {
+          this.errorMessage = `Building "${this.selectedBuilding}" has no lost and found. Closest available building is "${error.error.closest_building}". Please select it OR JCSU from the dropdown.`;
+          this.buildings = error.error.buildings;
+          this.closestSuggestedBuilding = error.error.closest_building;
+        } else {
+          this.errorMessage = 'An error occurred while fetching items.';
+        }
+        this.items = [];
+        this.filteredItems = [];
       }
     );
+  }
+
+  onBuildingChange(): void {
+    this.errorMessage = '';
+    this.fetchItems();
+  }
+
+  onSortChange(event: Event): void {
+    this.sortOrder = (event.target as HTMLSelectElement).value;
+    this.applyFilters();
+  }
+
+  onFilterChange(event: Event): void {
+    this.filterType = (event.target as HTMLSelectElement).value;
+    this.applyFilters();
   }
 
   applyFilters(): void {
@@ -67,27 +113,50 @@ export class LostAndFoundComponent implements OnInit {
       this.filterType === 'all' || item.type.toLowerCase() === this.filterType
     );
 
-    this.filteredItems.sort((a, b) => this.sortOrder === 'newest'
-      ? new Date(b.dateFound).getTime() - new Date(a.dateFound).getTime()
-      : new Date(a.dateFound).getTime() - new Date(b.dateFound).getTime()
+    this.filteredItems.sort((a, b) =>
+      this.sortOrder === 'newest'
+        ? new Date(b.dateFound).getTime() - new Date(a.dateFound).getTime()
+        : new Date(a.dateFound).getTime() - new Date(b.dateFound).getTime()
     );
   }
 
-  onSortChange(event: any): void {
-    this.sortOrder = event.target.value;
-    this.applyFilters();
-  }
-
-  onFilterChange(event: any): void {
-    this.filterType = event.target.value;
-    this.applyFilters();
-  }
-
-  toggleImage(item: any): void {
+  toggleImage(item: Item): void {
     item.imageVisible = !item.imageVisible;
   }
 
-  trackByFn(index: number, item: any): any {
-    return item.id || index;  
+  trackByFn(index: number, item: Item): any {
+    return item.type + item.dateFound + index;
+  }
+
+  markAsClaimed(item: Item): void {
+    if (item.claimed) return;
+
+    const dateClaimed = new Date().toISOString().split('T')[0];
+    const body = {
+      itemType: item.type,
+      LocationFound: item.location,
+      itemDescription: item.description,
+      dateFound: item.dateFound,
+      dateClaimed: dateClaimed,
+      LFlocation: this.selectedBuilding
+    };
+
+    const url = `${flask_URL}/L&F/claimItem`;
+    this.http.post<any>(url, body).subscribe({
+      next: () => {
+        console.log(`Item "${item.description}" marked as claimed.`);
+        item.claimed = true;
+        this.items = this.items.filter(i =>
+          !(i.type === item.type &&
+            i.location === item.location &&
+            i.description === item.description &&
+            i.dateFound === item.dateFound)
+        );
+        this.applyFilters();
+      },
+      error: error => {
+        console.error('Error marking item as claimed:', error);
+      }
+    });
   }
 }

@@ -1,73 +1,87 @@
-<!--Mary Cottier, Shane Petree, Guilherme Cassiano-->
-<main>
-    <header>
-      <div class="container">
-        <div class="logo-group">
-          <img class="university-logo-large-img align-image-bottom" alt="University of Nevada, Reno" src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg" width="65" height="65">
-          <span class="logo-text-new align-text-middle">University of Nevada, Reno</span>
+<!--Mary Cottier, Shane Petree, Guilherme Cassiano, Matthew Guild-->
+<div class="add-item">
+  <div class="page-wrapper">
+    <!-- HEADER -->
+    <header class="header">
+      <div class="top-bar">
+        <div class="top-links">
+          <a class="nav-link" routerLink="/map" routerLinkActive="active">Map</a>
+          <a class="nav-link" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+          <a class="login-button" routerLink="/logout" routerLinkActive="active">Logout</a>
         </div>
-        <h1>Lost and Found</h1>
-        <nav>
-        <ul>
-            <li><a routerLink="/dashboard">Dashboard</a></li>
-            <li><a routerLink="/map">Map</a></li>
-            <!-- Shane Petree -->
-            <li><a routerLink="/add-item">Report Lost Item</a></li>
-            <li><a routerLink="/claimed-items">Claimed Items</a></li>
+      </div>
 
-            <li><a routerLink="/login">Logout</a></li>
-        </ul>
-    </nav>
-    </div>
+      <div class="branding-bar">
+        <img
+          class="university-logo-large-img align-image-bottom"
+          alt="University of Nevada, Reno"
+          src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg"
+          width="65"
+          height="65"
+        />
+        <h1>University of Nevada, Reno</h1>
+        <p>Inspiring Excellence Since 1874</p>
+      </div>
     </header>
- 
- 
-    <section class="add-item-form">
-        <h2>Add a Found Item</h2>
-        <form (ngSubmit)="onSubmit()" enctype="multipart/form-data">
-          <label for="worker">Worker Submitting This Form:</label>
-          <input type="text" id="worker" name="worker" [(ngModel)]="item.worker" placeholder="Your First and Last name" required>
 
-          <label for="location">Lost and Found Location:</label>
-          <select id="location" name="location" [(ngModel)]="item.location" required>
-            <option value="" disabled selected>Select a Building</option>
-            <option *ngFor="let building of buildings" [value]="building">
-              {{ building }}
-            </option>
-          </select>
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+      <section class="add-item-form">
+        <h2>Add New Item</h2>
 
+        <form (ngSubmit)="onSubmit()" #addItemForm="ngForm">
 
-          <label for="dateFound">Date Found:</label>
-          <input type="date" id="dateFound" name="dateFound" [(ngModel)]="item.dateFound" required>
+          <!-- Item Name -->
+          <label for="image">Item type:</label>
+          <input type="text"
+                 id="itemName"
+                 name="itemName"
+                 [(ngModel)]="item.itemType"
+                 required />
 
+          <!-- Description -->
+          <label for="image">Item description:</label>
+          <textarea id="description"
+                    name="description"
+                    [(ngModel)]="item.description"
+                    placeholder="Ex: size large green hoodie"
+                    required></textarea>
 
-          <label for="locationFound">Location Found:</label>
-          <input type="text" id="locationFound" name="locationFound" [(ngModel)]="item.locationFound" placeholder="Location" required>
+          <!-- Location -->
+          <label for="image">Lost and Found location:</label>
+          <input type="text"
+                 id="location"
+                 name="location"
+                 [(ngModel)]="item.location"
+                 required />
 
+          <label for="image">Location found:</label>
+          <input type="text"
+                 id="category"
+                 name="category"
+                 [(ngModel)]="item.locationFound"
+                 placeholder="Ex: 3rd floor men's restroom"
+                 required />
 
-          <label for="itemType">Item Type:</label>
-          <select id="itemType" name="itemType" [(ngModel)]="item.itemType" required (change)="toggleClothingFields()">
-            <option value="" disabled selected>Select Item Type</option>
-            <option value="clothing">Clothing</option>
-            <option value="technology">Technology</option>
-            <option value="misc">Miscellaneous</option>
-          </select>
+          <div>
+            <label for="image">Upload Image:</label>
+            <input type="file"
+                   id="image"
+                   name="image"
+                   (change)="onFileSelected($event)"
+                   accept="image/*" />
+          </div>
 
-
-          <label for="description">Description:</label>
-          <textarea id="description" name="description" [(ngModel)]="item.description" placeholder="Additional details" rows="3"></textarea>
-
-
-          <label for="imagePhoto">Upload a photo of the item</label>
-          <input type="file" id="imagePhoto" name="imagePhoto" (change)="onFileSelected($event)" accept=".png, .jpg, .jpeg">
-
-
-          <button type="submit">Add Item</button>
+          <div class="add-item-button-wrapper">
+            <button type="submit" class="add-item-button">Submit</button>
+          </div>
         </form>
-    </section>
- 
- 
+      </section>
+    </main>
+
+    <!-- FOOTER -->
     <footer>
-        <p>&copy; 2025 University of Nevada, Reno. Lost and Found Service.</p>
+      <p>&copy; 2025 University of Nevada, Reno. Lost and Found Service.</p>
     </footer>
- </main>
+  </div>
+</div>

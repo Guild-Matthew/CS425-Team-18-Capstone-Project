@@ -1,37 +1,124 @@
-import { Component } from '@angular/core';
+//Guilherme Cassiano, Mary Cottier 
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+import { flask_URL } from '../../app.config';
 
 @Component({
   selector: 'app-deactivateuser',
   standalone: true,
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './deactivateuser.component.html',
-  styleUrls: ['./deactivateuser.component.css'],
-  imports: [CommonModule]
+  styleUrls: ['./deactivateuser.component.css']
 })
-export class DeactivateUserComponent {
-  // Simulate current user role (can be 'student' or 'staff')
+export class DeactivateUserComponent implements OnInit {
+  users: any[] = [];
+  accessibleBuildings: string[] = [];
+  selectedBuildings: Set<string> = new Set();
   role: string = 'student';
 
-  users = [
-    { id: 1, name: 'Alice', email: 'alice@unr.edu', role: 'student', building: 'SEM' },
-    { id: 2, name: 'Bob', email: 'bob@unr.edu', role: 'staff', building: 'DMSC' },
-    { id: 3, name: 'Charlie', email: 'charlie@unr.edu', role: 'student', building: 'AB' },
-    { id: 4, name: 'Diana', email: 'diana@unr.edu', role: 'staff', building: 'SEM' }
-  ];
+  constructor(private http: HttpClient) { }
 
-  filterType: string = 'all';
+  ngOnInit(): void {
+    const userId = localStorage.getItem('user_id');
+    const role = localStorage.getItem('role');
 
-  filterAccounts(type: string) {
-    this.filterType = type;
+    const params = new HttpParams()
+      .set('user_id', userId || '')
+      .set('role', role || '')
+      .set('building', 'all');
+
+    this.http.get<any>(`${flask_URL}/deactivate_user`, { params }).subscribe(
+      response => {
+        this.users = response.users;
+        this.accessibleBuildings = response.buildings;
+        this.selectedBuildings = new Set(response.buildings);
+      },
+      error => {
+        console.error('Failed to load users:', error);
+      }
+    );
   }
 
-  deactivateUser(userId: number) {
-    this.users = this.users.filter(user => user.id !== userId);
-    alert(`✅ User with ID ${userId} has been deactivated.`);
+  onBuildingCheckboxChange(event: any): void {
+    const building = event.target.value;
+    const checked = event.target.checked;
+
+    if (checked) {
+      this.selectedBuildings.add(building);
+    } else {
+      this.selectedBuildings.delete(building);
+    }
+
+    this.filterUsersByBuildings(); 
   }
 
-  get filteredUsers() {
-    if (this.filterType === 'all') return this.users;
-    return this.users.filter(user => user.building === this.filterType);
+  toggleSelectAll(event: any): void {
+    const checked = event.target.checked;
+    if (checked) {
+      this.accessibleBuildings.forEach(b => this.selectedBuildings.add(b));
+    } else {
+      this.selectedBuildings.clear();
+    }
+
+    this.filterUsersByBuildings();
   }
+
+  deactivateUser(userId: number): void {
+    const user_id = localStorage.getItem('user_id');
+    const role = localStorage.getItem('role');
+    const token = localStorage.getItem('authtoken');
+
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const body = {
+      user_id,
+      role,
+      authtoken: token,
+      target_id: userId
+    };
+
+    this.http.post(`${flask_URL}/deactivate_user`, body, { headers }).subscribe(
+      () => {
+        this.users = this.users.filter(user => user.id !== userId);
+        alert(`User with ID ${userId} has been deactivated.`);
+      },
+      error => {
+        console.error('Error deactivating user:', error);
+      }
+    );
+  }
+
+  get filteredUsers(): any[] {
+    if (this.selectedBuildings.size === 0) {
+      return this.users;
+    }
+    return this.users.filter(user =>
+      user.buildings.some((b: string) => this.selectedBuildings.has(b))
+    );
+  }
+
+  filterUsersByBuildings(): void {
+    const userId = localStorage.getItem('user_id');
+    const role = localStorage.getItem('role');
+
+    let params = new HttpParams()
+      .set('user_id', userId || '')
+      .set('role', role || '');
+
+    this.selectedBuildings.forEach(building => {
+      params = params.append('building', building);
+    });
+
+    this.http.get<any>(`${flask_URL}/deactivate_user`, { params }).subscribe(
+      response => {
+        this.users = response.users;
+      },
+      error => {
+        console.error('Error fetching filtered users:', error);
+      }
+    );
+  }
+
 }

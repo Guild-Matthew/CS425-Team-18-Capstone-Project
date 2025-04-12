@@ -62,28 +62,28 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
 }
 
-.user-card p {
-  margin: 0.25rem 0;
-}
+  .user-card p {
+    margin: 0.25rem 0;
+  }
 
-.user-card button {
-  margin-top: 0.5rem;
-  padding: 0.4rem 1rem;
-  background-color: #041E42;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
+  .user-card button {
+    margin-top: 0.5rem;
+    padding: 0.4rem 1rem;
+    background-color: #c62828;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
 
-.user-card button:hover {
-  background-color: #041E42;
-}
+    .user-card button:hover {
+      background-color: #b71c1c;
+    }
 
 /* Add User Button */
 .main-content-button {
-  background-color: #041E42;
+  background-color: #002147;
   color: white;
   padding: 0.6rem 1.2rem;
   border: none;
@@ -92,13 +92,13 @@
   cursor: pointer;
 }
 
-.main-content-button:hover {
-  background-color: #041E42;
-}
+  .main-content-button:hover {
+    background-color: #001730;
+  }
 
 /* Footer */
 .footer {
-  background-color: #041E42;
+  background-color: #002244;
   color: white;
   text-align: center;
   padding: 1.5rem 1rem;
@@ -108,10 +108,10 @@
   font-family: Arial, sans-serif;
 }
 
-.footer p {
-  margin: 0;
-  font-size: 0.95rem;
-}
+  .footer p {
+    margin: 0;
+    font-size: 0.95rem;
+  }
 
 /* ===== Restored Centered Header Layout ===== */
 .header {
@@ -121,7 +121,7 @@
 
 /* Top nav bar (MAP, DASHBOARD, etc.) */
 .top-bar {
-  background-color: #041E42;
+  background-color: #002244;
   padding: 0.5rem 1rem;
   display: flex;
   justify-content: flex-end;
@@ -134,61 +134,61 @@
   gap: 1.5rem;
 }
 
-.top-links .nav-link {
-  color: white;
-  text-transform: uppercase;
-  font-weight: bold;
-  text-decoration: none;
-  font-size: 0.85rem;
-  padding: 0.4rem 0.8rem;
-  border-radius: 4px;
-  transition: background-color 0.2s ease-in-out;
-}
+  .top-links .nav-link {
+    color: white;
+    text-transform: uppercase;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    transition: background-color 0.2s ease-in-out;
+  }
 
-.top-links .nav-link:hover {
-  background-color: rgba(255, 255, 255, 0.15);
-}
+    .top-links .nav-link:hover {
+      background-color: rgba(255, 255, 255, 0.15);
+    }
 
-/* Optional LOGIN button */
-.top-links .login-button {
-  background-color: #78be20;
-  color: black;
-  font-weight: bold;
-  padding: 0.4rem 1rem;
-  border-radius: 5px;
-  text-decoration: none;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  transition: background-color 0.2s ease;
-}
+  /* Optional LOGIN button */
+  .top-links .login-button {
+    background-color: #78be20;
+    color: black;
+    font-weight: bold;
+    padding: 0.4rem 1rem;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    transition: background-color 0.2s ease;
+  }
 
-.top-links .login-button:hover {
-  background-color: #65a718;
-}
+    .top-links .login-button:hover {
+      background-color: #65a718;
+    }
 
 /* Centered branding */
 .branding-bar {
-  background-color: #041E42;
+  background-color: #002244;
   text-align: center;
   padding: 1.5rem 1rem;
   color: white;
 }
 
-.branding-bar img {
-  height: 60px;
-  margin-bottom: 0.5rem;
-}
+  .branding-bar img {
+    height: 60px;
+    margin-bottom: 0.5rem;
+  }
 
-.branding-bar h1 {
-  margin: 0;
-  font-size: 1.8rem;
-}
+  .branding-bar h1 {
+    margin: 0;
+    font-size: 1.8rem;
+  }
 
-.branding-bar p {
-  margin: 0;
-  font-size: 0.95rem;
-  color: #ccc;
-}
+  .branding-bar p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #ccc;
+  }
 
 /* ===== Responsive Styles ===== */
 @media (max-width: 1024px) {

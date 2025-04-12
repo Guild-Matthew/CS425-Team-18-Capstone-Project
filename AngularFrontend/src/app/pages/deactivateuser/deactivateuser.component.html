@@ -1,17 +1,19 @@
+<!--Guilherme Cassiano, Mary Cottier, Shane Petree-->
 <div class="page-wrapper">
   <!-- HEADER -->
   <header class="header">
     <div class="top-bar">
       <div class="top-links">
-        <a class="nav-link" href="#">MAP</a>
-        <a class="nav-link" href="#">DASHBOARD</a>
-        <a class="nav-link" href="#">LOST & FOUND</a>
-        <a class="login-button" href="#">LOGIN</a>
+        <a class="nav-link" routerLink="/map">Map</a>
+        <a class="nav-link" routerLink="/dashboard">Dashboard</a>
+        <a class="nav-link" routerLink="/lost-and-found">Lost & Found</a>
+        <a class="login-button" routerLink="/logout">Logout</a>
       </div>
     </div>
-  
+
     <div class="branding-bar">
-      <img src="assets/unr_logo.png" alt="University Logo" />
+      <img class="university-logo-large-img align-image-bottom" alt="University of Nevada, Reno"
+           src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg" width="65" height="65">
       <h1>University of Nevada, Reno</h1>
       <p>Inspiring Excellence Since 1874</p>
     </div>
@@ -24,45 +26,44 @@
       <div class="sidebar">
         <h2>Sort & Filter</h2>
         <div class="filter-section">
-          <label for="building">Filter by Building:</label>
-          <select id="building">
-            <option value="all">All</option>
-          </select>
-        </div>
-      </div>
+          <label>Filter by Building:</label>
+          <div class="checkbox-group">
 
+            <!-- Individual Buildings -->
+            <div *ngFor="let building of accessibleBuildings">
+              <label>
+                <input type="checkbox"
+                       [value]="building"
+                       [checked]="selectedBuildings.has(building)"
+                       (change)="onBuildingCheckboxChange($event)" />
+                {{ building }}
+              </label>
+            </div>
+            <!-- "Select All" Option -->
+            <label>
+              <input type="checkbox"
+                     [checked]="selectedBuildings.size === accessibleBuildings.length"
+                     (change)="toggleSelectAll($event)" />
+              Select All
+            </label>
+          </div>
+        </div> <!-- Close filter-section div here -->
+      </div> <!-- Close sidebar div here -->
       <!-- Users Section -->
       <div class="user-section">
         <div class="user-header">
           <h2 class="students-header">Students Working in Selected Building</h2>
-          <button class="main-content-button">Add User</button>
+          <button class="main-content-button" [routerLink]="'/add-user'">Add User</button>
         </div>
 
         <!-- Cards -->
         <div class="user-card-grid">
-          <div class="user-card">
-            <p><strong>Name:</strong> Alice</p>
-            <p><strong>Email:</strong> alice&#64;unr.edu</p>
-            <p><strong>Building:</strong> SEM</p>
-            <button>Deactivate</button>
-          </div>
-          <div class="user-card">
-            <p><strong>Name:</strong> Bob</p>
-            <p><strong>Email:</strong> bob&#64;unr.edu</p>
-            <p><strong>Building:</strong> DMSC</p>
-            <button>Deactivate</button>
-          </div>
-          <div class="user-card">
-            <p><strong>Name:</strong> Charlie</p>
-            <p><strong>Email:</strong> charlie&#64;unr.edu</p>
-            <p><strong>Building:</strong> AB</p>
-            <button>Deactivate</button>
-          </div>
-          <div class="user-card">
-            <p><strong>Name:</strong> Diana</p>
-            <p><strong>Email:</strong> diana&#64;unr.edu</p>
-            <p><strong>Building:</strong> SEM</p>
-            <button>Deactivate</button>
+          <div class="user-card" *ngFor="let user of filteredUsers">
+            <p><strong>Name:</strong> {{ user.name }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Role:</strong> {{ user.role }}</p>
+            <p><strong>Buildings:</strong> {{ user.buildings.join(', ') }}</p>
+            <button (click)="deactivateUser(user.id)">Deactivate</button>
           </div>
         </div>
       </div>

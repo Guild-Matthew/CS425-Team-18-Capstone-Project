@@ -16,12 +16,12 @@ body {
 header {
   font-family: Arial, sans-serif;
   width: 100%;
-  background-color: #041E42;
+  background-color: #002244;
   color: white;
 }
 
 .top-bar {
-  background-color: #041E42;
+  background-color: #002244;
   padding: 0.5rem 1rem;
   display: flex;
   justify-content: flex-end;
@@ -66,7 +66,7 @@ header {
     }
 
 .branding-bar {
-  background-color: #041E42;
+  background-color: #002244;
   text-align: center;
   padding: 1.5rem 1rem;
   color: white;
@@ -165,7 +165,7 @@ header {
 
 /* Footer */
 footer {
-  background-color: #041E42;
+  background-color: #002244;
   color: white;
   text-align: center;
   padding: 1.5rem 1rem;
@@ -180,52 +180,29 @@ footer {
 }
 
 /* Add Item Button */
-.add-item-section {
+.add-item-button-wrapper {
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 15px; /* Ensures spacing above the button */
+  margin: 20px 0;
 }
-
-.main-content-button {
-  background-color: #041E42; 
-  color: white;
-  font-weight: bold;
-  text-transform: uppercase;
-  padding: .6rem 1.2rem; /* Adjust padding */
-  border-radius: 6px;
-  border: none;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.main-content-button:hover {
-  background-color: #041E42; /* Hover effect */
-  transform: translateY(-2px); /* Slight lift on hover */
-}
-
-.main-content-button:focus {
-  outline: none;
-}
-
 
 .add-item-button {
-  background-color: #041E42;
+  background-color: #78be20;
   color: white;
   font-weight: bold;
   text-transform: uppercase;
-  padding: 0.6rem 1.2rem;
-  border-radius: 6px;
+  padding: 0.5rem 1.2rem;
+  border-radius: 5px;
   border: none;
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.add-item-button:hover {
-  background-color: #041E42;
-  transform: translateY(-2px);
-}
+  .add-item-button:hover {
+    background-color: #65a718;
+    transform: translateY(-2px);
+  }
 
   .add-item-button:focus {
     outline: none;

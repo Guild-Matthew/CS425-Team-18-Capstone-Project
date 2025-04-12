@@ -4,12 +4,25 @@ from flask import render_template, request, redirect, url_for, Blueprint, jsonif
 from HelloFlask.queries import Queries
 from datetime import datetime 
 import os
+import numpy as np
 from werkzeug.utils import secure_filename
 from flask_cors import cross_origin
 # Create an instance of the Queries class for database operations
 db_queries = Queries()
 main_bp = Blueprint('main', __name__)
 
+@main_bp.route('/ItemOperationLogs', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def get_operation_logs():
+    filter_type = request.args.get('filterType', None)  
+
+    if filter_type and filter_type.upper() in ['INSERT', 'DELETE']:
+        logs = db_queries.get_operation_logs_by_type(filter_type.upper())
+        print(logs)
+    else:
+        logs = db_queries.get_operation_logs()
+        print(logs)
+    return jsonify(logs)
 
 @main_bp.route('/', methods=['GET'])
 def home():
@@ -23,28 +36,62 @@ def get_buildings():
     buildings = db_queries.getBuildings()  # Query to fetch building data
     return jsonify(buildings)  # Return the building data as JSON
 
+
 @main_bp.route('/L&F', methods=['GET'])
 def info():
-    filter_type = request.args.get('filterType', 'all')  # Default to 'all'
-    building = request.args.get('building')  # Get the building parameter
-    sort_order = request.args.get('sort', 'oldest') # Get sorting order (default to oldest)
-    # If "all" is selected, fetch all items; otherwise, filter by the selected type
+    filter_type = request.args.get('filterType', 'all')
+    building = request.args.get('building')
+    sort_order = request.args.get('sort', 'oldest')
     order = "ASC" if sort_order == "oldest" else "DESC"
-    # Ensure building is provided
-    if not building:
-        return "Building parameter is required", 400
 
-    # Query items based on building and filter
+    all_buildings_info = db_queries.getBuildingCoordinates()
+    all_buildings = [b['buildingcode'] for b in all_buildings_info]
+
+    if not building:
+        building = all_buildings[0] if all_buildings else None
+
+    if not building:
+        return jsonify({"error": "No buildings available"}), 400
+
+    current = next((b for b in all_buildings_info if b['buildingcode'] == building), None)
+    if not current:
+        return jsonify({"error": "Building not found"}), 400
+
+    lat1, lon1 = current['latitude'], current['longitude']
+    bid = db_queries.getBuildingID(building)
+    floors = db_queries.getFloors(bid)
+
+    if not floors:
+        valid_buildings = [
+            b for b in all_buildings_info
+            if b['buildingcode'] != building and db_queries.getFloors(db_queries.getBuildingID(b['buildingcode']))
+        ]
+        if not valid_buildings:
+            return jsonify({"warning": f"No Lost and Found found for building '{building}', and no alternatives available."}), 400
+
+        a = np.array([[b['latitude'], b['longitude']] for b in valid_buildings])
+        b = np.array([lat1, lon1])
+        idx_min = np.sum((a - b) ** 2, axis=1).argmin()
+        closest_building = valid_buildings[idx_min]
+
+        return jsonify({
+            "warning": f'Building "{building}" has no Lost and Found. Closest alternative: "{closest_building["buildingcode"]}".',
+            "closest_building": closest_building["buildingcode"],
+            "buildings": all_buildings
+        }), 400
+
     if filter_type == 'all':
         items = db_queries.get_items(building, order)
     else:
         items = db_queries.get_items_by_type(filter_type, building, order)
 
-    # Render the template with building and filtered items
-    return jsonify(items)
-    
-    # return the query as json data
-    # return jsonify(items)
+    return jsonify({
+        "items": items,
+        "buildings": all_buildings,
+        "selected_building": building
+    })
+
+
 
 @main_bp.route('/Items', methods=['GET', 'POST'])
 @cross_origin(supports_credentials=True)
@@ -52,11 +99,12 @@ def Reportitems():
     if request.method == 'POST':
         user_id = request.form.get('user_id')
         role = request.form.get('role')
-        formAuthToken = request.form.get('authtoken')
+        formAuthToken = request.form.get('authToken')
 
         uidauthtoken = db_queries.getTokenByUID(user_id)
+        uidauthtoken = uidauthtoken[0] if isinstance(uidauthtoken, list) and uidauthtoken else None
         if uidauthtoken != formAuthToken:
-            return jsonify({"error": "Unauthorized"}), 401
+            return jsonify({"error ONE": "Unauthorized"}), 401
 
         item_type = request.form.get('itemType')
         location_found = request.form.get('locationFound')
@@ -88,7 +136,7 @@ def Reportitems():
 
     user_id = request.args.get('user_id')  
     if not user_id:
-        return jsonify({"error": "Unauthorized - Missing User ID"}), 401
+        return jsonify({"error TWO": "Unauthorized - Missing User ID"}), 401
 
     buildings = db_queries.getBuildingsFromPermissions(user_id)
     
@@ -104,6 +152,7 @@ def remove_items():
         formAuthToken = data.get('authtoken')
 
         uidauthtoken = db_queries.getTokenByUID(user_id)
+        uidauthtoken = uidauthtoken[0] if isinstance(uidauthtoken, list) and uidauthtoken else None
         if uidauthtoken != formAuthToken:
             return jsonify({"error": "Unauthorized"}), 401
 
@@ -118,7 +167,7 @@ def remove_items():
             return jsonify({"error": "Missing fields"}), 400
 
         db_queries.insert_Claimed_item(item_type, location_found, description, date_found, dateClaimed, lostAndFindLocation)
-        db_queries.deleteItem(item_type, location_found, date_found, description)
+        db_queries.deleteItem(item_type, location_found, description, date_found)
 
         return jsonify({"message": "Item removed successfully"}), 200
 
@@ -192,6 +241,7 @@ def addBuilding():
         Longitude = request.form.get('Longitude')
 
         uidauthtoken = db_queries.getTokenByUID(user_id)
+        uidauthtoken = uidauthtoken[0] if isinstance(uidauthtoken, list) and uidauthtoken else None
         if uidauthtoken != formAuthToken:
             return jsonify({"error": "Unauthorized"}), 401
 

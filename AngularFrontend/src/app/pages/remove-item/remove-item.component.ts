@@ -78,7 +78,7 @@ export class RemoveItemComponent implements OnInit {
     const body = {
       user_id: userId,  
       role: role,
-      authToken: authToken,
+      authtoken: authToken,
       itemType: item.type,
       locationFound: item.location,
       dateFound: item.dateFound,
