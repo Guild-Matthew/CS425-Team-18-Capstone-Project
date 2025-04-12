@@ -18,12 +18,12 @@ export class AppComponent implements OnInit {
   title = 'AnguarFrontend';
 
   ngOnInit(): void {
-    //localStorage.clear();
+    localStorage.clear();
   }
 
   // clears the local storage when the browser is closed
   @HostListener("window:beforeunload", ["$event"])
   clearLocalStorage(event) {
-    //localStorage.clear();
+    localStorage.clear();
   }
 }
