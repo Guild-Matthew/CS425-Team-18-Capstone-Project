@@ -4,11 +4,23 @@
   <app-nav-bar class="header"></app-nav-bar>
 
   <google-map id="map-container" *ngIf="center" [center]="center" width="inherit" height="inherit" [zoom]="zoom" [options]="mapOptions">
+
+    <!-- Dropdown inside map to overlay it -->
+    <div class="building-dropdown">
+      <select (change)="onDropdownChange($event)">
+        <option value="" disabled selected>Select a Building</option>
+        <option *ngFor="let building of markers" [value]="building.title">
+          {{ building.title.split('\n')[0] }}
+        </option>
+      </select>
+    </div>
+
     <map-marker *ngFor="let marker of markers"
                 [position]="marker"
                 [title]="marker.title"
                 (mapClick)="onMarkerClick(marker.title)">
     </map-marker>
+
   </google-map>
 
   <footer class="footer">

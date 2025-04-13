@@ -83,7 +83,7 @@
 
 /* Add User Button */
 .main-content-button {
-  background-color: #002147;
+  background-color: #041E42;
   color: white;
   padding: 0.6rem 1.2rem;
   border: none;
@@ -93,12 +93,12 @@
 }
 
   .main-content-button:hover {
-    background-color: #001730;
+    background-color: #041E42;
   }
 
 /* Footer */
 .footer {
-  background-color: #002244;
+  background-color: #041E42;
   color: white;
   text-align: center;
   padding: 1.5rem 1rem;
@@ -121,7 +121,7 @@
 
 /* Top nav bar (MAP, DASHBOARD, etc.) */
 .top-bar {
-  background-color: #002244;
+  background-color: #041E42;
   padding: 0.5rem 1rem;
   display: flex;
   justify-content: flex-end;
@@ -168,7 +168,7 @@
 
 /* Centered branding */
 .branding-bar {
-  background-color: #002244;
+  background-color: #041E42;
   text-align: center;
   padding: 1.5rem 1rem;
   color: white;

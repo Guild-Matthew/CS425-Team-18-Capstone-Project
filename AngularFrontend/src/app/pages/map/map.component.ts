@@ -85,6 +85,16 @@ export class MapComponent implements OnInit {
     const buildingName = markerTitle.split("\n")[0].replace("Building ", "").trim(); 
     this.router.navigate(['/lost-and-found'], { queryParams: { building: buildingName } });
   }
+
+  onDropdownChange(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    const selectedTitle = selectElement.value;
+  
+    if (selectedTitle) {
+      this.onMarkerClick(selectedTitle);
+    }
+  }  
+  
   checkLoginStatus() {
     this.role = localStorage.getItem('role');  
     const userData = localStorage.getItem('user_id');

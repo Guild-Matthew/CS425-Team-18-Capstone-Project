@@ -30,14 +30,16 @@
         <h2>Add New Item</h2>
 
         <form (ngSubmit)="onSubmit()" #addItemForm="ngForm">
-
-          <!-- Item Name -->
-          <label for="image">Item type:</label>
-          <input type="text"
-                 id="itemName"
-                 name="itemName"
-                 [(ngModel)]="item.itemType"
-                 required />
+          
+          <!-- Item types -->
+          <label for="itemType">Item Type:</label>
+          <select id="itemType" name="itemType" required>
+            <option value="" disabled selected>Select item type</option>
+            <option value="clothing">Clothing</option>
+            <option value="technology">Technology</option>
+            <option value="medical_health">Medical/Health</option>
+            <option value="miscellaneous">Miscellaneous</option>
+          </select>
 
           <!-- Description -->
           <label for="image">Item description:</label>
