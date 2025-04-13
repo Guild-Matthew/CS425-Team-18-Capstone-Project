@@ -1,5 +1,6 @@
  /* Mary Cottier, Matthew Guild, Shane Petree */
-/* Ensure full height and remove margins */
+
+ /* Ensure full height and remove margins */
 html, body {
   height: 100%;
   width: 100%;
@@ -9,6 +10,7 @@ html, body {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 }
 
 /* Fullscreen Background with Centered Image */
@@ -17,7 +19,7 @@ html, body {
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh; /* Full screen */
+  height: 75vh; /* Full screen */
   /* Shane Petree */
   background-image: url(../../../assets/campus_image.jpg);
   background-size: cover;
@@ -44,7 +46,8 @@ html, body {
   align-items: center;
   position: relative;
   width: 100%;
-  height: 100vh; /* Ensure full screen height */
+  height: 75vh; /* Ensure full screen height */
+  flex-grow: 1;
 }
 
 /* Centered Login Box */
@@ -113,6 +116,31 @@ button[type="submit"]:hover {
   background-color: #041E42;
 }
 
+/* Container for positioning the return button */
+.return-to-map-container {
+  position: absolute;
+  top: 25px;
+  left: 25px;
+}
+
+/* Style for return to map button in top-left */
+.return-to-map-container button {
+  background-color: transparent;
+  color: #041E42;
+  border: none;
+  font-size: 0.9em;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 5px 10px;
+  text-decoration: underline;
+}
+
+.return-to-map-container button:hover {
+  text-decoration: none;
+  background-color: rgba(4, 30, 66, 0.05);
+  border-radius: 4px;
+}
+
 /* Help Links */
 .help-link {
   color: #041E42;
@@ -143,11 +171,98 @@ button[type="submit"]:hover {
 .signin-option-btn:hover {
   background-color: #f2f2f2;
 }
-  /* Footer stays at the bottom */
-  footer {
-    background-color: #041E42;
-    color: white;
-    text-align: center;
-    padding: 10px 0;
-    font-size: 0.9em;
+
+/* Footer */
+footer {
+  background-color: #041E42;
+  color: white;
+  text-align: center;
+  padding: 1.5rem 1rem;
+  font-size: 0.9em;
+  font-family: Arial, sans-serif;
+  background-image: url("/assets/site-footer-bg.jpg");
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  bottom: 0;
+  width: 100%;
 }
+
+/* HEADER */
+header {
+  font-family: Arial, sans-serif;
+  width: 100%;
+  background-color: #041E42;
+  color: white;
+}
+
+.top-bar {
+  background-color: #041E42;
+  padding: 0.5rem 1rem;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.top-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+  .top-links .nav-link {
+    color: white;
+    text-transform: uppercase;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    transition: background-color 0.2s ease-in-out;
+  }
+
+    .top-links .nav-link:hover {
+      background-color: rgba(255, 255, 255, 0.15);
+    }
+
+  .top-links .login-button {
+    background-color: #78be20;
+    color: black;
+    font-weight: bold;
+    padding: 0.4rem 1rem;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    transition: background-color 0.2s ease;
+  }
+
+    .top-links .login-button:hover {
+      background-color: #65a718;
+    }
+
+.branding-bar {
+  background-color: #041E42;
+  text-align: center;
+  padding: 1.5rem 1rem;
+  color: white;
+}
+
+  .branding-bar img {
+    height: 60px;
+    margin-bottom: 0.5rem;
+  }
+
+  .branding-bar h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: white; /* Ensure visibility */
+    position: relative; /* Help it stay above overlays */
+    z-index: 2;
+  }
+
+  .branding-bar p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #ccc;
+  }

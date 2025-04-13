@@ -1,8 +1,25 @@
 <!--Mary Cottier, Matthew Guild-->
+<!-- HEADER -->
+<header class="header">
+  <div class="top-bar">
+    <div class="top-links">
+    </div>
+  </div>
+
+  <div class="branding-bar">
+    <img src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg" alt="University Logo" />
+    <h1>University of Nevada, Reno</h1>
+    <p>Inspiring Excellence Since 1874</p>
+  </div>
+</header>
+
 <div class="fullscreen-container">
   <div class="background-overlay"></div>
   <div class="login-container">
     <div class="login-box">
+      <div class="return-to-map-container">
+        <button mat-button type="button" routerLink="/map">← Return to Map</button>
+      </div>
       <img class="university-logo-large-img align-image-bottom" alt="University of Nevada, Reno" src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg" width="65" height="65">
       <h1>Sign in</h1>
       <form (ngSubmit)="onSubmit()">
@@ -24,6 +41,7 @@
     </div>
   </div>
 </div>
-<footer>
-  <p>&copy; 2025 University of Nevada, Reno. Lost and Found Service.</p>
-</footer>
+    <!-- Footer Section -->
+    <footer>
+      <p>&copy; 2025 University of Nevada, Reno. Lost and Found Service.</p>
+    </footer>
