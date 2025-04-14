@@ -68,7 +68,7 @@ export class AddItemComponent implements OnInit {
     const formData = new FormData();
     formData.append('user_id', userId);
     formData.append('role', role);
-    formData.append('token', this.authToken || '');
+    formData.append('authToken', this.authToken || '');
     formData.append('worker', this.item.worker);
     formData.append('location', this.item.location);
     formData.append('dateFound', this.item.dateFound);

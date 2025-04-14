@@ -108,10 +108,10 @@ def Reportitems():
 
         item_type = request.form.get('itemType')
         location_found = request.form.get('locationFound')
-        date_found = request.form.get('dateFound') #Should we have this? We can just use datetime.now to get the date when the form was submited 
+        date_found = datetime.now()  #Should we have this? We can just use datetime.now to get the date when the form was submited 
         description = request.form.get('description')
         lostAndFindLocation = request.form.get('location')  
-
+        print("ITEM INFO:", item_type, location_found, date_found, description, lostAndFindLocation)
         if not all([item_type, location_found, date_found, description, lostAndFindLocation]):
             return jsonify({"error": "Missing fields"}), 400
 

@@ -30,10 +30,10 @@
         <h2>Add New Item</h2>
 
         <form (ngSubmit)="onSubmit()" #addItemForm="ngForm">
-          
+
           <!-- Item types -->
           <label for="itemType">Item Type:</label>
-          <select id="itemType" name="itemType" required>
+          <select id="itemType" name="itemType" [(ngModel)]="item.itemType" required>
             <option value="" disabled selected>Select item type</option>
             <option value="clothing">Clothing</option>
             <option value="technology">Technology</option>
@@ -50,12 +50,14 @@
                     required></textarea>
 
           <!-- Location -->
-          <label for="image">Lost and Found location:</label>
-          <input type="text"
-                 id="location"
-                 name="location"
-                 [(ngModel)]="item.location"
-                 required />
+          <label for="location">Lost and Found Location:</label>
+          <select id="location"
+                  name="location"
+                  [(ngModel)]="item.location"
+                  required>
+            <option value="" disabled selected>Select location</option>
+            <option *ngFor="let building of buildings" [value]="building">{{ building }}</option>
+          </select>
 
           <label for="image">Location found:</label>
           <input type="text"
