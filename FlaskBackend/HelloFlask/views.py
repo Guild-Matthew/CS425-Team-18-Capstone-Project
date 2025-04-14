@@ -111,16 +111,23 @@ def Reportitems():
         date_found = datetime.now()
         description = request.form.get('description')
         lostAndFindLocation = request.form.get('location')  
-        print("ITEM INFO:", item_type, location_found, date_found, description, lostAndFindLocation)
-        if not all([item_type, location_found, date_found, description, lostAndFindLocation]):
+        floor_number = request.form.get('floor')
+        room_number = request.form.get('room')
+
+        # Make sure all fields are filled
+        if not all([item_type, location_found, description, lostAndFindLocation, floor_number, room_number]):
             return jsonify({"error": "Missing fields"}), 400
 
+        bid = db_queries.getBuildingID(lostAndFindLocation)
+        fid = db_queries.get_fid(bid, floor_number)
+        rid = db_queries.get_rid(bid, room_number, floor_number)
+
+        # Handle image upload
         upload_folder = os.path.join(current_app.root_path, 'static', 'uploads')
         os.makedirs(upload_folder, exist_ok=True)
 
         image_file = request.files.get('imagePhoto')
         relative_path = None  
-
         if image_file and image_file.filename:
             filename = secure_filename(image_file.filename)
             file_path = os.path.join(upload_folder, filename)
@@ -130,7 +137,10 @@ def Reportitems():
             except Exception as e:
                 print(f"Error saving file: {e}")
 
-        db_queries.insert_item(item_type, location_found, description, date_found, lostAndFindLocation, relative_path)
+        db_queries.insert_item(
+            item_type, location_found, description, date_found,
+            lostAndFindLocation, relative_path, fid=fid, rid=rid
+        )
 
         return jsonify({"message": "Item added successfully"}), 200
 
@@ -139,7 +149,6 @@ def Reportitems():
         return jsonify({"error TWO": "Unauthorized - Missing User ID"}), 401
 
     buildings = db_queries.getBuildingsFromPermissions(user_id)
-    
     return jsonify({"buildings": buildings})
 
 @main_bp.route('/remove_item', methods=['GET', 'POST'])

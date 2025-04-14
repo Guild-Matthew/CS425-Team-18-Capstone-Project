@@ -21,12 +21,12 @@ class Queries:
         self.conn.close()
 
     # Query to insert an item into the "items" table
-    def insert_item(self, itemType, LocationFound, itemDescription, dateFound, LFlocation, image_path, performed_by="system"):
+    def insert_item(self, itemType, LocationFound, itemDescription, dateFound, LFlocation, image_path, fid=None, rid=None, performed_by="system"):
         insert_query = """
-            INSERT INTO items (itemType, LocationFound, itemDescription, dateFound, LFlocation, image_path)
-            VALUES (%s, %s, %s, %s, %s, %s)
+            INSERT INTO items (itemType, LocationFound, itemDescription, dateFound, LFlocation, image_path, fid, rid)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
         """
-        self.cursor.execute(insert_query, (itemType, LocationFound, itemDescription, dateFound, LFlocation, image_path))
+        self.cursor.execute(insert_query, (itemType, LocationFound, itemDescription, dateFound, LFlocation, image_path, fid, rid))
         self.conn.commit()
 
         log_query = """
@@ -418,6 +418,24 @@ class Queries:
         rows = self.cursor.fetchall()
         columns = [desc[0] for desc in self.cursor.description]
         return [dict(zip(columns, row)) for row in rows]
+
+    def get_fid(self, bid, floornumber):
+        query = """
+            SELECT fid FROM floors
+            WHERE bid = %s AND floornumber = %s
+        """
+        self.cursor.execute(query, (bid, floornumber))
+        row = self.cursor.fetchone()
+        return row[0] if row else None
+
+    def get_rid(self, bid, roomnumber, floornumber):
+        query = """
+            SELECT rid FROM rooms
+            WHERE bid = %s AND roomnumber = %s AND floornumber = %s
+        """
+        self.cursor.execute(query, (bid, roomnumber, floornumber))
+        row = self.cursor.fetchone()
+        return row[0] if row else None
 
 
 

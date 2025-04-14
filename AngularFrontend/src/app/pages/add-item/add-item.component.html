@@ -54,9 +54,24 @@
           <select id="location"
                   name="location"
                   [(ngModel)]="item.location"
+                  (change)="fetchFloors()"
                   required>
             <option value="" disabled selected>Select location</option>
             <option *ngFor="let building of buildings" [value]="building">{{ building }}</option>
+          </select>
+
+          <!-- Select Floor -->
+          <label for="floor">Floor:</label>
+          <select id="floor" name="floor" [(ngModel)]="item.floor" (change)="fetchRooms()" required>
+            <option value="" disabled selected>Select floor</option>
+            <option *ngFor="let floor of floors" [value]="floor">{{ floor }}</option>
+          </select>
+
+          <!-- Select Room -->
+          <label for="room">Room:</label>
+          <select id="room" name="room" [(ngModel)]="item.room" required>
+            <option value="" disabled selected>Select room</option>
+            <option *ngFor="let room of rooms" [value]="room">{{ room }}</option>
           </select>
 
           <label for="image">Location found:</label>

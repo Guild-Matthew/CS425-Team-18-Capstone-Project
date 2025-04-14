@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { flask_URL } from '../../app.config';
 import { CommonModule, NgFor } from '@angular/common';
-import { RouterLink, ActivatedRoute, Router } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 
 @Component({
@@ -17,6 +17,8 @@ export class AddItemComponent implements OnInit {
   item: any = {
     worker: '',
     location: '',
+    floor: '',
+    room: '', 
     dateFound: '',
     locationFound: '',
     itemType: '',
@@ -26,8 +28,11 @@ export class AddItemComponent implements OnInit {
 
   authToken: string | null = null;
   buildings: string[] = [];
+  floors: string[] = [];
+  rooms: string[] = []; 
+  selectedBuilding: string = '';
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) { }
 
   ngOnInit(): void {
     this.authToken = localStorage.getItem('authtoken');
@@ -36,7 +41,6 @@ export class AddItemComponent implements OnInit {
 
   fetchBuildings(): void {
     const userId = localStorage.getItem('user_id');
-
     if (!userId) {
       console.error('No user ID found. Redirecting to login.');
       this.router.navigate(['/login']);
@@ -51,6 +55,44 @@ export class AddItemComponent implements OnInit {
       },
       error: err => {
         console.error('Error fetching buildings:', err);
+      }
+    });
+  }
+
+  fetchFloors(): void {
+    const userId = localStorage.getItem('user_id');
+    const role = localStorage.getItem('role');
+    if (!this.item.location) return;
+
+    const url = `${flask_URL}/editFloor?token=${this.authToken}&user_id=${userId}&role=${role}&selected_building=${this.item.location}`;
+
+    this.http.get<any>(url, { withCredentials: true }).subscribe({
+      next: data => {
+        this.floors = data.floors || [];
+        this.rooms = [];
+        this.item.floor = '';
+        this.item.room = '';
+      },
+      error: err => {
+        console.error('Error fetching floors:', err);
+      }
+    });
+  }
+
+  fetchRooms(): void {
+    const userId = localStorage.getItem('user_id');
+    const role = localStorage.getItem('role');
+    if (!this.item.location || !this.item.floor) return;
+
+    const url = `${flask_URL}/editFloor?token=${this.authToken}&user_id=${userId}&role=${role}&selected_building=${this.item.location}&selected_floor=${this.item.floor}`;
+
+    this.http.get<any>(url, { withCredentials: true }).subscribe({
+      next: data => {
+        this.rooms = data.rooms || [];
+        this.item.room = '';
+      },
+      error: err => {
+        console.error('Error fetching rooms:', err);
       }
     });
   }
@@ -75,17 +117,15 @@ export class AddItemComponent implements OnInit {
     formData.append('locationFound', this.item.locationFound);
     formData.append('itemType', this.item.itemType);
     formData.append('description', this.item.description);
+    formData.append('floor', this.item.floor);
+    formData.append('room', this.item.room);
 
     if (this.item.imagePhoto) {
       formData.append('imagePhoto', this.item.imagePhoto);
     }
 
-    console.log('Submitting item:');
-    formData.forEach((value, key) => console.log(`${key}: ${value}`));
-
     this.http.post(`${flask_URL}/Items`, formData, { withCredentials: true }).subscribe({
       next: response => {
-        console.log('Item added successfully:', response);
         alert('Item successfully added!');
         this.resetForm();
       },
@@ -106,18 +146,13 @@ export class AddItemComponent implements OnInit {
       description: '',
       imagePhoto: null
     };
+    this.floors = [];
   }
 
   onFileSelected(event: any): void {
     const file = event.target.files?.[0];
     if (file) {
       this.item.imagePhoto = file;
-      console.log('File selected:', file.name);
     }
   }
-
-  toggleClothingFields(): void {
-    console.log('Item type changed to:', this.item.itemType);
-  }
 }
-
