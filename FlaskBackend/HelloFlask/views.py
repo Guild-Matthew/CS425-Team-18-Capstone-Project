@@ -108,7 +108,7 @@ def Reportitems():
 
         item_type = request.form.get('itemType')
         location_found = request.form.get('locationFound')
-        date_found = datetime.now()  #Should we have this? We can just use datetime.now to get the date when the form was submited 
+        date_found = datetime.now()
         description = request.form.get('description')
         lostAndFindLocation = request.form.get('location')  
         print("ITEM INFO:", item_type, location_found, date_found, description, lostAndFindLocation)
