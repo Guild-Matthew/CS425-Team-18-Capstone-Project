@@ -41,6 +41,8 @@ def get_buildings():
 def info():
     filter_type = request.args.get('filterType', 'all')
     building = request.args.get('building')
+    floor = request.args.get('floor')
+    room = request.args.get('room')
     sort_order = request.args.get('sort', 'oldest')
     order = "ASC" if sort_order == "oldest" else "DESC"
 
@@ -60,6 +62,7 @@ def info():
     lat1, lon1 = current['latitude'], current['longitude']
     bid = db_queries.getBuildingID(building)
     floors = db_queries.getFloors(bid)
+    rooms = db_queries.getRooms(bid, floor) if floor else []
 
     if not floors:
         valid_buildings = [
@@ -81,16 +84,17 @@ def info():
         }), 400
 
     if filter_type == 'all':
-        items = db_queries.get_items(building, order)
+        items = db_queries.get_items(building, order, floor, room)
     else:
-        items = db_queries.get_items_by_type(filter_type, building, order)
+        items = db_queries.get_items_by_type(filter_type, building, order, floor, room)
 
     return jsonify({
         "items": items,
         "buildings": all_buildings,
-        "selected_building": building
+        "selected_building": building,
+        "floors": floors,
+        "rooms": rooms
     })
-
 
 
 @main_bp.route('/Items', methods=['GET', 'POST'])

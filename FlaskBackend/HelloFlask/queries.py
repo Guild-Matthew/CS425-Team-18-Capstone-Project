@@ -46,32 +46,55 @@ class Queries:
         self.conn.commit()
 
     # Query to get items from the "items" table
-    def get_items(self, LFlocation, order):#*
-        # Validate the order argument to ensure it's either ASC or DESC
-        if order not in ("ASC", "DESC"):
-            raise ValueError("Invalid order. Must be 'ASC' or 'DESC'.")    
-        query = f"""
-        SELECT itemType, LocationFound, itemDescription, dateFound, image_path
-        FROM items 
-        WHERE LFlocation = %s
-        ORDER BY dateFound {order}
+    def get_items(self, LFlocation, order, floor=None, room=None):
+        query = """
+            SELECT i.itemType, i.LocationFound, i.itemDescription, i.dateFound, i.image_path, r.roomnumber
+            FROM items i
+            LEFT JOIN rooms r ON i.rid = r.rid
+            WHERE i.LFlocation = %s
         """
-        self.cursor.execute(query, (LFlocation,))  # Pass LFlocation as a tuple
-        return self.cursor.fetchall()  # Fetch all matching items
+        params = [LFlocation]
+        if floor:
+            query += """
+                AND i.fid = (
+                    SELECT fid FROM floors
+                    WHERE floornumber = %s AND bid = (SELECT bid FROM building WHERE buildingcode = %s)
+                )
+            """
+            params.extend([floor, LFlocation])  
+        if room:
+            query += " AND r.roomnumber = %s"
+            params.append(room)  
+        query += f" ORDER BY i.dateFound {order}"
+        self.cursor.execute(query, params)
+        return self.cursor.fetchall()
+
 
     # Query to get filtered items from the "items" table
-    def get_items_by_type(self, item_type, building, order):#*
-        # Validate the order argument to ensure it's either ASC or DESC
-        if order not in ("ASC", "DESC"):
-            raise ValueError("Invalid order. Must be 'ASC' or 'DESC'.")
-
+    def get_items_by_type(self, item_type, building, order, floor=None, room=None):
         query = f"""
-        SELECT itemType, LocationFound, itemDescription, dateFound, image_path
-        FROM items
-        WHERE itemType = %s AND lflocation = %s
-        ORDER BY dateFound {order}
+            SELECT i.itemType, i.LocationFound, i.itemDescription, i.dateFound, i.image_path, r.roomnumber
+            FROM items i
+            LEFT JOIN rooms r ON i.rid = r.rid
+            WHERE i.itemType = %s AND i.LFlocation = %s
         """
-        self.cursor.execute(query, (item_type, building))
+        params = [item_type, building]
+
+        if floor:
+            query += """
+                AND i.fid = (
+                    SELECT fid FROM floors
+                    WHERE floornumber = %s AND bid = (SELECT bid FROM building WHERE buildingcode = %s)
+                )
+            """
+            params.extend([floor, building])
+
+        if room:
+            query += " AND r.roomnumber = %s"
+            params.append(room)
+
+        query += f" ORDER BY i.dateFound {order}"
+        self.cursor.execute(query, params)
         return self.cursor.fetchall()
 
     # Query to get items from the "Claimed items" table

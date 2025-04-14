@@ -9,7 +9,7 @@
           <a class="nav-link" routerLink="/map">Map</a>
           <a class="nav-link" routerLink="/dashboard">Dashboard</a>
           <a class="nav-link" routerLink="/lost-and-found">Lost & Found</a>
-          <a class="login-button" routerLink="/logout">Logout</a>   
+          <a class="login-button" routerLink="/logout">Logout</a>
         </div>
       </div>
 
@@ -52,6 +52,25 @@
             <option *ngFor="let b of buildings" [value]="b">{{ b }}</option>
           </select>
         </div>
+
+        <!-- Floor Filter -->
+        <div class="filter-section" *ngIf="floors.length > 0">
+          <label for="floor">Floor:</label>
+          <select id="floor" [(ngModel)]="selectedFloor" (change)="onFloorChange()">
+            <option value="">All Floors</option>
+            <option *ngFor="let f of floors" [value]="f">{{ f }}</option>
+          </select>
+        </div>
+
+        <!-- Room Filter -->
+        <div class="filter-section" *ngIf="rooms.length > 0">
+          <label for="room">Room:</label>
+          <select id="room" [(ngModel)]="selectedRoom" (change)="onRoomChange()">
+            <option value="">All Rooms</option>
+            <option *ngFor="let r of rooms" [value]="r">{{ r }}</option>
+          </select>
+        </div>
+
       </aside>
 
       <!-- Products Section -->
@@ -75,14 +94,15 @@
             <h3><strong>Location found: </strong> <span>{{ item.location }}</span></h3>
             <h3><strong>Date found: </strong> <span>{{ item.dateFound }}</span></h3>
             <h3><strong>Description: </strong> <span>{{ item.description }}</span></h3>
+            <h3 *ngIf="item.roomNumber"><strong>Room: </strong> <span>{{ item.roomNumber }}</span></h3>
             <div *ngIf="item.imageUrl">
               <img [src]="item.imageUrl" alt="Photo of {{ item.type }}" style="max-width: 200px;">
             </div>
-            
-          <!-- Mark as Claimed Button -->
-          <div class="claim-button-section" *ngIf="role === 'student' || role === 'admin' || role === 'superadmin'">
-            <button class="main-content-button" (click)="markAsClaimed(item)">Mark as Claimed</button>
-          </div>
+
+            <!-- Mark as Claimed Button -->
+            <div class="claim-button-section" *ngIf="role === 'student' || role === 'admin' || role === 'superadmin'">
+              <button class="main-content-button" (click)="markAsClaimed(item)">Mark as Claimed</button>
+            </div>
 
           </div>
         </div>

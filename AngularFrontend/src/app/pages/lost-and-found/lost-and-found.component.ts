@@ -15,6 +15,7 @@ interface Item {
   dateFound: string;
   description: string;
   imageUrl?: string;
+  roomNumber?: string;
   imageVisible: boolean;
   claimed?: boolean;
 }
@@ -32,12 +33,16 @@ export class LostAndFoundComponent implements OnInit {
   items: Item[] = [];
   filteredItems: Item[] = [];
   selectedBuilding: string = '';
+  selectedFloor: string = '';
+  selectedRoom: string = '';
   buildings: string[] = [];
+  floors: string[] = [];
+  rooms: string[] = [];
   errorMessage: string = '';
   closestSuggestedBuilding: string = '';
   role: string | null = null;
 
-  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router) {}
+  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
     this.checkLoginStatus();
@@ -56,7 +61,7 @@ export class LostAndFoundComponent implements OnInit {
 
   fetchItems(): void {
     this.errorMessage = '';
-    const url = `${flask_URL}/L&F?building=${this.selectedBuilding}&filterType=${this.filterType}&sort=${this.sortOrder}`;
+    const url = `${flask_URL}/L&F?building=${this.selectedBuilding}&filterType=${this.filterType}&sort=${this.sortOrder}&floor=${this.selectedFloor}&room=${this.selectedRoom}`;
 
     this.http.get<any>(url).subscribe(
       data => {
@@ -67,10 +72,13 @@ export class LostAndFoundComponent implements OnInit {
           description: item[2],
           dateFound: item[3],
           imageUrl: item[4],
+          roomNumber: item[5],
           imageVisible: false,
           claimed: item.claimed || false
         }));
         this.buildings = data.buildings;
+        this.floors = data.floors || [];
+        this.rooms = data.rooms || [];
         this.selectedBuilding = data.selected_building;
         this.applyFilters();
       },
@@ -95,6 +103,8 @@ export class LostAndFoundComponent implements OnInit {
 
   onBuildingChange(): void {
     this.errorMessage = '';
+    this.selectedFloor = '';
+    this.selectedRoom = '';
     this.fetchItems();
   }
 
@@ -106,6 +116,15 @@ export class LostAndFoundComponent implements OnInit {
   onFilterChange(event: Event): void {
     this.filterType = (event.target as HTMLSelectElement).value;
     this.applyFilters();
+  }
+
+  onFloorChange(): void {
+    this.selectedRoom = '';
+    this.fetchItems();
+  }
+
+  onRoomChange(): void {
+    this.fetchItems(); 
   }
 
   applyFilters(): void {
