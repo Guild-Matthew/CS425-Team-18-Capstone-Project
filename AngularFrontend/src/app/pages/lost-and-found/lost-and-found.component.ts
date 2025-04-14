@@ -150,20 +150,35 @@ export class LostAndFoundComponent implements OnInit {
   markAsClaimed(item: Item): void {
     if (item.claimed) return;
 
-    const dateClaimed = new Date().toISOString().split('T')[0];
+    const userId = localStorage.getItem('user_id');
+    const role = localStorage.getItem('role');
+    const authToken = localStorage.getItem('authtoken');
+
+    if (!userId || !authToken) {
+      console.error("User not authenticated");
+      return;
+    }
+
+    const dateClaimed = new Date().toISOString().split('T')[0];  // optional for tracking
+
+    const url = `${flask_URL}/remove_item`;
     const body = {
+      user_id: userId,
+      role: role,
+      authtoken: authToken,
       itemType: item.type,
-      LocationFound: item.location,
-      itemDescription: item.description,
+      locationFound: item.location,
       dateFound: item.dateFound,
-      dateClaimed: dateClaimed,
-      LFlocation: this.selectedBuilding
+      description: item.description,
+      lfLocation: this.selectedBuilding
     };
 
-    const url = `${flask_URL}/L&F/claimItem`;
-    this.http.post<any>(url, body).subscribe({
+    const headers = { 'Content-Type': 'application/json' };
+
+    this.http.post(url, body, { headers, withCredentials: true }).subscribe({
       next: () => {
         console.log(`Item "${item.description}" marked as claimed.`);
+        alert('Item marked as claimed.');
         item.claimed = true;
         this.items = this.items.filter(i =>
           !(i.type === item.type &&
