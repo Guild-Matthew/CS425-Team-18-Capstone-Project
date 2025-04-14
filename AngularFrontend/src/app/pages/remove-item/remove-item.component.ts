@@ -19,6 +19,8 @@ export class RemoveItemComponent implements OnInit {
   sortOrder: string = 'oldest';
   filterType: string = 'all';
   building: string = '';
+  floors: string[] = [];
+  rooms: string[] = []; 
   items: any[] = [];
   buildings: string[] = [];
   authToken: string | null = null;

@@ -37,12 +37,13 @@ class Queries:
         self.conn.commit()
 
     # Query to insert an item into the "Claimed items" table
-    def insert_Claimed_item(self, itemType, LocationFound, itemDescription, dateFound, dateClaimed, LFlocation):#*
+    def insert_Claimed_item(self, itemType, LocationFound, itemDescription, dateFound, dateClaimed, LFlocation, fid=None, rid=None):
         query = """
-        INSERT INTO claimedItems (itemType, LocationFound, itemDescription, dateFound, dateClaimed, LFlocation)
-        VALUES (%s, %s, %s, %s, %s, %s)
-        """
-        self.cursor.execute(query, (itemType, LocationFound, itemDescription, dateFound, dateClaimed, LFlocation))
+            INSERT INTO claimedItems 
+            (itemType, LocationFound, itemDescription, dateFound, dateClaimed, LFlocation, fid, rid)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            """
+        self.cursor.execute(query, (itemType, LocationFound, itemDescription, dateFound, dateClaimed, LFlocation, fid, rid))
         self.conn.commit()
 
     # Query to get items from the "items" table
@@ -98,26 +99,55 @@ class Queries:
         return self.cursor.fetchall()
 
     # Query to get items from the "Claimed items" table
-    def get_Claimed_items(self, LFlocation, order): #*
+    def get_Claimed_items(self, LFlocation, order, floor=None, room=None):
         query = f"""
-        SELECT itemType, LocationFound, itemDescription, dateFound, dateClaimed  
-        FROM claimedItems 
-        WHERE lflocation = %s 
-        ORDER BY dateClaimed {order}
+            SELECT i.itemType, i.LocationFound, i.itemDescription, i.dateFound, i.dateClaimed, r.roomnumber
+            FROM claimedItems i
+            LEFT JOIN rooms r ON i.rid = r.rid
+            WHERE i.lflocation = %s
         """
-        self.cursor.execute(query, (LFlocation,))
-        return self.cursor.fetchall()  # Fetch all matching items
+        params = [LFlocation]
+
+        if floor:
+            query += """
+                AND i.fid = (
+                    SELECT fid FROM floors
+                    WHERE floornumber = %s AND bid = (SELECT bid FROM building WHERE buildingcode = %s)
+                )
+            """
+            params.extend([floor, LFlocation])
+
+        if room:
+            query += " AND r.roomnumber = %s"
+            params.append(room)
+
+        query += f" ORDER BY i.dateClaimed {order}"
+        self.cursor.execute(query, params)
+        return self.cursor.fetchall()
 
     # Query to get filtered items from the "Claimed items" table
-    def get_Claimed_items_by_type(self, LFlocation, item_type, order): #*
+    def get_Claimed_items_by_type(self, item_type, LFlocation, order, floor=None, room=None):
         query = f"""
-        SELECT itemType, LocationFound, itemDescription, dateFound, dateClaimed  
-        FROM claimedItems 
-        WHERE lflocation = %s AND itemType = %s
-        ORDER BY dateClaimed {order}
+            SELECT i.itemType, i.LocationFound, i.itemDescription, i.dateFound, i.dateClaimed, r.roomnumber
+            FROM claimedItems i
+            LEFT JOIN rooms r ON i.rid = r.rid
+            WHERE i.lflocation = %s AND i.itemType = %s
         """
-        self.cursor.execute(query, (LFlocation, item_type))
-        return self.cursor.fetchall()  # Fetch all matching items
+        params = [LFlocation, item_type]
+        if floor:
+            query += """
+                AND i.fid = (
+                    SELECT fid FROM floors
+                    WHERE floornumber = %s AND bid = (SELECT bid FROM building WHERE buildingcode = %s)
+                )
+            """
+            params.extend([floor, LFlocation])
+        if room:
+            query += " AND r.roomnumber = %s"
+            params.append(room)
+        query += f" ORDER BY i.dateClaimed {order}"
+        self.cursor.execute(query, params)
+        return self.cursor.fetchall()
 
     # Query to create an account (admin or user)
     def createAccount(self, username, password, email, role): #*
@@ -459,6 +489,27 @@ class Queries:
         self.cursor.execute(query, (bid, roomnumber, floornumber))
         row = self.cursor.fetchone()
         return row[0] if row else None
+
+    def getFloorID(self, buildingcode, floor):
+        query = """
+            SELECT fid FROM floors 
+            WHERE floornumber = %s 
+            AND bid = (SELECT bid FROM building WHERE buildingcode = %s)
+        """
+        self.cursor.execute(query, (floor, buildingcode))
+        result = self.cursor.fetchone()
+        return result[0] if result else None
+
+    def getRoomID(self, buildingcode, floor, room):
+        query = """
+            SELECT rid FROM rooms 
+            WHERE roomnumber = %s 
+            AND floornumber = %s
+            AND bid = (SELECT bid FROM building WHERE buildingcode = %s)
+        """
+        self.cursor.execute(query, (room, floor, buildingcode))
+        result = self.cursor.fetchone()
+        return result[0] if result else None
 
 
 

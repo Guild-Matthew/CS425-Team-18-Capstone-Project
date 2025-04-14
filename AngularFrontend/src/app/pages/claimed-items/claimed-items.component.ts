@@ -19,9 +19,14 @@ export class ClaimedItemsComponent implements OnInit {
   sortOrder: string = 'oldest';
   filterType: string = 'all';
   building: string = '';
+  selectedFloor: string = '';
+  selectedRoom: string = '';
   items: any[] = [];
   buildings: string[] = [];
+  floors: string[] = [];
+  rooms: string[] = [];
   authToken: string | null = null;
+
   constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
@@ -38,28 +43,23 @@ export class ClaimedItemsComponent implements OnInit {
     const authToken = localStorage.getItem('authtoken');
 
     if (!userId) {
-      console.error("No user ID found. Redirecting to login.");
       this.router.navigate(['/login']);
       return;
     }
 
-    if (!this.building) {
-      this.building = "Please select a building";
-    }
-
-    const url = `${flask_URL}/claimedItems?token=${authToken}&user_id=${userId}&role=${role}&building=${this.building}&filterType=${this.filterType}&sort=${this.sortOrder}`;
-
-    console.log("Fetching items from:", url);
+    const url = `${flask_URL}/claimedItems?token=${authToken}&user_id=${userId}&role=${role}&building=${this.building}&filterType=${this.filterType}&sort=${this.sortOrder}&floor=${this.selectedFloor}&room=${this.selectedRoom}`;
 
     this.http.get<any>(url, { withCredentials: true }).subscribe(
       data => {
-        console.log("Data received:", data);
         this.items = data.items;
         this.buildings = data.buildings;
+        this.floors = data.floors || [];
+        this.rooms = data.rooms || [];
       },
       error => console.error("Error fetching items:", error)
     );
   }
+
   onSortChange(event: any): void {
     this.sortOrder = event.target.value;
     this.fetchItems();
@@ -69,5 +69,15 @@ export class ClaimedItemsComponent implements OnInit {
     this.filterType = event.target.value;
     this.fetchItems();
   }
- }
+
+  onFloorChange(): void {
+    this.selectedRoom = '';
+    this.fetchItems();
+  }
+
+  onRoomChange(): void {
+    this.fetchItems();
+  }
+}
+
 

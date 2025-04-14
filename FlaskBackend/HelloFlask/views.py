@@ -175,11 +175,17 @@ def remove_items():
         description = data.get('description')
         dateClaimed = datetime.now().strftime('%Y-%m-%d %H:%M')
         lostAndFindLocation = data.get('lfLocation')
+        floor = data.get('floor')
+        room = data.get('room')
 
         if not all([item_type, location_found, date_found, description]):
             return jsonify({"error": "Missing fields"}), 400
 
-        db_queries.insert_Claimed_item(item_type, location_found, description, date_found, dateClaimed, lostAndFindLocation)
+        # Get FID and RID (if floor/room provided)
+        fid = db_queries.getFloorID(lostAndFindLocation, floor) if floor else None
+        rid = db_queries.getRoomID(lostAndFindLocation, floor, room) if room and floor else None
+
+        db_queries.insert_Claimed_item(item_type, location_found, description, date_found, dateClaimed, lostAndFindLocation, fid, rid)
         db_queries.deleteItem(item_type, location_found, description, date_found)
 
         return jsonify({"message": "Item removed successfully"}), 200
@@ -210,37 +216,54 @@ def remove_items():
     }
     return jsonify(response)
 
-@main_bp.route('/claimedItems', methods=['GET', 'POST'])
+@main_bp.route('/claimedItems', methods=['GET'])
 @cross_origin(supports_credentials=True)
 def ClaimedItems():
-        user_id = request.args.get('user_id')  
-        role = request.args.get('role')
-        formAuthToken = request.args.get('token')
-        uidauthtoken = db_queries.getTokenByUID(user_id)
-        uidauthtoken = uidauthtoken[0] if isinstance(uidauthtoken, list) and uidauthtoken else None
+    user_id = request.args.get('user_id')  
+    role = request.args.get('role')
+    formAuthToken = request.args.get('token')
+    floor = request.args.get("floor")
+    room = request.args.get("room")
 
-        if uidauthtoken != formAuthToken:
-            return jsonify({"error": "Unauthorized"}), 401
+    uidauthtoken = db_queries.getTokenByUID(user_id)
+    uidauthtoken = uidauthtoken[0] if isinstance(uidauthtoken, list) and uidauthtoken else None
 
-        buildings = db_queries.getBuildingsFromPermissions(user_id)
-        selected_building = request.args.get('building', buildings[0] if buildings else None)
-        sort_order = request.args.get('sort', 'oldest')
-        order = "ASC" if sort_order == "oldest" else "DESC"
-        filter_type = request.args.get('filterType', 'all')
+    if uidauthtoken != formAuthToken:
+        return jsonify({"error": "Unauthorized"}), 401
 
-        if filter_type == 'all':
-            items = db_queries.get_Claimed_items(selected_building, order)
-        else:
-            items = db_queries.get_Claimed_items_by_type(filter_type, selected_building, order)
+    buildings = db_queries.getBuildingsFromPermissions(user_id)
+    selected_building = request.args.get('building', buildings[0] if buildings else None)
+    sort_order = request.args.get('sort', 'oldest')
+    order = "ASC" if sort_order == "oldest" else "DESC"
+    filter_type = request.args.get('filterType', 'all')
 
-        response = {
-        "items": [{"type": item[0], "location": item[1], "description": item[2], "dateFound": item[3], "lfLocation": selected_building, "dateClaimed": item[4]} for item in items],
+    bid = db_queries.getBuildingID(selected_building)
+    floors = db_queries.getFloors(bid)
+    rooms = db_queries.getRooms(bid, floor) if floor else []
+
+    if filter_type == 'all':
+        items = db_queries.get_Claimed_items(selected_building, order, floor, room)
+    else:
+        items = db_queries.get_Claimed_items_by_type(filter_type, selected_building, order, floor, room)
+
+    response = {
+        "items": [{
+            "type": item[0],
+            "location": item[1],
+            "description": item[2],
+            "dateFound": item[3],
+            "dateClaimed": item[4],
+            "roomNumber": item[5]
+        } for item in items],
         "sort_order": sort_order,
         "filterType": filter_type,
         "buildings": buildings,
-        "selected_building": selected_building
-        }
-        return jsonify(response)
+        "selected_building": selected_building,
+        "floors": floors,
+        "rooms": rooms
+    }
+    return jsonify(response)
+
 
 @main_bp.route('/addBuilding', methods=['GET', 'POST'])
 @cross_origin(supports_credentials=True)

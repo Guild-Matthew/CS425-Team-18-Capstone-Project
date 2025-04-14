@@ -159,7 +159,7 @@ export class LostAndFoundComponent implements OnInit {
       return;
     }
 
-    const dateClaimed = new Date().toISOString().split('T')[0];  // optional for tracking
+    const dateClaimed = new Date().toISOString().split('T')[0];
 
     const url = `${flask_URL}/remove_item`;
     const body = {
@@ -170,7 +170,9 @@ export class LostAndFoundComponent implements OnInit {
       locationFound: item.location,
       dateFound: item.dateFound,
       description: item.description,
-      lfLocation: this.selectedBuilding
+      lfLocation: this.selectedBuilding,
+      floor: this.selectedFloor,
+      room: this.selectedRoom
     };
 
     const headers = { 'Content-Type': 'application/json' };
