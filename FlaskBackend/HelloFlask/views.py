@@ -151,8 +151,11 @@ def Reportitems():
     user_id = request.args.get('user_id')  
     if not user_id:
         return jsonify({"error TWO": "Unauthorized - Missing User ID"}), 401
-
-    buildings = db_queries.getBuildingsFromPermissions(user_id)
+    role = request.args.get('role')
+    if role == 'superadmin':
+            buildings = db_queries.getAllBuildings()
+    else:
+            buildings = db_queries.getBuildingsFromPermissions(user_id)
     return jsonify({"buildings": buildings})
 
 @main_bp.route('/remove_item', methods=['GET', 'POST'])
@@ -231,7 +234,10 @@ def ClaimedItems():
     if uidauthtoken != formAuthToken:
         return jsonify({"error": "Unauthorized"}), 401
 
-    buildings = db_queries.getBuildingsFromPermissions(user_id)
+    if role == 'superadmin':
+            buildings = db_queries.getAllBuildings()
+    else:
+            buildings = db_queries.getBuildingsFromPermissions(user_id)
     selected_building = request.args.get('building', buildings[0] if buildings else None)
     sort_order = request.args.get('sort', 'oldest')
     order = "ASC" if sort_order == "oldest" else "DESC"

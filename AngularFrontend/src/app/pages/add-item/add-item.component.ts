@@ -41,13 +41,14 @@ export class AddItemComponent implements OnInit {
 
   fetchBuildings(): void {
     const userId = localStorage.getItem('user_id');
+    const role = localStorage.getItem('role');
     if (!userId) {
       console.error('No user ID found. Redirecting to login.');
       this.router.navigate(['/login']);
       return;
     }
 
-    const url = `${flask_URL}/Items?user_id=${userId}`;
+    const url = `${flask_URL}/Items?user_id=${userId}&role=${role}`;
     this.http.get<any>(url, { withCredentials: true }).subscribe({
       next: data => {
         console.log('Buildings received:', data.buildings);

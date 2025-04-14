@@ -239,13 +239,13 @@ class Queries:
         return [{"username": row[0], "email": row[1], "active": row[2], "role": row[3]} for row in rows] 
  
     # Query to deactivate an account 
-    def deactivateUser(self, email, username):
+    def deactivateUser(self, uid):
         query = """
         UPDATE users
         SET active = FALSE
-        WHERE email = %s AND username = %s
+        WHERE uid = %s 
         """
-        self.cursor.execute(query, (email, username))  
+        self.cursor.execute(query, (uid,))  
         self.conn.commit()
 
     # Query to reactivate an account that already exists 

@@ -57,6 +57,7 @@ export class MapComponent implements OnInit {
     ];
 
     this.mapOptions = {
+      mapTypeId: 'satellite',
       minZoom: 15,
       maxZoom: 20,
       restriction: {

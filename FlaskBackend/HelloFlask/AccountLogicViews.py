@@ -159,10 +159,11 @@ def deactivate_user():
             return jsonify({"error": "Unauthorized"}), 401
 
         target_id = data.get('target_id')
+        print("ID", target_id)
         if not target_id:
             return jsonify({"error": "Missing target user ID"}), 400
 
-        db_queries.deactivateStudentAccount(target_id)
+        db_queries.deactivateUser(target_id)
         return jsonify({"message": "Account deactivated"}), 200
 
     user_id = request.args.get('user_id')
@@ -192,9 +193,7 @@ def deactivate_user():
         uid_lists.extend(uids)
 
     uid_lists = list(set(uid_lists))  # Remove duplicates
-    print("UID lists:", uid_lists)
     users = db_queries.getUserVoidFiltered(uid_lists, 'student', 'true')
-    print("Users", users)
     formatted_users = []
     user_map = {}
 
