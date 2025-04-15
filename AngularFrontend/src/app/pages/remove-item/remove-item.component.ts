@@ -1,4 +1,4 @@
-//Guilherme Cassiano
+//Guilherme Cassiano, Matthew Guild
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { flask_URL } from '../../app.config';
@@ -19,8 +19,6 @@ export class RemoveItemComponent implements OnInit {
   sortOrder: string = 'oldest';
   filterType: string = 'all';
   building: string = '';
-  floors: string[] = [];
-  rooms: string[] = []; 
   items: any[] = [];
   buildings: string[] = [];
   authToken: string | null = null;

@@ -1,106 +1,78 @@
-<!--Mary Cottier, Shane Petree, Guilherme Cassiano-->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UNR Lost and Found</title>
-</head>
-
-<body>
-    <header>
-        <div class="container">
-            <div class="logo-group">
-                <img class="university-logo-large-img align-image-bottom" 
-                     alt="University of Nevada, Reno" 
-                     src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg" 
-                     width="65" height="65">
-                <span class="logo-text-new align-text-middle">
-                    University of Nevada, Reno
-                </span>
-            </div>
-            <h1>Claimed Items</h1>
-            <nav>
-                <ul>
-                    <!-- Shane Petree -->
-                    <li><a routerLink="/dashboard">Dashboard</a></li>
-                    <li><a routerLink="/add-item">Report Lost Item</a></li>
-                    <li><a routerLink="/lost-and-found">View Items</a></li>
-                    <li><a routerLink="#">Help</a></li>
-                    <li><a routerLink="/logout">Logout</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-
-    <div class="main-content">
-        <!-- Sidebar for Sort and Filter -->
-      <aside class="sidebar">
-        <h2>Sort & Filter</h2>
-        <!-- Sort section -->
-        <div class="filter-section">
-          <label for="sort">Sort By:</label>
-          <select id="sort" (change)="onSortChange($event)">
-            <option value="oldest" [selected]="sortOrder === 'oldest'">Date Claimed: Oldest</option>
-            <option value="newest" [selected]="sortOrder === 'newest'">Date Claimed: Newest</option>
-          </select>
-        </div>
-        <!-- Filter section -->
-        <div class="filter-section">
-          <label for="filterType">Filter by Type:</label>
-          <select id="filterType" (change)="onFilterChange($event)">
-            <option value="all" [selected]="filterType === 'all'">All</option>
-            <option value="clothing" [selected]="filterType === 'clothing'">Clothing</option>
-            <option value="technology" [selected]="filterType === 'technology'">Technology</option>
-            <option value="misc" [selected]="filterType === 'misc'">Miscellaneous</option>
-          </select>
-        </div>
-        <!--Building Section-->
-        <div class="filter-section">
-          <label for="building">Lost and Found Location:</label>
-          <select id="building" [(ngModel)]="building" (change)="fetchItems()">
-            <option *ngFor="let b of buildings" [value]="b">{{ b }}</option>
-          </select>
-        </div>
-        <!-- Floor Filter -->
-        <div class="filter-section" *ngIf="floors.length > 0">
-          <label for="floor">Floor:</label>
-          <select id="floor" [(ngModel)]="selectedFloor" (change)="onFloorChange()">
-            <option value="">All Floors</option>
-            <option *ngFor="let f of floors" [value]="f">{{ f }}</option>
-          </select>
-        </div>
-
-        <!-- Room Filter -->
-        <div class="filter-section" *ngIf="rooms.length > 0">
-          <label for="room">Room:</label>
-          <select id="room" [(ngModel)]="selectedRoom" (change)="onRoomChange()">
-            <option value="">All Rooms</option>
-            <option *ngFor="let r of rooms" [value]="r">{{ r }}</option>
-          </select>
-        </div>
-      </aside>
-
-        <!-- Products Section -->
-        <section id="products">
-            <h2>Found Claimed Items in Building: {{ building }}</h2>
-            <div class="product-grid">
-              <div class="product" *ngFor="let item of items">
-                <h3><strong>Item type: </strong> <span>{{ item.type }}</span></h3>
-                <h3><strong>Location found: </strong> <span>{{ item.location }}</span></h3>
-                <h3><strong>Date found: </strong> <span>{{ item.dateFound }}</span></h3>
-                <h3><strong>Date claimed: </strong> <span>{{ item.dateClaimed }}</span></h3>
-                <h3><strong>Description: </strong> <span>{{ item.description }}</span></h3>
-                <h3 *ngIf="item.roomNumber"><strong>Room: </strong> <span>{{ item.roomNumber }}</span></h3>
-              </div>
-                <p *ngIf="items.length === 0">No items found for the selected filter.</p>
-            </div>
-        </section>
+<div class="claimed-items-page">
+  <!-- Header -->
+  <header class="header">
+    <div class="top-bar">
+      <div class="top-links">
+        <a class="nav-link" routerLink="/dashboard">Dashboard</a>
+        <a class="nav-link" routerLink="/add-item">Report Lost Item</a>
+        <a class="nav-link" routerLink="/lost-and-found">View Items</a>
+        <a class="nav-link" routerLink="#">Help</a>
+        <a class="login-button" routerLink="/login">Logout</a>
+      </div>
     </div>
+    <div class="branding-bar">
+      <img
+        class="university-logo-large-img align-image-bottom"
+        alt="University of Nevada, Reno"
+        src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg"
+        width="65"
+        height="65"
+      />
+      <h1>University of Nevada, Reno</h1>
+      <p>Lost and Found Service</p>
+    </div>
+  </header>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2025 University of Nevada, Reno. Lost and Found Service.</p>
-    </footer>
-</body>
-</html>
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Sidebar Filters -->
+    <aside class="sidebar">
+      <h2>Sort & Filter</h2>
+
+      <div class="filter-section">
+        <label for="sort">Sort By:</label>
+        <select id="sort" (change)="onSortChange($event)">
+          <option value="oldest">Date Claimed: Oldest</option>
+          <option value="newest">Date Claimed: Newest</option>
+        </select>
+      </div>
+
+      <div class="filter-section">
+        <label for="filterType">Filter by Type:</label>
+        <select id="filterType" (change)="onFilterChange($event)">
+          <option value="all">All</option>
+          <option value="clothing">Clothing</option>
+          <option value="technology">Technology</option>
+          <option value="misc">Miscellaneous</option>
+        </select>
+      </div>
+
+      <div class="filter-section">
+        <label for="building">Lost and Found Location:</label>
+        <select id="building" [(ngModel)]="building" (change)="fetchItems()">
+          <option *ngFor="let b of buildings" [value]="b">{{ b }}</option>
+        </select>
+      </div>
+    </aside>
+
+    <!-- Products List -->
+    <section id="products">
+      <h2>Found Claimed Items in Building: {{ building }}</h2>
+      <div class="product-grid">
+        <div class="product" *ngFor="let item of items">
+          <h3><strong>Item type:</strong> <span>{{ item.type }}</span></h3>
+          <h3><strong>Location found:</strong> <span>{{ item.location }}</span></h3>
+          <h3><strong>Date found:</strong> <span>{{ item.dateFound }}</span></h3>
+          <h3><strong>Date claimed:</strong> <span>{{ item.dateClaimed }}</span></h3>
+          <h3><strong>Description:</strong> <span>{{ item.description }}</span></h3>
+        </div>
+      </div>
+      <p *ngIf="items.length === 0">No items found for the selected filter.</p>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 University of Nevada, Reno. Lost and Found Service.</p>
+  </footer>
+</div>

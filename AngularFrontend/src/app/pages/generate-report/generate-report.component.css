@@ -1,27 +1,30 @@
-/* Mary Cottier and Matthew Guild*/
-/* Styling */
+/*Mary Cottier and Matthew Guild*/ 
 * {
   box-sizing: border-box;
 }
 
 body {
-  font-family: Arial, sans-serif;
   margin: 0;
-  padding: 0;
+  font-family: Arial, sans-serif;
   background-color: #f3f4f6;
-  color: #000000;
+  color: #000;
+}
+
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 /* HEADER */
 header {
-  font-family: Arial, sans-serif;
-  width: 100%;
-  background-color: #002244;
+  background-color: #041E42;
   color: white;
+  width: 100%;
 }
 
 .top-bar {
-  background-color: #002244;
+  background-color: #041E42;
   padding: 0.5rem 1rem;
   display: flex;
   justify-content: flex-end;
@@ -34,213 +37,177 @@ header {
   gap: 1.5rem;
 }
 
-  .top-links .nav-link {
-    color: white;
-    text-transform: uppercase;
-    font-weight: bold;
-    text-decoration: none;
-    font-size: 0.85rem;
-    padding: 0.4rem 0.8rem;
-    border-radius: 4px;
-    transition: background-color 0.2s ease-in-out;
-  }
+.top-links .nav-link {
+  color: white;
+  text-transform: uppercase;
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  transition: background-color 0.2s ease-in-out;
+}
 
-    .top-links .nav-link:hover {
-      background-color: rgba(255, 255, 255, 0.15);
-    }
+.top-links .nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
 
-  .top-links .login-button {
-    background-color: #78be20;
-    color: black;
-    font-weight: bold;
-    padding: 0.4rem 1rem;
-    border-radius: 5px;
-    text-decoration: none;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    transition: background-color 0.2s ease;
-  }
+.top-links .login-button {
+  background-color: #78be20;
+  color: black;
+  font-weight: bold;
+  padding: 0.4rem 1rem;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  transition: background-color 0.2s ease;
+}
 
-    .top-links .login-button:hover {
-      background-color: #65a718;
-    }
+.top-links .login-button:hover {
+  background-color: #65a718;
+}
 
 .branding-bar {
-  background-color: #002244;
+  background-color: #041E42;
   text-align: center;
   padding: 1.5rem 1rem;
   color: white;
 }
 
-  .branding-bar img {
-    height: 60px;
-    margin-bottom: 0.5rem;
-  }
+.branding-bar img {
+  height: 60px;
+  margin-bottom: 0.5rem;
+}
 
-  .branding-bar h1 {
-    margin: 0;
-    font-size: 1.8rem;
-  }
+.branding-bar h1 {
+  margin: 0;
+  font-size: 1.8rem;
+}
 
-  .branding-bar p {
-    margin: 0;
-    font-size: 0.95rem;
-    color: #ccc;
-  }
+.branding-bar p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #ccc;
+}
 
-/* MAIN CONTENT */
+/* MAIN LAYOUT */
 .main-content {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: flex-start;
   gap: 20px;
   margin: 40px auto;
   max-width: 1200px;
   padding: 0 20px;
+  width: 100%;
 }
 
+/* Sidebar Filter */
 .sidebar {
-  flex: 0 0 220px;
-  position: sticky;
-  top: 0;
-  height: auto;
-  background-color: #ffffff;
+  flex: 0 0 250px;
+  background-color: #fff;
   border-radius: 10px;
   padding: 20px;
+  margin-top: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-left: 0;
-  margin-right: 20px;
-  margin-top: 60px;
 }
 
-  .sidebar h2 {
-    font-size: 1.5rem;
-    margin-bottom: 15px;
-  }
-
-.filter-section {
+.sidebar h2 {
+  font-size: 1.25rem;
   margin-bottom: 20px;
 }
 
-  .filter-section label,
-  .filter-section select {
-    display: block;
-    width: 100%;
-    margin-bottom: 10px;
-  }
+.filter-section label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 6px;
+}
 
+.filter-section select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+/* Table Section */
 #products {
   flex: 1;
-  max-width: 900px;
-  margin: 60px auto 20px auto;
-}
-
-  #products h2 {
-    text-align: left;
-    margin-bottom: 20px;
-  }
-
-.product-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-}
-
-.product {
-  background-color: #ffffff;
+  background-color: #fff;
   border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  text-align: left;
-  transition: transform 0.3s ease;
-  width: 100%;
-  max-width: 400px;
+  margin-top: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
 }
 
-  .product:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
+#products h2 {
+  margin-top: 0;
+  color: #041E42;
+}
 
-/* Footer */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+thead th {
+  background-color: #e6e6e6;
+  padding: 12px;
+  text-align: left;
+  font-weight: bold;
+}
+
+tbody td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+/* No Logs Message */
+p[style*='color: red'] {
+  margin-top: 20px;
+}
+
+/* FOOTER */
 footer {
-  background-color: #002244;
+  background-color: #041E42;
   color: white;
   text-align: center;
   padding: 1.5rem 1rem;
   font-size: 0.9em;
-  font-family: Arial, sans-serif;
+  margin-top: auto;
   background-image: url("/assets/site-footer-bg.jpg");
   background-size: cover;
   background-position: center;
-  position: relative;
-  bottom: 0;
-  width: 100%;
 }
 
-/* Add Item Button */
-.add-item-button-wrapper {
-  display: flex;
-  justify-content: flex-end;
-  margin: 20px 0;
-}
-
-.add-item-button {
-  background-color: #78be20;
-  color: white;
-  font-weight: bold;
-  text-transform: uppercase;
-  padding: 0.5rem 1.2rem;
-  border-radius: 5px;
-  border: none;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-  .add-item-button:hover {
-    background-color: #65a718;
-    transform: translateY(-2px);
-  }
-
-  .add-item-button:focus {
-    outline: none;
-  }
-
-/* Responsive */
+/* Responsive Adjustments */
 @media (max-width: 1024px) {
+  .main-content {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .sidebar,
+  #products {
+    width: 100%;
+    margin: 0;
+  }
+
   .top-links {
     flex-wrap: wrap;
-    gap: 1rem;
-  }
-
-  .branding-bar img {
-    height: 48px;
+    justify-content: center;
+    gap: 0.75rem;
   }
 
   .branding-bar h1 {
     font-size: 1.5rem;
   }
 
-  .main-content {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .sidebar {
-    margin-left: 0;
-    margin-right: 0;
-    margin-top: 20px;
-    width: 100%;
-  }
-
-  #products {
-    margin-left: 0;
-    width: 100%;
-  }
-
-  .product-grid {
-    justify-content: center;
+  .branding-bar img {
+    height: 50px;
   }
 }

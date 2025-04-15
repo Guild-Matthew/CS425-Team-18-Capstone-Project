@@ -1,61 +1,75 @@
-<!--Guilherme Cassiano-->
+<!--Guilherme Cassiano, Matthew Guild-->
 <div class="remove-items">
-  <header>
-    <div class="container">
-      <h1>Remove Items</h1>
-      <nav>
-        <ul>
-          <li><a routerLink="/dashboard">Dashboard</a></li>
-          <li><a routerLink="/map">Map</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
-
-  <div class="main-content">
-    <aside class="sidebar">
-      <h2>Sort & Filter</h2>
-      <div class="filter-section">
-        <label for="sort">Sort By:</label>
-        <select id="sort" (change)="onSortChange($event)">
-          <option value="newest">Date Found: Most Recent</option>
-          <option value="oldest">Date Found: Oldest</option>
-        </select>
-      </div>
-
-      <div class="filter-section">
-        <label for="filterType">Filter by Type:</label>
-        <select id="filterType" (change)="onFilterChange($event)">
-          <option value="all">All</option>
-          <option value="clothing">Clothing</option>
-          <option value="technology">Electronics</option>
-          <option value="misc">Miscellaneous</option>
-        </select>
-      </div>
-
-      <div class="filter-section">
-        <label for="building">Lost and Found Location:</label>
-        <select id="building" [(ngModel)]="building" (change)="fetchItems()">
-          <option *ngFor="let b of buildings" [value]="b">{{ b }}</option>
-        </select>
-      </div>
-    </aside>
-
-    <section id="products">
-      <h2>Found Items in Building: {{ building }}</h2>
-      <div class="product-grid">
-        <div *ngFor="let item of items" class="product">
-          <h3><strong>Item type:</strong> {{ item.type }}</h3>
-          <h3><strong>Location found:</strong> {{ item.location }}</h3>
-          <h3><strong>Date found:</strong> {{ item.dateFound }}</h3>
-          <h3><strong>Description:</strong> {{ item.description }}</h3>
-          <button (click)="removeItem(item)" class="delete-btn">Delete</button>
+  <div class="page-wrapper">
+    <!-- HEADER -->
+    <header class="header">
+      <div class="top-bar">
+        <div class="top-links">
+          <a class="nav-link" routerLink="/map">Map</a>
+          <a class="nav-link" routerLink="/dashboard">Dashboard</a>
+          <a class="nav-link" routerLink="/lost-and-found">Lost & Found</a>
+          <a class="login-button" routerLink="/login">Logout</a>
         </div>
       </div>
-    </section>
-  </div>
 
-  <footer>
-    <p>&copy; 2025 University of Nevada, Reno. Lost and Found Service.</p>
-  </footer>
+      <div class="branding-bar">
+        <img
+          src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg"
+          alt="University of Nevada, Reno"
+        />
+        <h1>University of Nevada, Reno</h1>
+        <p>Inspiring Excellence Since 1874</p>
+      </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+      <aside class="sidebar">
+        <h2>Sort & Filter</h2>
+
+        <div class="filter-section">
+          <label for="sort">Sort By:</label>
+          <select id="sort" (change)="onSortChange($event)">
+            <option value="newest">Date Found: Most Recent</option>
+            <option value="oldest">Date Found: Oldest</option>
+          </select>
+        </div>
+
+        <div class="filter-section">
+          <label for="filterType">Filter by Type:</label>
+          <select id="filterType" (change)="onFilterChange($event)">
+            <option value="all">All</option>
+            <option value="clothing">Clothing</option>
+            <option value="technology">Electronics</option>
+            <option value="misc">Miscellaneous</option>
+          </select>
+        </div>
+
+        <div class="filter-section">
+          <label for="building">Lost and Found Location:</label>
+          <select id="building" [(ngModel)]="building" (change)="fetchItems()">
+            <option *ngFor="let b of buildings" [value]="b">{{ b }}</option>
+          </select>
+        </div>
+      </aside>
+
+      <section id="products">
+        <h2>Found Items in Building: {{ building }}</h2>
+        <div class="product-grid">
+          <div *ngFor="let item of items" class="product">
+            <h3><strong>Item type:</strong> {{ item.type }}</h3>
+            <h3><strong>Location found:</strong> {{ item.location }}</h3>
+            <h3><strong>Date found:</strong> {{ item.dateFound }}</h3>
+            <h3><strong>Description:</strong> {{ item.description }}</h3>
+            <button (click)="removeItem(item)" class="delete-btn">Delete</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+      <p>&copy; 2025 University of Nevada, Reno. Lost and Found Service.</p>
+    </footer>
+  </div>
 </div>

@@ -1,149 +1,202 @@
- /* Mary Cottier */
-:host {
-    display: block;
+/* Reset and Layout */
+* {
     box-sizing: border-box;
+  }
+  
+  body {
+    margin: 0;
     font-family: Arial, sans-serif;
     background-color: #f3f4f6;
     color: #000000;
-    margin: 0;
-    padding: 0;
-}
-
-/* Container */
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
+  }
+  
+  .page-wrapper {
     display: flex;
-}
-
-/* Header */
-header {
-    background-color: #041E42;
-    color: #ffffff;
-    padding: 20px 0;
-    margin-bottom: 20px;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  /* Header */
+  header {
     width: 100%;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.header-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
+    background-color: #041E42;
+    color: white;
+  }
+  
+  .top-bar {
+    background-color: #041E42;
+    padding: 0.5rem 1rem;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  
+  .top-links {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-}
-
-.logo-group {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-header h1 {
-    font-size: 2.5rem;
-    margin: 0;
-}
-
-nav ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    gap: 25px;
-}
-
-nav ul li a {
-    color: #ffffff;
+    gap: 1.5rem;
+  }
+  
+  .top-links .nav-link {
+    color: white;
+    text-transform: uppercase;
+    font-weight: bold;
     text-decoration: none;
-    font-size: 1.2rem;
-    transition: color 0.3s ease;
-}
-
-nav ul li a:hover {
-    color: #f3f4f6;
-}
-
-/* Main Content Layout */
-.main-content {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  .top-links .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+  
+  .top-links .login-button {
+    background-color: #78be20;
+    color: black;
+    font-weight: bold;
+    padding: 0.4rem 1rem;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    transition: background-color 0.2s ease;
+  }
+  
+  .top-links .login-button:hover {
+    background-color: #65a718;
+  }
+  
+  .branding-bar {
+    background-color: #041E42;
+    text-align: center;
+    padding: 1.5rem 1rem;
+    color: white;
+  }
+  
+  .branding-bar img {
+    height: 60px;
+    margin-bottom: 0.5rem;
+  }
+  
+  .branding-bar h1 {
+    margin: 0;
+    font-size: 1.8rem;
+  }
+  
+  .branding-bar p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #ccc;
+  }
+  
+  /* Main Layout */
+  .main-content {
     display: flex;
     align-items: flex-start;
-    gap: 20px;
-}
-
-/* Sidebar */
-.sidebar {
+    justify-content: center;
+    padding: 40px 20px;
+    gap: 60px;
+    flex-wrap: wrap;
+  }
+  
+  /* Sidebar (Sort & Filter) */
+  .sidebar {
     flex: 0 0 250px;
-    position: sticky;
-    top: 0;
-    height: auto;
     background-color: #ffffff;
     border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-right: 100px;
-    margin-left: 200px;
-    margin-top: 60px;
-}
-
-.sidebar h2 {
-    font-size: 1.5rem;
+    padding: 25px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .sidebar h2 {
+    font-size: 1.2rem;
     margin-bottom: 15px;
-}
-
-.filter-section {
+    color: #041E42;
+  }
+  
+  .filter-section {
     margin-bottom: 20px;
-}
-
-.filter-section label,
-.filter-section select {
+  }
+  
+  .filter-section label {
     display: block;
+    font-weight: bold;
+    margin-bottom: 6px;
+  }
+  
+  .filter-section select {
     width: 100%;
-    margin-bottom: 10px;
-}
-
-/* Product Display */
-#products {
-    margin-bottom: 20px;
-    margin-left: 200px;
-}
-
-#products h2 {
+    padding: 8px;
+    font-size: 0.95rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  
+  /* Products / Claimed Items Display */
+  #products {
+    flex: 1;
+    max-width: 800px;
+  }
+  
+  #products h2 {
     text-align: left;
+    font-size: 1.3rem;
     margin-bottom: 20px;
-}
-
-.product h3 span {
-    font-weight: normal;
-}
-
-.product {
+    color: #041E42;
+  }
+  
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+  }
+  
+  .product {
     background-color: #ffffff;
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 20px;
     text-align: left;
     transition: transform 0.3s ease;
-}
-
-.product:hover {
+  }
+  
+  .product:hover {
     transform: translateY(-5px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.product-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-}
-
-/* Footer */
-footer {
+  }
+  
+  /* Footer */
+  footer {
     background-color: #041E42;
     color: white;
     text-align: center;
-    padding: 10px 0;
+    padding: 1.2rem 1rem;
     font-size: 0.9em;
-}
+    margin-top: auto;
+    background-image: url('/assets/site-footer-bg.jpg');
+    background-size: cover;
+    background-position: center;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .main-content {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  
+    .sidebar {
+      width: 100%;
+    }
+  
+    #products {
+      width: 100%;
+    }
+  
+    #products h2 {
+      text-align: center;
+    }
+  }
+  

@@ -1,149 +1,175 @@
-/* Mary Cottier */
+/* Mary Cottier, Natthew Guild */
 :host {
   display: block;
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
   background-color: #f3f4f6;
-  color: #000000;
-  margin: 0;
-  padding: 0;
+  color: #000;
+  font-family: Arial, sans-serif;
 }
 
-/* Container */
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
+.page-wrapper {
   display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-/* Header */
+/* HEADER */
 header {
   background-color: #041E42;
-  color: #ffffff;
-  padding: 20px 0;
-  margin-bottom: 20px;
+  color: white;
   width: 100%;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.header-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
+.top-bar {
+  background-color: #041E42;
+  padding: 0.5rem 1rem;
   display: flex;
+  justify-content: flex-end;
   align-items: center;
-  justify-content: space-between;
 }
 
-.logo-group {
+.top-links {
   display: flex;
-  align-items: center;
-  gap: 15px;
+  gap: 1.5rem;
 }
 
-header h1 {
-  font-size: 2.5rem;
+.nav-link {
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.8rem;
+}
+
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.login-button {
+  background-color: #78be20;
+  color: black;
+  padding: 0.4rem 1rem;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.login-button:hover {
+  background-color: #65a718;
+}
+
+.branding-bar {
+  padding: 1.5rem;
+  text-align: center;
+  background-color: #041E42;
+}
+
+.branding-bar img {
+  height: 60px;
+  margin-bottom: 0.5rem;
+}
+
+.branding-bar h1 {
+  font-size: 1.8rem;
   margin: 0;
 }
 
-nav ul {
-  list-style-type: none;
-  padding: 0;
+.branding-bar p {
   margin: 0;
-  display: flex;
-  gap: 25px;
+  font-size: 0.95rem;
+  color: #ccc;
 }
 
-  nav ul li a {
-    color: #ffffff;
-    text-decoration: none;
-    font-size: 1.2rem;
-    transition: color 0.3s ease;
-  }
-
-    nav ul li a:hover {
-      color: #f3f4f6;
-    }
-
-/* Main Content Layout */
+/* MAIN CONTENT */
 .main-content {
   display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
   align-items: flex-start;
-  gap: 20px;
+  padding: 40px 40px;
+  gap: 40px;
 }
 
 /* Sidebar */
 .sidebar {
   flex: 0 0 250px;
-  position: sticky;
-  top: 0;
-  height: auto;
   background-color: #ffffff;
   border-radius: 10px;
   padding: 20px;
+  margin: 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-right: 100px;
-  margin-left: 200px;
-  margin-top: 60px;
 }
 
-  .sidebar h2 {
-    font-size: 1.5rem;
-    margin-bottom: 15px;
-  }
+.sidebar h2 {
+  margin-bottom: 15px;
+}
 
 .filter-section {
   margin-bottom: 20px;
 }
 
-  .filter-section label,
-  .filter-section select {
-    display: block;
-    width: 100%;
-    margin-bottom: 10px;
-  }
+.filter-section label,
+.filter-section select {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+}
 
-/* Product Display */
+/* Product Section */
 #products {
+  flex: 1;
+  max-width: 1000px;
+  padding-top: 10px;
+}
+
+#products h2 {
   margin-bottom: 20px;
-  margin-left: 200px;
 }
-
-  #products h2 {
-    text-align: left;
-    margin-bottom: 20px;
-  }
-
-.product h3 span {
-  font-weight: normal;
-}
-
-.product {
-  background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  text-align: left;
-  transition: transform 0.3s ease;
-}
-
-  .product:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
 
 .product-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-wrap: wrap;
   gap: 20px;
 }
 
-/* Footer */
+.product {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  width: 100%;
+  max-width: 350px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.product:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.delete-btn {
+  background-color: #b91c1c;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  background-color: #991b1b;
+}
+
+/* FOOTER */
 footer {
   background-color: #041E42;
   color: white;
   text-align: center;
-  padding: 10px 0;
+  padding: 1.5rem 1rem;
   font-size: 0.9em;
+  background-image: url("/assets/site-footer-bg.jpg");
+  background-size: cover;
+  background-position: center;
+  margin-top: auto;
 }
