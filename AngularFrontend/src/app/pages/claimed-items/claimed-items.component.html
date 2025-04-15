@@ -11,13 +11,11 @@
       </div>
     </div>
     <div class="branding-bar">
-      <img
-        class="university-logo-large-img align-image-bottom"
-        alt="University of Nevada, Reno"
-        src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg"
-        width="65"
-        height="65"
-      />
+      <img class="university-logo-large-img align-image-bottom"
+           alt="University of Nevada, Reno"
+           src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg"
+           width="65"
+           height="65" />
       <h1>University of Nevada, Reno</h1>
       <p>Lost and Found Service</p>
     </div>
@@ -53,6 +51,24 @@
           <option *ngFor="let b of buildings" [value]="b">{{ b }}</option>
         </select>
       </div>
+
+      <!-- Floor Filter -->
+      <div class="filter-section" *ngIf="floors.length > 0">
+        <label for="floor">Floor:</label>
+        <select id="floor" [(ngModel)]="selectedFloor" (change)="onFloorChange()">
+          <option value="">All Floors</option>
+          <option *ngFor="let f of floors" [value]="f">{{ f }}</option>
+        </select>
+      </div>
+
+      <!-- Room Filter -->
+      <div class="filter-section" *ngIf="rooms.length > 0">
+        <label for="room">Room:</label>
+        <select id="room" [(ngModel)]="selectedRoom" (change)="onRoomChange()">
+          <option value="">All Rooms</option>
+          <option *ngFor="let r of rooms" [value]="r">{{ r }}</option>
+        </select>
+      </div>
     </aside>
 
     <!-- Products List -->
@@ -65,6 +81,7 @@
           <h3><strong>Date found:</strong> <span>{{ item.dateFound }}</span></h3>
           <h3><strong>Date claimed:</strong> <span>{{ item.dateClaimed }}</span></h3>
           <h3><strong>Description:</strong> <span>{{ item.description }}</span></h3>
+          <h3 *ngIf="item.roomNumber"><strong>Room:</strong> <span>{{ item.roomNumber }}</span></h3>
         </div>
       </div>
       <p *ngIf="items.length === 0">No items found for the selected filter.</p>
