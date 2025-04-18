@@ -37,6 +37,14 @@
         <input type="date" id="date" [(ngModel)]="selectedDate" (change)="onDateChange()" />
       </div>
 
+      <div class="filter-section" *ngIf="role === 'admin' || role === 'superadmin'">
+        <label for="logType">Log Type:</label>
+        <select id="logType" [(ngModel)]="logType" (change)="onLogTypeChange()">
+          <option value="item">Item Logs</option>
+          <option value="account">Account Logs</option>
+        </select>
+      </div>
+
     </aside>
 
     <!-- Report Table -->
@@ -44,7 +52,7 @@
       <h2>Database Operations Log</h2>
       <div *ngIf="logs.length > 0; else noLogs">
         <div style="overflow-x: auto;">
-          <table style="width: 100%; border-collapse: collapse;">
+          <table *ngIf="logType === 'item'" style="width: 100%; border-collapse: collapse;">
             <thead>
               <tr>
                 <th>Action</th>
@@ -54,7 +62,7 @@
                 <th>Date Found</th>
                 <th>Performed By</th>
                 <th>Performed On</th>
-                <th>Item in Lost and Found On Building</th>
+                <th>Building</th>
               </tr>
             </thead>
             <tbody>
@@ -67,6 +75,25 @@
                 <td>{{ log.performedby }}</td>
                 <td>{{ log.dateperformed }}</td>
                 <td>{{ log.lflocation }}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table *ngIf="logType === 'account'" style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr>
+                <th>Action</th>
+                <th>NetID</th>
+                <th>Role</th>
+                <th>Date Performed</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let log of filteredLogs">
+                <td>{{ log.actiontype }}</td>
+                <td>{{ log.email }}</td>
+                <td>{{ log.role }}</td>
+                <td>{{ log.dateperformed }}</td>
               </tr>
             </tbody>
           </table>

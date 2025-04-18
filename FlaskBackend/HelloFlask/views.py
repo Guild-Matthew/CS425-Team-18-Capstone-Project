@@ -444,3 +444,22 @@ def RedirectDashboard():
     else:
         # Redirect to the login page if not logged in
         return redirect(url_for('account.login'))
+
+@main_bp.route('/AccountLogs', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def get_account_logs():
+    user_id = request.args.get('user_id')
+    role = request.args.get('role')
+    token = request.args.get('token')
+
+    # Verify token
+    uidauthtoken = db_queries.getTokenByUID(user_id)
+    uidauthtoken = uidauthtoken[0] if isinstance(uidauthtoken, list) and uidauthtoken else None
+    if uidauthtoken != token:
+        return jsonify({"error": "Unauthorized"}), 401
+
+    if role not in ['admin', 'superadmin']:
+        return jsonify({"error": "Access denied"}), 403
+
+    logs = db_queries.get_account_logs()
+    return jsonify(logs)

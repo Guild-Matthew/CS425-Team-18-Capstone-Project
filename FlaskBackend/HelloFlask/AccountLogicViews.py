@@ -162,8 +162,11 @@ def deactivate_user():
         print("ID", target_id)
         if not target_id:
             return jsonify({"error": "Missing target user ID"}), 400
-
-        db_queries.deactivateUser(target_id)
+        email_data = db_queries.getEmailFromUID(target_id)
+        invalidated_user_role = db_queries.getRoleFromUID(target_id)
+        email = email_data['email'] if isinstance(email_data, dict) and 'email' in email_data else 'unknown'
+        user_role = invalidated_user_role['role'] if isinstance(invalidated_user_role, dict) and 'role' in invalidated_user_role else 'unknown'
+        db_queries.deactivateUser(target_id, email, user_role)
         return jsonify({"message": "Account deactivated"}), 200
 
     user_id = request.args.get('user_id')
@@ -185,7 +188,6 @@ def deactivate_user():
     selected_buildings = buildings_param if buildings_param and buildings_param != ['all'] else all_buildings
 
     # Collect UID list from selected buildings
-    print("Selected buildings:", selected_buildings)
     uid_lists = []
     for b in selected_buildings:
         bid = db_queries.getBuildingID(b)

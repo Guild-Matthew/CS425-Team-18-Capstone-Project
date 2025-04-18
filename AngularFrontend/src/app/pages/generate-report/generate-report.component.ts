@@ -22,6 +22,7 @@ export class GenerateReportComponent implements OnInit {
   userId: string | null = null;
   role: string | null = null;
   selectedDate: string = '';  // Format: YYYY-MM-DD
+  logType: string = 'item';
 
   constructor(private http: HttpClient) { }
 
@@ -40,12 +41,14 @@ export class GenerateReportComponent implements OnInit {
     }
 
     const dateParam = this.selectedDate ? `&date=${this.selectedDate}` : '';
-    const url = `${flask_URL}/ItemOperationLogs?filterType=${this.filterType}&user_id=${this.userId}&role=${this.role}&token=${this.authToken}${dateParam}`;
+    const baseURL = this.logType === 'account' ? '/AccountLogs' : '/ItemOperationLogs';
+    const url = `${flask_URL}${baseURL}?filterType=${this.filterType}&user_id=${this.userId}&role=${this.role}&token=${this.authToken}${dateParam}`;
+
     console.log("Fetching logs from:", url);
 
     this.http.get<any[]>(url, { withCredentials: true }).subscribe({
       next: data => {
-        console.log("Logs received from server:", data);
+        console.log("Logs received:", data);
         this.logs = data || [];
         this.filterLogs();
       },
@@ -56,18 +59,27 @@ export class GenerateReportComponent implements OnInit {
   }
 
   filterLogs(): void {
-    console.log("Filtering logs with filterType:", this.filterType);
-    if (this.filterType === 'all') {
-      this.filteredLogs = this.logs;
+    console.log("Filtering logs. Type:", this.logType, "Filter:", this.filterType);
+    if (this.logType === 'item') {
+      if (this.filterType === 'all') {
+        this.filteredLogs = this.logs;
+      } else {
+        this.filteredLogs = this.logs.filter(log =>
+          log.actiontype?.toUpperCase() === this.filterType.toUpperCase()
+        );
+      }
     } else {
-      this.filteredLogs = this.logs.filter(log => log.actiontype.toUpperCase() === this.filterType.toUpperCase());
+      this.filteredLogs = this.logs; 
     }
-    console.log("Filtered logs:", this.filteredLogs);
   }
 
   onDateChange(): void {
     console.log("Selected date:", this.selectedDate);
     this.loadLogs(); 
+  }
+
+  onLogTypeChange(): void {
+    this.loadLogs();
   }
 }
 

@@ -150,12 +150,19 @@ class Queries:
         return self.cursor.fetchall()
 
     # Query to create an account (admin or user)
-    def createAccount(self, username, password, email, role): #*
+    def createAccount(self, username, password, email, role):
         query = """
             INSERT INTO users (username, password, email, role)
             VALUES (%s, %s, %s, %s)
         """
         self.cursor.execute(query, (username, password, email, role))
+    
+    # Log the VALIDATE action
+        log_query = """
+            INSERT INTO accountlogs (actiontype, email, role)
+            VALUES ('VALIDATE', %s, %s)
+        """
+        self.cursor.execute(log_query, (email, role,))
         self.conn.commit()
 
     def updateUserToken(self, uid, token):
@@ -239,13 +246,18 @@ class Queries:
         return [{"username": row[0], "email": row[1], "active": row[2], "role": row[3]} for row in rows] 
  
     # Query to deactivate an account 
-    def deactivateUser(self, uid):
-        query = """
-        UPDATE users
-        SET active = FALSE
-        WHERE uid = %s 
-        """
-        self.cursor.execute(query, (uid,))  
+    def deactivateUser(self, uid, email, role):
+        # First get username
+        self.cursor.execute("SELECT username FROM users WHERE uid = %s", (uid,))
+        result = self.cursor.fetchone()
+        username = result[0] if result else 'unknown'
+
+        self.cursor.execute("UPDATE users SET active = FALSE WHERE uid = %s", (uid,))
+    
+        self.cursor.execute("""
+        INSERT INTO accountlogs (actiontype, email, role)
+        VALUES ('INVALIDATE', %s, %s)
+        """, (email,role,))
         self.conn.commit()
 
     # Query to reactivate an account that already exists 
@@ -527,6 +539,40 @@ class Queries:
         result = self.cursor.fetchone()
         return result[0] if result else None
 
+    def get_account_logs(self):
+        query = """
+            SELECT actiontype, email, dateperformed, role
+            FROM accountlogs
+            ORDER BY dateperformed DESC
+        """
+        self.cursor.execute(query)
+        rows = self.cursor.fetchall()
+        columns = [desc[0] for desc in self.cursor.description]
+        return [dict(zip(columns, row)) for row in rows]
+
+    def getEmailFromUID(self, uid): # Only use username, remove email
+        self.cursor.execute("""
+        SELECT email
+        FROM users 
+        WHERE uid = %s
+        """, (uid,))
+        row = self.cursor.fetchone()
+        if row:
+            # Convert rows to a list of dictionaries
+            return {"email": row[0]}  
+        return None
+
+    def getRoleFromUID(self, uid):
+        self.cursor.execute("""
+        SELECT role
+        FROM users 
+        WHERE uid = %s
+        """, (uid,))
+        row = self.cursor.fetchone()
+        if row:
+            # Convert rows to a list of dictionaries
+            return {"role": row[0]}  
+        return None
 
 
 
