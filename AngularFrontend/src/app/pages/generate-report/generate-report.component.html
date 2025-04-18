@@ -31,6 +31,12 @@
           <option value="DELETE">Removed</option>
         </select>
       </div>
+
+      <div class="filter-section">
+        <label for="date">Select Date:</label>
+        <input type="date" id="date" [(ngModel)]="selectedDate" (change)="onDateChange()" />
+      </div>
+
     </aside>
 
     <!-- Report Table -->

@@ -21,20 +21,26 @@ export class GenerateReportComponent implements OnInit {
   building: string = '';
   userId: string | null = null;
   role: string | null = null;
+  selectedDate: string = '';  // Format: YYYY-MM-DD
 
   constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
+    this.loadLogs();
+  }
+
+  loadLogs(): void {
     this.userId = localStorage.getItem('user_id');
     this.role = localStorage.getItem('role');
     this.authToken = localStorage.getItem('authtoken');
 
     if (!this.userId || !this.authToken || !this.role) {
-      console.error("Missing authentication data in localStorage.");
+      console.error("Missing authentication data.");
       return;
     }
 
-    const url = `${flask_URL}/ItemOperationLogs?filterType=${this.filterType}&user_id=${this.userId}&role=${this.role}&token=${this.authToken}`;
+    const dateParam = this.selectedDate ? `&date=${this.selectedDate}` : '';
+    const url = `${flask_URL}/ItemOperationLogs?filterType=${this.filterType}&user_id=${this.userId}&role=${this.role}&token=${this.authToken}${dateParam}`;
     console.log("Fetching logs from:", url);
 
     this.http.get<any[]>(url, { withCredentials: true }).subscribe({
@@ -51,13 +57,17 @@ export class GenerateReportComponent implements OnInit {
 
   filterLogs(): void {
     console.log("Filtering logs with filterType:", this.filterType);
-    if (this.filterType.toUpperCase() === 'ALL') {
+    if (this.filterType === 'all') {
       this.filteredLogs = this.logs;
     } else {
-      this.filteredLogs = this.logs.filter(log =>
-        log.actiontype?.toUpperCase() === this.filterType.toUpperCase()
-      );
+      this.filteredLogs = this.logs.filter(log => log.actiontype.toUpperCase() === this.filterType.toUpperCase());
     }
     console.log("Filtered logs:", this.filteredLogs);
   }
+
+  onDateChange(): void {
+    console.log("Selected date:", this.selectedDate);
+    this.loadLogs(); 
+  }
 }
+

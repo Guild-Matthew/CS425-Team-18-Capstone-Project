@@ -449,33 +449,44 @@ class Queries:
         rows = self.cursor.fetchall()
         return [{'buildingcode': row[0], 'latitude': row[1], 'longitude':row[2]} for row in rows]
 
-    def get_operation_logs_by_buildings(self, buildings):
+    def get_operation_logs_by_buildings(self, buildings, date_str=None):
         if not buildings:
             return []
         placeholders = ', '.join(['%s'] * len(buildings))
         query = f"""
             SELECT * FROM operationslogitems
             WHERE lflocation IN ({placeholders})
-            ORDER BY dateperformed DESC
         """
-        self.cursor.execute(query, buildings)
+        params = buildings
+        if date_str:
+            query += " AND DATE(dateperformed) = %s"
+            params += [date_str]
+        query += " ORDER BY dateperformed DESC"
+
+        self.cursor.execute(query, params)
         rows = self.cursor.fetchall()
         columns = [desc[0] for desc in self.cursor.description]
         return [dict(zip(columns, row)) for row in rows]
 
-    def get_operation_logs_by_type_and_buildings(self, action_type, buildings):
+    def get_operation_logs_by_type_and_buildings(self, action_type, buildings, date_str=None):
         if not buildings:
             return []
         placeholders = ', '.join(['%s'] * len(buildings))
         query = f"""
             SELECT * FROM operationslogitems
             WHERE actiontype = %s AND lflocation IN ({placeholders})
-            ORDER BY dateperformed DESC
         """
-        self.cursor.execute(query, [action_type] + buildings)
-        return self.cursor.fetchall()
+        params = [action_type] + buildings
+        if date_str:
+            query += " AND DATE(dateperformed) = %s"
+            params += [date_str]
+        query += " ORDER BY dateperformed DESC"
+
+        self.cursor.execute(query, params)
+        rows = self.cursor.fetchall()
         columns = [desc[0] for desc in self.cursor.description]
         return [dict(zip(columns, row)) for row in rows]
+
 
     def get_fid(self, bid, floornumber):
         query = """

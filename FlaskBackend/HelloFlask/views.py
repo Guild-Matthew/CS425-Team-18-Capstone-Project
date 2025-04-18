@@ -36,14 +36,11 @@ def get_operation_logs():
         return jsonify({"error": "Unauthorized role"}), 403
 
     # Fetch logs by building permission and action type
+    date_str = request.args.get('date') 
     if filter_type and filter_type.upper() in ['INSERT', 'DELETE']:
-        print("Calling TYPE + BUILDING query")
-        print("Filter type from request:", filter_type)
-        logs = db_queries.get_operation_logs_by_type_and_buildings(filter_type.upper(), permitted_buildings)
+        logs = db_queries.get_operation_logs_by_type_and_buildings(filter_type.upper(), permitted_buildings, date_str)
     else:
-        print("Calling ALL logs by buildings")
-        logs = db_queries.get_operation_logs_by_buildings(permitted_buildings)
-    print("Returned logs:", logs)
+        logs = db_queries.get_operation_logs_by_buildings(permitted_buildings, date_str)
     return jsonify(logs)
 
 @main_bp.route('/', methods=['GET'])
