@@ -2,9 +2,10 @@
   <div class="top-bar">
     <div class="top-links">
 
+      <a *ngIf="currentpage !== '/map'" class="nav-link" routerLink="/map">Map</a>
+      <a *ngIf="currentpage !== '/lost-and-found'" class="nav-link" routerLink="/lost-and-found">LOST & FOUND</a>
       <div *ngIf="isLoggedIn">
-        <a class="nav-link" routerLink="/dashboard">DASHBOARD</a>
-        <a class="nav-link" routerLink="/lost-and-found">LOST & FOUND</a>
+        <a *ngIf="currentpage !== '/dashboard'" class="nav-link" routerLink="/dashboard">DASHBOARD</a>
         <a class="login-button" routerLink="/logout">LOGOUT</a>
       </div>
 

@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, NavigationEnd } from '@angular/router';
+import { Location } from '@angular/common';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-nav-bar',
@@ -12,11 +14,12 @@ import { Router, RouterLink } from '@angular/router';
 export class NavBarComponent implements OnInit {
   isLoggedIn: boolean = false;
   role: string | null = null;
-
-  constructor(private router: Router) { }
-
+  currentpage: string | null = null;
+  constructor(private location: Location, private router: Router) { }
   ngOnInit() {
+    this.currentpage = this.location.path()
     this.checkLoginStatus();
+    console.log(this.currentpage)
   }
 
   checkLoginStatus() {

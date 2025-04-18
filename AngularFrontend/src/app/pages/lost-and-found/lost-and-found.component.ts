@@ -7,6 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { flask_URL } from '../../app.config';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { NavBarComponent } from '../../nav-bar/nav-bar.component';
 
 interface Item {
   id: number;
@@ -23,7 +24,7 @@ interface Item {
 @Component({
   selector: 'app-lost-and-found',
   standalone: true,
-  imports: [CommonModule, RouterLink, HttpClientModule, FormsModule],
+  imports: [CommonModule, RouterLink, HttpClientModule, FormsModule, NavBarComponent],
   templateUrl: './lost-and-found.component.html',
   styleUrls: ['./lost-and-found.component.css']
 })
