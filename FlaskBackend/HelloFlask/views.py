@@ -14,14 +14,36 @@ main_bp = Blueprint('main', __name__)
 @main_bp.route('/ItemOperationLogs', methods=['GET'])
 @cross_origin(supports_credentials=True)
 def get_operation_logs():
-    filter_type = request.args.get('filterType', None)  
+    user_id = request.args.get('user_id')
+    role = request.args.get('role')
+    token = request.args.get('token')
+    filter_type = request.args.get('filterType', None)
+    print("ROLE: ", role)
+    print("USERID: ", user_id)
+    # Verify token
+    uidauthtoken = db_queries.getTokenByUID(user_id)
+    uidauthtoken = uidauthtoken[0] if isinstance(uidauthtoken, list) and uidauthtoken else None
+    if uidauthtoken != token:
+        return jsonify({"error": "Unauthorized"}), 401
 
-    if filter_type and filter_type.upper() in ['INSERT', 'DELETE']:
-        logs = db_queries.get_operation_logs_by_type(filter_type.upper())
-        print(logs)
+    # Get buildings user has access to
+    if role == 'superadmin':
+        permitted_buildings = db_queries.getAllBuildings()
+    elif role in ['admin', 'student']:
+        permitted_buildings = db_queries.getBuildingsFromPermissions(user_id)
+        print("BUILDINGS: ", permitted_buildings)
     else:
-        logs = db_queries.get_operation_logs()
-        print(logs)
+        return jsonify({"error": "Unauthorized role"}), 403
+
+    # Fetch logs by building permission and action type
+    if filter_type and filter_type.upper() in ['INSERT', 'DELETE']:
+        print("Calling TYPE + BUILDING query")
+        print("Filter type from request:", filter_type)
+        logs = db_queries.get_operation_logs_by_type_and_buildings(filter_type.upper(), permitted_buildings)
+    else:
+        print("Calling ALL logs by buildings")
+        logs = db_queries.get_operation_logs_by_buildings(permitted_buildings)
+    print("Returned logs:", logs)
     return jsonify(logs)
 
 @main_bp.route('/', methods=['GET'])

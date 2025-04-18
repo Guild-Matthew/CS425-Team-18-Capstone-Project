@@ -30,10 +30,10 @@ class Queries:
         self.conn.commit()
 
         log_query = """
-            INSERT INTO operationslogitems (actiontype, itemtype, locationfound, description, datefound, performedby)
-            VALUES ('INSERT', %s, %s, %s, %s, %s)
+            INSERT INTO operationslogitems (actiontype, itemtype, locationfound, description, datefound, performedby, lflocation)
+            VALUES ('INSERT', %s, %s, %s, %s, %s, %s)
         """
-        self.cursor.execute(log_query, (itemType, LocationFound, itemDescription, dateFound, performed_by))
+        self.cursor.execute(log_query, (itemType, LocationFound, itemDescription, dateFound, performed_by, LFlocation))
         self.conn.commit()
 
     # Query to insert an item into the "Claimed items" table
@@ -449,26 +449,31 @@ class Queries:
         rows = self.cursor.fetchall()
         return [{'buildingcode': row[0], 'latitude': row[1], 'longitude':row[2]} for row in rows]
 
-    def get_operation_logs(self):
-        query = """
-            SELECT actiontype, itemtype, locationfound, description, datefound, performedby, dateperformed
-            FROM operationslogitems
+    def get_operation_logs_by_buildings(self, buildings):
+        if not buildings:
+            return []
+        placeholders = ', '.join(['%s'] * len(buildings))
+        query = f"""
+            SELECT * FROM operationslogitems
+            WHERE lflocation IN ({placeholders})
             ORDER BY dateperformed DESC
         """
-        self.cursor.execute(query)
+        self.cursor.execute(query, buildings)
         rows = self.cursor.fetchall()
         columns = [desc[0] for desc in self.cursor.description]
         return [dict(zip(columns, row)) for row in rows]
 
-    def get_operation_logs_by_type(self, action_type):
-        query = """
-            SELECT actiontype, itemtype, locationfound, description, datefound, performedby, dateperformed
-            FROM operationslogitems
-            WHERE actiontype = %s
+    def get_operation_logs_by_type_and_buildings(self, action_type, buildings):
+        if not buildings:
+            return []
+        placeholders = ', '.join(['%s'] * len(buildings))
+        query = f"""
+            SELECT * FROM operationslogitems
+            WHERE actiontype = %s AND lflocation IN ({placeholders})
             ORDER BY dateperformed DESC
         """
-        self.cursor.execute(query, (action_type,))
-        rows = self.cursor.fetchall()
+        self.cursor.execute(query, [action_type] + buildings)
+        return self.cursor.fetchall()
         columns = [desc[0] for desc in self.cursor.description]
         return [dict(zip(columns, row)) for row in rows]
 
