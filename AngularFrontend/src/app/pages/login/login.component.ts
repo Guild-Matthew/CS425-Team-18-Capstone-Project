@@ -37,15 +37,11 @@ export class LoginComponent {
 
   onSubmit() {
     const loginData = { NetId: this.netId, password: this.password };
-
     const headers = { 'Content-Type': 'application/json' };
-
-    // Shane Petree 1 line, updated flask URL in http request
+  
     this.http.post(flask_URL + '/login', loginData, { headers, withCredentials: true }).subscribe(
       (response: any) => {
-
         if (response.success) {
-
           localStorage.setItem('user_id', response.user_id);
           localStorage.setItem('role', response.role);
           localStorage.setItem('authtoken', response.authtoken);
@@ -53,12 +49,26 @@ export class LoginComponent {
             this.router.navigate(['/dashboard']);
           }
         } else {
-          console.error(" Login failed: No success flag in response.");
+          // Handle known failures with error message from Flask
+          if (response.error) {
+            alert(response.error);
+          } else {
+            alert('Login failed. Please try again.');
+          }
+          console.error("Login failed: No success flag in response.");
         }
       },
       (error) => {
-        console.error(" Login failed:", error);
+        // Backend sent 403 or 401, parse and alert user
+        if (error.status === 403 && error.error?.error) {
+          alert(error.error.error); // Account locked alert from Flask
+        } else if (error.status === 401 && error.error?.error) {
+          alert(error.error.error); // Invalid password warning from Flask
+        } else {
+          alert('Your account has been locked. Please contact your administrator or try again later.');
+        }
+        console.error("Login failed:", error);
       }
     );
-  }
+  }  
 }  

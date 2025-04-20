@@ -10,6 +10,11 @@ import json
 import uuid
 from collections import defaultdict
 from datetime import datetime
+from collections import defaultdict
+
+# Keeps track of failed login attempts per user
+failed_attempts = defaultdict(int)
+
 # Instance of Queries for database access
 db_queries = Queries()
 account_bp = Blueprint('account', __name__)
@@ -18,30 +23,49 @@ account_bp = Blueprint('account', __name__)
 @account_bp.route('/login', methods=['POST'])
 @cross_origin(supports_credentials=True) 
 def login():
-    data = request.get_json() # Get the JSON data from the request
+    data = request.get_json()
     username = data.get('NetId')
     password = data.get('password')
 
-    # Retrieve user data from the database
     user = db_queries.getUser(username)
-    
-    if user and user['active'] == True and check_password_hash(user['password'], password):
-        session['user_id'] = user['uid']
-        session['role'] = user['role']
-        session['username'] = user['username']
-        session.permanent = True 
-        session['last_activity'] = datetime.utcnow().isoformat()  
-        authtoken = str(uuid.uuid4())  
-        db_queries.updateUserToken(user['uid'], authtoken)
-        return jsonify({
-            'success': True,
-            'user_id': user['uid'],
-            'role': user['role'],
-            'username': user['username'],
-            'authtoken': authtoken
-        }), 200
-    else:
-        return jsonify({'success': False, 'error': "Invalid credentials"}), 401
+
+    # If user exists and is still active
+    if user:
+        # If they've failed 3+ times already, lock them out
+        if failed_attempts[username] >= 3:
+            if user['active']:  # only deactivate once
+                db_queries.deactivateUser(user['uid'], user['email'], user['role'])
+            return jsonify({'success': False, 'error': "Account has been locked due to multiple failed login attempts."}), 403
+
+        # Successful login
+        if user['active'] and check_password_hash(user['password'], password):
+            failed_attempts[username] = 0  # Reset counter on success
+
+            session['user_id'] = user['uid']
+            session['role'] = user['role']
+            session['username'] = user['username']
+            session.permanent = True 
+            session['last_activity'] = datetime.utcnow().isoformat()  
+            authtoken = str(uuid.uuid4())  
+            db_queries.updateUserToken(user['uid'], authtoken)
+
+            return jsonify({
+                'success': True,
+                'user_id': user['uid'],
+                'role': user['role'],
+                'username': user['username'],
+                'authtoken': authtoken
+            }), 200
+        else:
+            failed_attempts[username] += 1
+
+            # If this was the third failed attempt, deactivate
+            if failed_attempts[username] >= 3:
+                db_queries.deactivateUser(user['uid'], user['email'], user['role'])
+                return jsonify({'success': False, 'error': "Account has been locked due to multiple failed login attempts."}), 403
+
+    # Fallback case: unknown user or wrong credentials
+    return jsonify({'success': False, 'error': "Invalid credentials. Your account will be locked after 3 failed attempts."}), 401
 
 @account_bp.route('/logout')
 def logout():
