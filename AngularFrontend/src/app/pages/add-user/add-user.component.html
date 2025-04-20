@@ -35,11 +35,12 @@
           <input id="password" type="password" formControlName="password" placeholder="Enter Password" required />
 
           <label for="selectedRole">Role:</label>
+          <label for="selectedRole">Role:</label>
           <select id="selectedRole" formControlName="selectedRole" required>
             <option value="" disabled>Select a role</option>
-            <option value="admin">Admin</option>
+            <option *ngIf="role === 'superadmin'" value="admin">Admin</option>
             <option value="student">Student</option>
-          </select>
+          </select>          
 
           <div class="checkbox-group">
             <label>Building Permissions:</label>
