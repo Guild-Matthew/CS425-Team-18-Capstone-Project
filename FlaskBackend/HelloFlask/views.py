@@ -39,8 +39,10 @@ def get_operation_logs():
     date_str = request.args.get('date') 
     if filter_type and filter_type.upper() in ['INSERT', 'DELETE']:
         logs = db_queries.get_operation_logs_by_type_and_buildings(filter_type.upper(), permitted_buildings, date_str)
+        print("LOGS: ", logs)
     else:
         logs = db_queries.get_operation_logs_by_buildings(permitted_buildings, date_str)
+        print("LOGS: ", logs)
     return jsonify(logs)
 
 @main_bp.route('/', methods=['GET'])
@@ -208,7 +210,7 @@ def remove_items():
         rid = db_queries.getRoomID(lostAndFindLocation, floor, room) if room and floor else None
 
         db_queries.insert_Claimed_item(item_type, location_found, description, date_found, dateClaimed, lostAndFindLocation, fid, rid)
-        db_queries.deleteItem(item_type, location_found, description, date_found)
+        db_queries.deleteItem(item_type, location_found, description, date_found, lostAndFindLocation)
 
         return jsonify({"message": "Item removed successfully"}), 200
 

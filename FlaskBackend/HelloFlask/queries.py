@@ -271,7 +271,7 @@ class Queries:
         self.conn.commit()
 
     # Query to remove an item from the "items" table (removing an item from the L&F)
-    def deleteItem(self, itemType, LocationFound, itemDescription, dateFound, performed_by="system"):
+    def deleteItem(self, itemType, LocationFound, itemDescription, dateFound, LFlocation, performed_by="system"):
         delete_query = """
             DELETE FROM items
             WHERE itemType = %s AND LocationFound = %s AND itemDescription = %s AND dateFound = %s
@@ -280,11 +280,11 @@ class Queries:
         self.conn.commit()
 
         log_query = """
-            INSERT INTO operationslogitems (actiontype, itemtype, locationfound, description, datefound, performedby)
-            VALUES ('DELETE', %s, %s, %s, %s, %s)
+            INSERT INTO operationslogitems (actiontype, itemtype, locationfound, description, datefound, performedby, LFlocation)
+            VALUES ('DELETE', %s, %s, %s, %s, %s, %s)
             """
 
-        self.cursor.execute(log_query, (itemType, LocationFound, itemDescription, dateFound, performed_by))
+        self.cursor.execute(log_query, (itemType, LocationFound, itemDescription, dateFound, performed_by, LFlocation))
         self.conn.commit()
 
 
