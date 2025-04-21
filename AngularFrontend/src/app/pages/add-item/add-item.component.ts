@@ -103,9 +103,9 @@ export class AddItemComponent implements OnInit {
     const userId = localStorage.getItem('user_id');
     const role = localStorage.getItem('role');
     if (!this.item.location) return;
-
+  
     const url = `${flask_URL}/editFloor?token=${this.authToken}&user_id=${userId}&role=${role}&selected_building=${this.item.location}`;
-
+  
     this.http.get<any>(url, { withCredentials: true }).subscribe({
       next: data => {
         this.floors = data.floors || [];
@@ -118,14 +118,14 @@ export class AddItemComponent implements OnInit {
       }
     });
   }
-
+  
   fetchRooms(): void {
     const userId = localStorage.getItem('user_id');
     const role = localStorage.getItem('role');
     if (!this.item.location || !this.item.floor) return;
-
+  
     const url = `${flask_URL}/editFloor?token=${this.authToken}&user_id=${userId}&role=${role}&selected_building=${this.item.location}&selected_floor=${this.item.floor}`;
-
+  
     this.http.get<any>(url, { withCredentials: true }).subscribe({
       next: data => {
         this.rooms = data.rooms || [];
@@ -135,7 +135,7 @@ export class AddItemComponent implements OnInit {
         console.error('Error fetching rooms:', err);
       }
     });
-  }
+  }  
 
   onSubmit(): void {
     const userId = localStorage.getItem('user_id');

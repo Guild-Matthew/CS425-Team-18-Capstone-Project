@@ -38,7 +38,7 @@
         </div>
 
         <!-- Floor Filter -->
-        <div class="filter-section" *ngIf="floors.length > 0">
+        <div class="filter-section" *ngIf="selectedBuilding && floors.length > 0">
           <label for="floor">Floor:</label>
           <select id="floor" [(ngModel)]="selectedFloor" (change)="onFloorChange()">
             <option value="">All Floors</option>
@@ -47,7 +47,7 @@
         </div>
 
         <!-- Room Filter -->
-        <div class="filter-section" *ngIf="rooms.length > 0">
+        <div class="filter-section" *ngIf="selectedFloor && rooms.length > 0">
           <label for="room">Room:</label>
           <select id="room" [(ngModel)]="selectedRoom" (change)="onRoomChange()">
             <option value="">All Rooms</option>
@@ -55,12 +55,13 @@
           </select>
         </div>
 
+
       </aside>
 
       <!-- Products Section -->
       <section id="products">
         <h2>Items will be kept until December 29th, 2024</h2>
-        <h2>Found Items in Building: {{ selectedBuilding }}</h2>
+        <h2>Items located in Building: {{ selectedBuilding }}</h2>
 
         <!-- Add Item Button -->
         <div class="add-item-section" *ngIf="role === 'student' || role === 'admin' || role === 'superadmin'">
