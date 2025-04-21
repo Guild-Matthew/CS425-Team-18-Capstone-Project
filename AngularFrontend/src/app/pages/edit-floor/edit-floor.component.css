@@ -1,7 +1,42 @@
-/* Matthew Guild, Shane Petree */
+/* Matthew Guild, Shane Petree, Guilherme Cassiano */
 /* Styling */
 * {
   box-sizing: border-box;
+}
+
+/* MAIN CONTENT */
+.main-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 40px auto;
+  max-width: 900px;
+  padding: 0 20px;
+}
+
+.main-content-button {
+  background-color: #041E42;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+  .main-content-button:hover {
+    background-color: #041E42;
+  }
+
+.button-flex-group {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.invalid-input {
+  border: 1px solid red !important;
 }
 
 body {

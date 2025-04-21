@@ -18,7 +18,7 @@ export class AddBuildingComponent implements OnInit {
     BuildingCode: '',
     coordinates: ''
   };
-
+  role: string | null = null; 
   authToken: string | null = null;
 
   constructor(private http: HttpClient, private router: Router) { }

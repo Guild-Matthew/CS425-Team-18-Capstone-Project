@@ -13,13 +13,11 @@
       </div>
 
       <div class="branding-bar">
-        <img
-          class="university-logo-large-img align-image-bottom"
-          alt="University of Nevada, Reno"
-          src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg"
-          width="65"
-          height="65"
-        />
+        <img class="university-logo-large-img align-image-bottom"
+             alt="University of Nevada, Reno"
+             src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg"
+             width="65"
+             height="65" />
         <h1>University of Nevada, Reno</h1>
         <p>Inspiring Excellence Since 1874</p>
       </div>
@@ -28,7 +26,10 @@
     <!-- MAIN CONTENT -->
     <main class="main-content">
       <!-- Only show 'Add a Building' button if user is superadmin -->
-      <button *ngIf="role === 'superadmin'" class="main-content-button" [routerLink]="'/add-building'">Add a Building</button>
+      <div class="button-flex-group">
+        <button *ngIf="role === 'superadmin'" class="main-content-button" [routerLink]="'/add-building'">Add a Building</button>
+        <button class="main-content-button" [routerLink]="'/edit-floor'">Add a Room</button>
+      </div>
 
       <div class="form-card">
         <h2>Manage Floors in Building</h2>
@@ -36,14 +37,12 @@
         <!-- Building Selector -->
         <div>
           <label for="selectedBuilding">Select a Building:</label>
-          <select
-            id="selectedBuilding"
-            name="building"
-            [(ngModel)]="selectedBuilding"
-            (change)="fetchItems()"
-            required
-            title="Select Building"
-          >
+          <select id="selectedBuilding"
+                  name="building"
+                  [(ngModel)]="selectedBuilding"
+                  (change)="fetchItems()"
+                  required
+                  title="Select Building">
             <option value="" disabled selected>Select</option>
             <option *ngFor="let b of buildings" [value]="b">{{ b }}</option>
           </select>
@@ -53,17 +52,22 @@
         <form (ngSubmit)="addFloor()" #addFloorForm="ngForm">
           <div>
             <label for="floorNumber">Floor Number:</label>
-            <input
-              type="number"
-              id="floorNumber"
-              name="floorNumber"
-              [(ngModel)]="newFloorNumber"
-              required
-            />
+            <input type="number"
+                   id="floorNumber"
+                   name="floorNumber"
+                   [(ngModel)]="newFloorNumber"
+                   required
+                   min="1"
+                   pattern="^[1-9]\\d*$"
+                   #floorInput="ngModel"
+                   [ngClass]="{'invalid-input': floorInput.invalid && floorInput.touched}" />
+            <div *ngIf="floorInput.invalid && floorInput.touched" class="error-message">
+              Only positive whole numbers are allowed.
+            </div>
           </div>
 
           <div class="add-item-button-wrapper">
-            <button type="submit" class="add-item-button">Add Floor</button>
+            <button type="submit" class="add-item-button" [disabled]="addFloorForm.invalid">Add Floor</button>
           </div>
         </form>
       </div>
@@ -76,10 +80,10 @@
           <div *ngFor="let floor of floors" class="product">
             <h3><strong>Floor Number:</strong> <span>{{ floor }}</span></h3>
             <div class="button-group">
-            <button class="main-content-button"(click)="removeFloor(floor)">Remove Floor</button>
-            <button class="main-content-button" [routerLink]="'/edit-floor'">Add a Room</button>
+              <button class="main-content-button" (click)="removeFloor(floor)">Remove Floor</button>
+              <button class="main-content-button" [routerLink]="'/edit-floor'">Add a Room</button>
+            </div>
           </div>
-          </div>          
         </div>
 
         <ng-template #noFloors>
@@ -94,3 +98,4 @@
     </footer>
   </div>
 </div>
+

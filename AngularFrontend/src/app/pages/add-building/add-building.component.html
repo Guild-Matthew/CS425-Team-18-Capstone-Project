@@ -1,73 +1,76 @@
 <!--Guilherme Cassiano, Shane Petree, Matthew Guild-->
 <div class="add-building">
-    <div class="page-wrapper">
-      <!-- HEADER -->
-      <header class="header">
-        <div class="top-bar">
-          <div class="top-links">
-            <a class="nav-link" routerLink="/map">Map</a>
-            <a class="nav-link" routerLink="/dashboard">Dashboard</a>
-            <a class="nav-link" routerLink="/lost-and-found">Lost & Found</a>
-            <a class="login-button" routerLink="/logout">Logout</a>
-          </div>
+  <div class="page-wrapper">
+    <!-- HEADER -->
+    <header class="header">
+      <div class="top-bar">
+        <div class="top-links">
+          <a class="nav-link" routerLink="/map">Map</a>
+          <a class="nav-link" routerLink="/dashboard">Dashboard</a>
+          <a class="nav-link" routerLink="/lost-and-found">Lost & Found</a>
+          <a class="login-button" routerLink="/logout">Logout</a>
         </div>
-  
-        <div class="branding-bar">
-          <!-- External SVG logo with classes and fixed size -->
-          <img class="university-logo-large-img align-image-bottom"
-               alt="University of Nevada, Reno"
-               src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg"
-               width="65" height="65" />
-          <h1>University of Nevada, Reno</h1>
-          <p>Inspiring Excellence Since 1874</p>
-        </div>
-      </header>
-  
-      <!-- MAIN CONTENT -->
-      <main class="main-content">
-        <section id="add-form">
-          <h2>Add a New Building</h2>
-  
-          <form (ngSubmit)="onSubmit()" #buildingFormRef="ngForm">
-            <!-- Building Code -->
-            <div>
-              <label for="buildingCode">Building Code:</label>
-              <input
-                id="buildingCode"
-                name="BuildingCode"
-                [(ngModel)]="building.BuildingCode"
-                placeholder="Ex: DMSC, AB, MIKC"
-                required
-              />
-            </div>
-  
-            <!-- Coordinates -->
-            <div>
-              <label for="coordinates">Coordinates: To find the coordinates, right click the location on google maps</label>
-              <input
-                id="coordinates"
-                name="coordinates"
-                [(ngModel)]="building.coordinates"
-                placeholder="Ex: 39.539, -119.81455"
-                required
-              />
-            </div>
-  
-            
-  
-            <!-- Submit Button -->
-            <div class="add-item-button-wrapper">
-              <button type="submit" class="add-item-button">Submit</button>
-            </div>
-          </form>
-        </section>
-      </main>
-  
-      <!-- FOOTER -->
-      <footer>
-        <p>&copy; 2025 University of Nevada, Reno. Building Management Service.</p>
-      </footer>
+      </div>
+
+      <div class="branding-bar">
+        <!-- External SVG logo with classes and fixed size -->
+        <img class="university-logo-large-img align-image-bottom"
+             alt="University of Nevada, Reno"
+             src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg"
+             width="65" height="65" />
+        <h1>University of Nevada, Reno</h1>
+        <p>Inspiring Excellence Since 1874</p>
+      </div>
+    </header>
+
+    <div class="main-content">
+      <div class="button-flex-group">
+        <button class="main-content-button" [routerLink]="'/edit-floor'">Add a Room</button>
+        <button class="main-content-button" [routerLink]="'/add-floor'">Add a Floor</button>
+      </div>
     </div>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+      <section id="add-form">
+        <h2>Add a New Building</h2>
+
+        <form (ngSubmit)="onSubmit()" #buildingFormRef="ngForm">
+          <!-- Building Code -->
+          <div>
+            <label for="buildingCode">Building Code:</label>
+            <input id="buildingCode"
+                   name="BuildingCode"
+                   [(ngModel)]="building.BuildingCode"
+                   placeholder="Ex: DMSC, AB, MIKC"
+                   required />
+          </div>
+
+          <!-- Coordinates -->
+          <div>
+            <label for="coordinates">Coordinates: To find the coordinates, right click the location on google maps</label>
+            <input id="coordinates"
+                   name="coordinates"
+                   [(ngModel)]="building.coordinates"
+                   placeholder="Ex: 39.539, -119.81455"
+                   required />
+          </div>
+
+
+
+          <!-- Submit Button -->
+          <div class="add-item-button-wrapper">
+            <button type="submit" class="add-item-button">Submit</button>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+      <p>&copy; 2025 University of Nevada, Reno. Building Management Service.</p>
+    </footer>
+  </div>
   </div>
   
 

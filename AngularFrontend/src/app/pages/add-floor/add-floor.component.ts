@@ -21,12 +21,12 @@ export class AddFloorComponent implements OnInit {
   selectedBuilding: string = '';
   floors: string[] = [];
   newFloorNumber: number | null = null;
-  role: string | null = null;  // Add this line to store the user's role
+  role: string | null = null; 
 
   constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
-    this.checkLoginStatus();  // Check user role when the component initializes
+    this.checkLoginStatus();  
     this.route.queryParams.subscribe(params => {
       this.selectedBuilding = params['selected_building'] || '';
       this.fetchItems();
