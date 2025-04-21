@@ -41,11 +41,6 @@
         <span class="hero-buttons" *ngIf="role === 'admin' || role === 'superadmin'">
           <a routerLink="/deactivateuser" class="hero-button">Edit Access</a>
           <a routerLink="/add-floor" class="hero-button">Edit Buildings</a>
-          <a routerLink="/edit-floor" class="hero-button">Edit Floor</a>
-        </span>
-        <!-- Admin buttons-->
-        <span class="hero-buttons" *ngIf="role === 'superadmin'">
-        <a routerLink="/add-building" class="hero-button">Add Buildings</a>
       </span>
       </div>
     </div>

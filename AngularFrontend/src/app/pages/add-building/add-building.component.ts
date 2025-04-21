@@ -1,5 +1,4 @@
-// Guilherme Cassiano, Shane Petree, Matthew Guild
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -14,7 +13,7 @@ import { RouterLink } from '@angular/router';
   templateUrl: './add-building.component.html',
   styleUrls: ['./add-building.component.css']
 })
-export class AddBuildingComponent {
+export class AddBuildingComponent implements OnInit {
   building: any = {
     BuildingCode: '',
     coordinates: ''
@@ -23,6 +22,16 @@ export class AddBuildingComponent {
   authToken: string | null = null;
 
   constructor(private http: HttpClient, private router: Router) { }
+
+  ngOnInit(): void {
+    const role = localStorage.getItem('role');
+    
+    // Redirect non-superadmins to the dashboard or login page
+    if (role !== 'superadmin') {
+      console.error("Access denied. Redirecting to the dashboard.");
+      this.router.navigate(['/dashboard']);  // Or to another page as needed
+    }
+  }
 
   onSubmit(): void {
     const userId = localStorage.getItem('user_id');

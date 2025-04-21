@@ -1,91 +1,96 @@
 <!-- Implemented by Guilherme Domingues Cassiano, Matthew Guild, Shane Petree -->
 <div class="add-floor">
-    <div class="page-wrapper">
-      <!-- HEADER -->
-      <header class="header">
-        <div class="top-bar">
-          <div class="top-links">
-            <a class="nav-link" routerLink="/map">Map</a>
-            <a class="nav-link" routerLink="/dashboard">Dashboard</a>
-            <a class="nav-link" routerLink="/lost-and-found">Lost & Found</a>
-            <a class="login-button" routerLink="/logout">Logout</a>
-          </div>
+  <div class="page-wrapper">
+    <!-- HEADER -->
+    <header class="header">
+      <div class="top-bar">
+        <div class="top-links">
+          <a class="nav-link" routerLink="/map">Map</a>
+          <a class="nav-link" routerLink="/dashboard">Dashboard</a>
+          <a class="nav-link" routerLink="/lost-and-found">Lost & Found</a>
+          <a class="login-button" routerLink="/logout">Logout</a>
         </div>
-  
-        <div class="branding-bar">
-          <img
-            class="university-logo-large-img align-image-bottom"
-            alt="University of Nevada, Reno"
-            src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg"
-            width="65"
-            height="65"
-          />
-          <h1>University of Nevada, Reno</h1>
-          <p>Inspiring Excellence Since 1874</p>
+      </div>
+
+      <div class="branding-bar">
+        <img
+          class="university-logo-large-img align-image-bottom"
+          alt="University of Nevada, Reno"
+          src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg"
+          width="65"
+          height="65"
+        />
+        <h1>University of Nevada, Reno</h1>
+        <p>Inspiring Excellence Since 1874</p>
+      </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+      <!-- Only show 'Add a Building' button if user is superadmin -->
+      <button *ngIf="role === 'superadmin'" class="main-content-button" [routerLink]="'/add-building'">Add a Building</button>
+
+      <div class="form-card">
+        <h2>Manage Floors in Building</h2>
+
+        <!-- Building Selector -->
+        <div>
+          <label for="selectedBuilding">Select a Building:</label>
+          <select
+            id="selectedBuilding"
+            name="building"
+            [(ngModel)]="selectedBuilding"
+            (change)="fetchItems()"
+            required
+            title="Select Building"
+          >
+            <option value="" disabled selected>Select</option>
+            <option *ngFor="let b of buildings" [value]="b">{{ b }}</option>
+          </select>
         </div>
-      </header>
-  
-      <!-- MAIN CONTENT -->
-      <main class="main-content">
-        <div class="form-card">
-          <h2>Manage Floors in Building</h2>
-  
-          <!-- Building Selector -->
+
+        <!-- Add Floor Form -->
+        <form (ngSubmit)="addFloor()" #addFloorForm="ngForm">
           <div>
-            <label for="selectedBuilding">Select a Building:</label>
-            <select
-              id="selectedBuilding"
-              name="building"
-              [(ngModel)]="selectedBuilding"
-              (change)="fetchItems()"
+            <label for="floorNumber">Floor Number:</label>
+            <input
+              type="number"
+              id="floorNumber"
+              name="floorNumber"
+              [(ngModel)]="newFloorNumber"
               required
-              title="Select Building"
-            >
-              <option value="" disabled selected>Select</option>
-              <option *ngFor="let b of buildings" [value]="b">{{ b }}</option>
-            </select>
+            />
           </div>
-  
-          <!-- Add Floor Form -->
-          <form (ngSubmit)="addFloor()" #addFloorForm="ngForm">
-            <div>
-              <label for="floorNumber">Floor Number:</label>
-              <input
-                type="number"
-                id="floorNumber"
-                name="floorNumber"
-                [(ngModel)]="newFloorNumber"
-                required
-              />
-            </div>
-  
-            <div class="add-item-button-wrapper">
-              <button type="submit" class="add-item-button">Add Floor</button>
-            </div>
-          </form>
+
+          <div class="add-item-button-wrapper">
+            <button type="submit" class="add-item-button">Add Floor</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Floor List -->
+      <section id="products">
+        <h3>Floors in Building: {{ selectedBuilding }}</h3>
+
+        <div class="product-grid" *ngIf="floors && floors.length > 0; else noFloors">
+          <div *ngFor="let floor of floors" class="product">
+            <h3><strong>Floor Number:</strong> <span>{{ floor }}</span></h3>
+            <div class="button-group">
+            <button class="main-content-button"(click)="removeFloor(floor)">Remove Floor</button>
+            <button class="main-content-button" [routerLink]="'/edit-floor'">Add a Room</button>
+          </div>
+          </div>          
         </div>
-  
-        <!-- Floor List -->
-        <section id="products">
-          <h3>Floors in Building: {{ selectedBuilding }}</h3>
-  
-          <div class="product-grid" *ngIf="floors && floors.length > 0; else noFloors">
-            <div *ngFor="let floor of floors" class="product">
-              <h3><strong>Floor Number:</strong> <span>{{ floor }}</span></h3>
-              <button (click)="removeFloor(floor)">Remove Floor</button>
-            </div>
-          </div>
-  
-          <ng-template #noFloors>
-            <p>No floors found for the selected building.</p>
-          </ng-template>
-        </section>
-      </main>
-  
-      <!-- FOOTER -->
-      <footer>
-        <p>&copy; 2025 University of Nevada, Reno. Building Management Service.</p>
-      </footer>
-    </div>
+
+        <ng-template #noFloors>
+          <p>No floors found for the selected building.</p>
+        </ng-template>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+      <p>&copy; 2025 University of Nevada, Reno. Building Management Service.</p>
+    </footer>
   </div>
-  
+</div>

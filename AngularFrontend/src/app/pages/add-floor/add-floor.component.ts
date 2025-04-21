@@ -1,4 +1,3 @@
-//Matthew Guild, Guilherme Cassiano
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { flask_URL } from '../../app.config';
@@ -22,15 +21,28 @@ export class AddFloorComponent implements OnInit {
   selectedBuilding: string = '';
   floors: string[] = [];
   newFloorNumber: number | null = null;
+  role: string | null = null;  // Add this line to store the user's role
 
   constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
+    this.checkLoginStatus();  // Check user role when the component initializes
     this.route.queryParams.subscribe(params => {
       this.selectedBuilding = params['selected_building'] || '';
       this.fetchItems();
     });
     this.authToken = localStorage.getItem('authtoken');
+  }
+
+  // Method to check the user's role
+  checkLoginStatus() {
+    this.role = localStorage.getItem('role');
+    if (this.role !== 'student' && this.role !== 'admin' && this.role !== 'superadmin') {
+      console.error("User is not authorized. Redirecting to login.");
+      this.router.navigate(['/login']);
+    } else {
+      console.log(`User is logged in as: ${this.role}`);
+    }
   }
 
   fetchItems(): void {
