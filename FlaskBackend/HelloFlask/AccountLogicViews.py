@@ -214,7 +214,6 @@ def deactivate_user():
     else:
         return jsonify({"error": "Unauthorized role"}), 403
 
-    # Fix: handle 'all' or empty selection
     selected_buildings = buildings_param if buildings_param and buildings_param != ['all'] else all_buildings
 
     # Collect UID list from selected buildings
@@ -262,7 +261,6 @@ def deactivate_user():
         bid = db_queries.getBuildingID(b)
         uids = db_queries.getUsersFromPermissions(bid)
 
-        # Same logic: include both roles if superadmin
         role_filter = ['student', 'admin'] if role == 'superadmin' else 'student'
         usersActivate = db_queries.getUserVoidFiltered(uids, role_filter, 'false')
 
@@ -282,14 +280,95 @@ def deactivate_user():
 
     formatted_users_false = list(user_map_false.values())
     formatted_users = list(user_map.values())
-    print("Formatted users", formatted_users)
-    print("Formatted users false", formatted_users_false)
     return jsonify({
         "users": formatted_users,
         "usersActivate": formatted_users_false,
         "buildings": all_buildings,
         "selected_building": selected_buildings
     })
+
+@account_bp.route('/update_user_permissions', methods=['GET', 'POST'])
+@cross_origin(supports_credentials=True)
+def update_user_permissions():
+    if request.method == 'POST':
+        data = request.get_json()
+        user_id = data.get('user_id')
+        token = data.get('authtoken')
+        target_id = data.get('target_id') 
+        buildings = data.get('buildings', [])
+
+        uidauthtoken = db_queries.getTokenByUID(user_id)
+        if isinstance(uidauthtoken, list):
+            uidauthtoken = uidauthtoken[0]
+
+        if uidauthtoken != token:
+            return jsonify({"error": "Unauthorized"}), 401
+
+        db_queries.clearPermissionsForUser(target_id)
+
+        for building_name in buildings:
+            bid = db_queries.getBuildingID(building_name)
+            db_queries.createPermissions(bid, target_id)
+
+        return jsonify({"message": "Permissions updated successfully"}), 200
+
+    query_type = request.args.get('type')
+    role = request.args.get('role')
+    if query_type == 'users':
+        if role == 'superadmin':
+            all_uids = db_queries.getAllUserIDs()
+            print(f"All UIDs: {all_uids}")
+            user_list = []
+            for uid in all_uids:
+                username = db_queries.getUsernameByUID(uid)
+                email = db_queries.getEmailFromUID(uid)
+                print(f"UID: {uid} -> username: {username}, email: {email}")
+                user_list.append({
+                    "id": uid,
+                    "name": username,
+                    "email": email['email'] if email and 'email' in email else 'unknown'
+                })
+            return jsonify({"users": user_list})
+        elif role == 'admin':
+            all_uids = db_queries.getAllStudentIDs()
+            print(f"All UIDs: {all_uids}")
+            user_list = []
+            for uid in all_uids:
+                username = db_queries.getUsernameByUID(uid)
+                email = db_queries.getEmailFromUID(uid)
+                print(f"UID: {uid} -> username: {username}, email: {email}")
+                user_list.append({
+                    "id": uid,
+                    "name": username,
+                    "email": email['email'] if email and 'email' in email else 'unknown'
+                })
+            return jsonify({"users": user_list})
+
+
+    elif query_type == 'buildings':
+        user_id = request.args.get('user_id')
+        role = request.args.get('role')
+
+        if not user_id or not role:
+            return jsonify({"error": "Missing user_id or role"}), 400
+
+        if role == 'superadmin':
+            buildings = db_queries.getAllBuildings()
+        elif role == 'admin':
+            buildings = db_queries.getBuildingsFromPermissions(user_id)
+        else:
+            return jsonify({"error": "Unauthorized role"}), 403
+
+        return jsonify({"buildings": buildings})
+
+    elif query_type == 'permissions':
+        target_uid = request.args.get('uid')
+        if not target_uid:
+            return jsonify({"error": "Missing user ID"}), 400
+        building_codes = db_queries.getBuildingsFromPermissions(target_uid)
+        return jsonify({"buildings": building_codes})
+
+    return jsonify({"error": "Invalid query type"}), 400
 
 
 

@@ -1,7 +1,7 @@
-//Guilherme Cassiano, Mary Cottier 
+// Guilherme Cassiano, Mary Cottier
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { flask_URL } from '../../app.config';
@@ -20,7 +20,8 @@ export class DeactivateUserComponent implements OnInit {
   selectedBuildings: Set<string> = new Set();
   role: string = 'student';
   accountFilter: string = 'active';
-  constructor(private http: HttpClient) { }
+
+  constructor(private http: HttpClient, private router: Router) { }
 
   ngOnInit(): void {
     const userId = localStorage.getItem('user_id');
@@ -54,7 +55,7 @@ export class DeactivateUserComponent implements OnInit {
       this.selectedBuildings.delete(building);
     }
 
-    this.filterUsersByBuildings(); 
+    this.filterUsersByBuildings();
   }
 
   toggleSelectAll(event: any): void {
@@ -86,7 +87,7 @@ export class DeactivateUserComponent implements OnInit {
         const deactivatedUser = this.users.find(user => user.id === userId);
         if (deactivatedUser) {
           this.users = this.users.filter(user => user.id !== userId);
-          this.deactivatedUsers.push(deactivatedUser); 
+          this.deactivatedUsers.push(deactivatedUser);
         }
         alert(`User with ID ${userId} has been deactivated.`);
       },
@@ -104,6 +105,7 @@ export class DeactivateUserComponent implements OnInit {
       user.buildings.some((b: string) => this.selectedBuildings.has(b))
     );
   }
+
   get filteredDeactivatedUsers(): any[] {
     if (this.selectedBuildings.size === 0) {
       return this.deactivatedUsers;
@@ -165,4 +167,17 @@ export class DeactivateUserComponent implements OnInit {
     );
   }
 
+  navigateToEditPermissions(): void {
+    const userId = localStorage.getItem('user_id');
+    const role = localStorage.getItem('role');
+
+    console.log('Navigating to edit-permissions with:', { userId, role });
+
+    if (!userId || !role) {
+      alert('Missing user session info. Please log in again.');
+      return;
+    }
+
+    this.router.navigate(['/edit-permissions']);
+  }
 }

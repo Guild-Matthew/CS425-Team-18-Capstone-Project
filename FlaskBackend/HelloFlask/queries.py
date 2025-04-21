@@ -572,18 +572,6 @@ class Queries:
         columns = [desc[0] for desc in self.cursor.description]
         return [dict(zip(columns, row)) for row in rows]
 
-    def getEmailFromUID(self, uid): # Only use username, remove email
-        self.cursor.execute("""
-        SELECT email
-        FROM users 
-        WHERE uid = %s
-        """, (uid,))
-        row = self.cursor.fetchone()
-        if row:
-            # Convert rows to a list of dictionaries
-            return {"email": row[0]}  
-        return None
-
     def getRoleFromUID(self, uid):
         self.cursor.execute("""
         SELECT role
@@ -596,6 +584,43 @@ class Queries:
             return {"role": row[0]}  
         return None
 
+    def getAllUserIDs(self):
+        self.cursor.execute("SELECT uid FROM users WHERE active = 'TRUE'")
+        return [row[0] for row in self.cursor.fetchall()]
+
+    def getAllStudentIDs(self):
+        self.cursor.execute("SELECT uid FROM users WHERE role = 'student' AND active = 'TRUE'")
+        return [row[0] for row in self.cursor.fetchall()]
+
+    def getEmailFromUID(self, uid):
+        try:
+            uid = int(uid)
+            self.cursor.execute("SELECT email FROM users WHERE uid = %s", (uid,))
+            row = self.cursor.fetchone()
+            return {"email": row[0]} if row else None
+        except Exception as e:
+            print(f"Error in getEmailFromUID for uid={uid}: {e}")
+            return None
+
+    def getBuildingNameFromBID(self, bid):
+        self.cursor.execute("""
+            SELECT buildingcode FROM building WHERE bid = %s
+        """, (bid,))
+        row = self.cursor.fetchone()
+        return row[0] if row else None
+
+    def clearPermissionsForUser(self, uid):
+        self.cursor.execute("""
+            DELETE FROM permissions WHERE uid = %s
+        """, (uid,))
+        self.conn.commit()
+
+    def getUsernameByUID(self, uid):
+        self.cursor.execute("""
+            SELECT username FROM users WHERE uid = %s
+        """, (uid,))
+        result = self.cursor.fetchone()
+        return result[0] if result else 'unknown'
 
 
 if __name__ == "__main__":
