@@ -109,6 +109,11 @@ export class LostAndFoundComponent implements OnInit {
     this.fetchItems();
   }
 
+  onFloorChange(): void {
+    this.selectedRoom = '';
+    this.fetchItems();
+  }
+  
   onSortChange(event: Event): void {
     this.sortOrder = (event.target as HTMLSelectElement).value;
     this.applyFilters();
@@ -117,11 +122,6 @@ export class LostAndFoundComponent implements OnInit {
   onFilterChange(event: Event): void {
     this.filterType = (event.target as HTMLSelectElement).value;
     this.applyFilters();
-  }
-
-  onFloorChange(): void {
-    this.selectedRoom = '';
-    this.fetchItems();
   }
 
   onRoomChange(): void {
