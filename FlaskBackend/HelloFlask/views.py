@@ -463,5 +463,9 @@ def get_account_logs():
     if role not in ['admin', 'superadmin']:
         return jsonify({"error": "Access denied"}), 403
 
-    logs = db_queries.get_account_logs()
+    if role == 'admin':
+        logs = db_queries.get_account_logsADM()
+    if role == 'superadmin':
+        logs = db_queries.get_account_logs()
+
     return jsonify(logs)

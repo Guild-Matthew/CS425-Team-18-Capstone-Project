@@ -27,8 +27,11 @@
         <label for="actionType">Action Type:</label>
         <select id="actionType" [(ngModel)]="filterType" (change)="filterLogs()">
           <option value="all">All</option>
-          <option value="INSERT">Added</option>
-          <option value="DELETE">Removed</option>
+          <option *ngIf="logType === 'item'" value="INSERT">Added</option>
+          <option *ngIf="logType === 'item'" value="DELETE">Removed</option>
+          <option *ngIf="logType === 'account'" value="VALIDATE">Validated</option>
+          <option *ngIf="logType === 'account'" value="INVALIDATE">Invalidated</option>
+          <option *ngIf="logType === 'account'" value="REVALIDATE">Revalidated</option>
         </select>
       </div>
 
@@ -49,6 +52,7 @@
 
     <!-- Report Table -->
     <section id="products">
+      <button class="main-content-button" (click)="downloadCSV()">Download CSV</button>
       <h2>Database Operations Log</h2>
       <div *ngIf="logs.length > 0; else noLogs">
         <div style="overflow-x: auto;">

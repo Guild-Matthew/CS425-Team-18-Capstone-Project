@@ -3,6 +3,21 @@
   box-sizing: border-box;
 }
 
+.main-content-button {
+  background-color: #041E42;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  margin: 1rem 0;
+}
+
+  .main-content-button:hover {
+    background-color: #023267;
+  }
+
 body {
   margin: 0;
   font-family: Arial, sans-serif;

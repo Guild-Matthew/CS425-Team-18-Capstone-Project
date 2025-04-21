@@ -148,14 +148,6 @@ class Queries:
         query += f" ORDER BY i.dateClaimed {order}"
         self.cursor.execute(query, params)
         return self.cursor.fetchall()
-
-    # Query to create an account (admin or user)
-    def createAccount(self, username, password, email, role):
-        query = """
-            INSERT INTO users (username, password, email, role)
-            VALUES (%s, %s, %s, %s)
-        """
-        self.cursor.execute(query, (username, password, email, role))
     
     # Log the VALIDATE action
         log_query = """
@@ -258,13 +250,27 @@ class Queries:
         if not rows: 
             return "none"
         return [{"username": row[0], "email": row[1], "active": row[2], "role": row[3]} for row in rows] 
- 
+    
+    # Query to create an account (admin or user)
+    def createAccount(self, username, password, email, role):
+        query = """
+            INSERT INTO users (username, password, email, role)
+            VALUES (%s, %s, %s, %s)
+        """
+        self.cursor.execute(query, (username, password, email, role))
+
+        self.cursor.execute("""
+        INSERT INTO accountlogs (actiontype, email, role)
+        VALUES ('VALIDATE', %s, %s)
+        """, (email,role,))
+        self.conn.commit()
+
     # Query to deactivate an account 
     def deactivateUser(self, uid, email, role):
-        # First get username
         self.cursor.execute("SELECT username FROM users WHERE uid = %s", (uid,))
         result = self.cursor.fetchone()
         username = result[0] if result else 'unknown'
+
 
         self.cursor.execute("UPDATE users SET active = FALSE WHERE uid = %s", (uid,))
     
@@ -287,7 +293,7 @@ class Queries:
         # Log the VALIDATE action
         self.cursor.execute("""
             INSERT INTO accountlogs (actiontype, email, role)
-            VALUES ('VALIDATE', %s, %s)
+            VALUES ('REVALIDATE', %s, %s)
         """, (email, role))
 
         self.conn.commit()
@@ -565,6 +571,18 @@ class Queries:
         query = """
             SELECT actiontype, email, dateperformed, role
             FROM accountlogs
+            ORDER BY dateperformed DESC
+        """
+        self.cursor.execute(query)
+        rows = self.cursor.fetchall()
+        columns = [desc[0] for desc in self.cursor.description]
+        return [dict(zip(columns, row)) for row in rows]
+
+    def get_account_logsADM(self):
+        query = """
+            SELECT actiontype, email, dateperformed, role
+            FROM accountlogs
+            WHERE role = 'student'
             ORDER BY dateperformed DESC
         """
         self.cursor.execute(query)

@@ -60,17 +60,15 @@ export class GenerateReportComponent implements OnInit {
 
   filterLogs(): void {
     console.log("Filtering logs. Type:", this.logType, "Filter:", this.filterType);
-    if (this.logType === 'item') {
-      if (this.filterType === 'all') {
-        this.filteredLogs = this.logs;
-      } else {
-        this.filteredLogs = this.logs.filter(log =>
-          log.actiontype?.toUpperCase() === this.filterType.toUpperCase()
-        );
-      }
-    } else {
-      this.filteredLogs = this.logs; 
+
+    if (this.filterType === 'all') {
+      this.filteredLogs = this.logs;
+      return;
     }
+
+    this.filteredLogs = this.logs.filter(log =>
+      log.actiontype?.toUpperCase() === this.filterType.toUpperCase()
+    );
   }
 
   onDateChange(): void {
@@ -81,5 +79,50 @@ export class GenerateReportComponent implements OnInit {
   onLogTypeChange(): void {
     this.loadLogs();
   }
+
+  downloadCSV(): void {
+    const isItemLog = this.logType === 'item';
+    const logsToExport = this.filteredLogs;
+
+    const headers = isItemLog
+      ? ['Action', 'Type', 'Location', 'Description', 'Date Found', 'Performed By', 'Performed On', 'Building']
+      : ['Action', 'NetID', 'Role', 'Date Performed'];
+
+    const rows = logsToExport.map(log => {
+      return isItemLog
+        ? [
+          log.actiontype,
+          log.itemtype,
+          log.locationfound,
+          log.description,
+          log.datefound,
+          log.performedby,
+          log.dateperformed,
+          log.lflocation
+        ]
+        : [
+          log.actiontype,
+          log.email,
+          log.role,
+          log.dateperformed
+        ];
+    });
+
+    const csvContent =
+      [headers, ...rows]
+        .map(row => row.map(field => `"${(field ?? '').toString().replace(/"/g, '""')}"`).join(','))
+        .join('\r\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = isItemLog ? 'item_logs.csv' : 'account_logs.csv';
+    a.click();
+
+    URL.revokeObjectURL(url);
+  }
+
 }
 
