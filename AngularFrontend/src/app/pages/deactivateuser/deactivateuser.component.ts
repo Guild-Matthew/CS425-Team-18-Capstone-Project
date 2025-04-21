@@ -15,10 +15,11 @@ import { flask_URL } from '../../app.config';
 })
 export class DeactivateUserComponent implements OnInit {
   users: any[] = [];
+  deactivatedUsers: any[] = [];
   accessibleBuildings: string[] = [];
   selectedBuildings: Set<string> = new Set();
   role: string = 'student';
-
+  accountFilter: string = 'active';
   constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
@@ -33,6 +34,7 @@ export class DeactivateUserComponent implements OnInit {
     this.http.get<any>(`${flask_URL}/deactivate_user`, { params }).subscribe(
       response => {
         this.users = response.users;
+        this.deactivatedUsers = response.usersActivate || [];
         this.accessibleBuildings = response.buildings;
         this.selectedBuildings = new Set(response.buildings);
       },
@@ -81,7 +83,11 @@ export class DeactivateUserComponent implements OnInit {
 
     this.http.post(`${flask_URL}/deactivate_user`, body, { headers }).subscribe(
       () => {
-        this.users = this.users.filter(user => user.id !== userId);
+        const deactivatedUser = this.users.find(user => user.id === userId);
+        if (deactivatedUser) {
+          this.users = this.users.filter(user => user.id !== userId);
+          this.deactivatedUsers.push(deactivatedUser); 
+        }
         alert(`User with ID ${userId} has been deactivated.`);
       },
       error => {
@@ -95,6 +101,14 @@ export class DeactivateUserComponent implements OnInit {
       return this.users;
     }
     return this.users.filter(user =>
+      user.buildings.some((b: string) => this.selectedBuildings.has(b))
+    );
+  }
+  get filteredDeactivatedUsers(): any[] {
+    if (this.selectedBuildings.size === 0) {
+      return this.deactivatedUsers;
+    }
+    return this.deactivatedUsers.filter(user =>
       user.buildings.some((b: string) => this.selectedBuildings.has(b))
     );
   }
@@ -114,9 +128,39 @@ export class DeactivateUserComponent implements OnInit {
     this.http.get<any>(`${flask_URL}/deactivate_user`, { params }).subscribe(
       response => {
         this.users = response.users;
+        this.deactivatedUsers = response.deactivatedUsers || [];
       },
       error => {
         console.error('Error fetching filtered users:', error);
+      }
+    );
+  }
+
+  reactivateUser(userId: number): void {
+    const user_id = localStorage.getItem('user_id');
+    const role = localStorage.getItem('role');
+    const token = localStorage.getItem('authtoken');
+
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const body = {
+      user_id,
+      role,
+      authtoken: token,
+      target_id: userId,
+      reactivate: true
+    };
+
+    this.http.post(`${flask_URL}/deactivate_user`, body, { headers }).subscribe(
+      () => {
+        const reactivatedUser = this.deactivatedUsers.find(user => user.id === userId);
+        if (reactivatedUser) {
+          this.deactivatedUsers = this.deactivatedUsers.filter(user => user.id !== userId);
+          this.users.push(reactivatedUser);
+        }
+        alert(`User with ID ${userId} has been reactivated.`);
+      },
+      error => {
+        console.error('Error reactivating user:', error);
       }
     );
   }

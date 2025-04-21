@@ -209,23 +209,37 @@ class Queries:
         return [{"username": row[0], "email": row[1], "active": row[2], "role": row[3]} for row in rows] 
 
 
-    def getUserVoidFiltered(self, uid_list, role, active):  
-        if not uid_list: 
-            return "none"  
-    
-        placeholders = ', '.join(['%s'] * len(uid_list))  
-        query = f"""
-            SELECT uid, username, email, active, role
-            FROM users 
-            WHERE uid IN ({placeholders}) AND role = %s AND active = %s
-        """
-        self.cursor.execute(query, tuple(uid_list) + (role,) + (active,))  
+    def getUserVoidFiltered(self, uid_list, roles, active):  
+        if not uid_list:
+            return "none"
+
+        placeholders = ', '.join(['%s'] * len(uid_list))
+
+        if isinstance(roles, list):
+            role_placeholders = ', '.join(['%s'] * len(roles))
+            query = f"""
+                SELECT uid, username, email, active, role
+                FROM users 
+                WHERE uid IN ({placeholders}) AND role IN ({role_placeholders}) AND active = %s
+            """
+            self.cursor.execute(query, tuple(uid_list) + tuple(roles) + (active,))
+        else:
+            query = f"""
+                SELECT uid, username, email, active, role
+                FROM users 
+                WHERE uid IN ({placeholders}) AND role = %s AND active = %s
+            """
+            self.cursor.execute(query, tuple(uid_list) + (roles,) + (active,))
+
         rows = self.cursor.fetchall()
-    
+
         if not rows: 
             return "none"
-    
-        return [{"id": row[0], "username": row[1], "email": row[2], "active": row[3], "role": row[4]} for row in rows]
+
+        return [
+            {"id": row[0], "username": row[1], "email": row[2], "active": row[3], "role": row[4]}
+            for row in rows
+        ]
 
 
 
@@ -261,13 +275,21 @@ class Queries:
         self.conn.commit()
 
     # Query to reactivate an account that already exists 
-    def activateUser(self, email, username):
-        query = """
-        UPDATE users
-        SET active = TRUE
-        WHERE email = %s AND username = %s
-        """
-        self.cursor.execute(query, (email, username))  
+    def activateUser(self, uid, email, role):
+        # Get the username for logging (optional but consistent)
+        self.cursor.execute("SELECT username FROM users WHERE uid = %s", (uid,))
+        result = self.cursor.fetchone()
+        username = result[0] if result else 'unknown'
+
+        # Reactivate user
+        self.cursor.execute("UPDATE users SET active = TRUE WHERE uid = %s", (uid,))
+
+        # Log the VALIDATE action
+        self.cursor.execute("""
+            INSERT INTO accountlogs (actiontype, email, role)
+            VALUES ('VALIDATE', %s, %s)
+        """, (email, role))
+
         self.conn.commit()
 
     # Query to remove an item from the "items" table (removing an item from the L&F)

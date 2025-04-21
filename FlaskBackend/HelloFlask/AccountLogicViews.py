@@ -176,22 +176,28 @@ def deactivate_user():
         user_id = data.get('user_id')
         role = data.get('role')
         token = data.get('authtoken')
+        target_id = data.get('target_id')
+        reactivate = data.get('reactivate', False)
 
         uidauthtoken = db_queries.getTokenByUID(user_id)
         uidauthtoken = uidauthtoken[0] if isinstance(uidauthtoken, list) and uidauthtoken else None
         if uidauthtoken != token:
             return jsonify({"error": "Unauthorized"}), 401
 
-        target_id = data.get('target_id')
-        print("ID", target_id)
         if not target_id:
             return jsonify({"error": "Missing target user ID"}), 400
+
         email_data = db_queries.getEmailFromUID(target_id)
-        invalidated_user_role = db_queries.getRoleFromUID(target_id)
+        user_role_data = db_queries.getRoleFromUID(target_id)
         email = email_data['email'] if isinstance(email_data, dict) and 'email' in email_data else 'unknown'
-        user_role = invalidated_user_role['role'] if isinstance(invalidated_user_role, dict) and 'role' in invalidated_user_role else 'unknown'
-        db_queries.deactivateUser(target_id, email, user_role)
-        return jsonify({"message": "Account deactivated"}), 200
+        user_role = user_role_data['role'] if isinstance(user_role_data, dict) and 'role' in user_role_data else 'unknown'
+
+        if reactivate:
+            db_queries.activateUser(target_id, email, user_role)
+            return jsonify({"message": "Account reactivated"}), 200
+        else:
+            db_queries.deactivateUser(target_id, email, user_role)
+            return jsonify({"message": "Account deactivated"}), 200
 
     user_id = request.args.get('user_id')
     role = request.args.get('role')
@@ -219,32 +225,68 @@ def deactivate_user():
         uid_lists.extend(uids)
 
     uid_lists = list(set(uid_lists))  # Remove duplicates
-    users = db_queries.getUserVoidFiltered(uid_lists, 'student', 'true')
+    if role == 'superadmin':
+        users = db_queries.getUserVoidFiltered(uid_lists, ['student', 'admin'], 'true')
+        usersActivate = db_queries.getUserVoidFiltered(uid_lists, ['student', 'admin'], 'false')
+    else:
+        users = db_queries.getUserVoidFiltered(uid_lists, 'student', 'true')
+        usersActivate = db_queries.getUserVoidFiltered(uid_lists, 'student', 'false')
     formatted_users = []
+    formatted_users_false = []
     user_map = {}
+    user_map_false = {}
 
     for b in selected_buildings:
         bid = db_queries.getBuildingID(b)
         uids = db_queries.getUsersFromPermissions(bid)
-        users = db_queries.getUserVoidFiltered(uids, 'student', 'true')
     
+        # Use correct roles based on logged-in user's role
+        role_filter = ['student', 'admin'] if role == 'superadmin' else 'student'
+        users = db_queries.getUserVoidFiltered(uids, role_filter, 'true')
+
         if users != "none":
             for u in users:
                 uid = u.get('id', 0)
                 if uid not in user_map:
                     user_map[uid] = {
-                    "name": u['username'],
-                    "email": u['email'],
-                    "role": u['role'],
-                    "id": uid,
-                    "buildings": [b]
+                        "name": u['username'],
+                        "email": u['email'],
+                        "role": u['role'],
+                        "id": uid,
+                        "buildings": [b]
                     }
                 else:
                     user_map[uid]["buildings"].append(b)
+
+    for b in selected_buildings:
+        bid = db_queries.getBuildingID(b)
+        uids = db_queries.getUsersFromPermissions(bid)
+
+        # Same logic: include both roles if superadmin
+        role_filter = ['student', 'admin'] if role == 'superadmin' else 'student'
+        usersActivate = db_queries.getUserVoidFiltered(uids, role_filter, 'false')
+
+        if usersActivate != "none":
+            for u in usersActivate:
+                uid = u.get('id', 0)
+                if uid not in user_map_false:
+                    user_map_false[uid] = {
+                        "name": u['username'],
+                        "email": u['email'],
+                        "role": u['role'],
+                        "id": uid,
+                        "buildings": [b]
+                    }
+                else:
+                    user_map_false[uid]["buildings"].append(b)
+
+    formatted_users_false = list(user_map_false.values())
     formatted_users = list(user_map.values())
     print("Formatted users", formatted_users)
+    print("Formatted users false", formatted_users_false)
     return jsonify({
         "users": formatted_users,
+        "usersActivate": formatted_users_false,
         "buildings": all_buildings,
         "selected_building": selected_buildings
     })
