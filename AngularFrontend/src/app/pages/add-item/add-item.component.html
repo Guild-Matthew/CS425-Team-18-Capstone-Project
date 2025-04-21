@@ -39,8 +39,20 @@
             <option value="clothing">Clothing</option>
             <option value="technology">Technology</option>
             <option value="medical_health">Medical/Health</option>
+            <option value="bags">Bags, Backpacks, and Purses</option>
+            <option value="school">School Supplies</option>
+            <option value="sports_rec">Sports and Recreaction</option>
+            <option value="Keys_IDs">Keys, Cards, and ID's</option>
             <option value="miscellaneous">Miscellaneous</option>
           </select>
+          
+          <!-- Subcategory -->
+          <label for="subcategory">Subcategory:</label>
+          <select id="subcategory" name="subcategory" [(ngModel)]="item.subcategory" required>
+            <option value="" disabled selected>Select subcategory</option>
+            <option *ngFor="let sub of subcategories[item.itemType] || []" [value]="sub">{{ sub }}</option>
+          </select>
+          
 
           <!-- Description -->
           <label for="image">Item description:</label>
