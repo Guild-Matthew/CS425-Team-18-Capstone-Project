@@ -1,16 +1,13 @@
-<!--Shane Petree-->
+<!-- Shane Petree -->
 
 <div class="main-container" *ngIf="role === 'admin' || role === 'superadmin'">
   <app-nav-bar></app-nav-bar>
 
-  <!-- Align buttons like in Add Floor -->
   <main class="main-content">
-    <!-- Button section centered like in add-floor -->
-    <div class="main-content">
-      <div class="button-flex-group">
-        <button *ngIf="role === 'superadmin'" class="main-content-button" [routerLink]="'/add-building'">Add a Building</button>
-        <button class="main-content-button" [routerLink]="'/add-floor'">Add a Floor</button>
-      </div>
+    <!-- Button section -->
+    <div class="button-flex-group">
+      <button *ngIf="role === 'superadmin'" class="main-content-button" [routerLink]="'/add-building'">Add a Building</button>
+      <button class="main-content-button" [routerLink]="'/add-floor'">Add or Remove a Floor</button>
     </div>
 
     <section class="form-card edit-floor-form">
@@ -20,10 +17,7 @@
         <!-- Select building -->
         <mat-form-field>
           <mat-label>Select a Building</mat-label>
-          <mat-select formControlName="selected_building"
-                      [value]="selected_building"
-                      (selectionChange)="fetchFloors($event)"
-                      required>
+          <mat-select formControlName="selected_building" [value]="selected_building" (selectionChange)="fetchFloors($event)" required>
             <mat-option>None</mat-option>
             <mat-option *ngFor="let building of buildings" [value]="building">{{ building }}</mat-option>
           </mat-select>
@@ -33,36 +27,17 @@
         <!-- Select floor -->
         <mat-form-field>
           <mat-label>Select a Floor</mat-label>
-          <mat-select formControlName="selected_floor"
-                      [value]="selected_floor"
-                      (selectionChange)="fetchRooms($event)"
-                      required>
+          <mat-select formControlName="selected_floor" [value]="selected_floor" (selectionChange)="fetchRooms($event)" required>
             <mat-option>None</mat-option>
             <mat-option *ngFor="let floor of floors" [value]="floor">{{ floor }}</mat-option>
           </mat-select>
         </mat-form-field>
         <br />
 
-        <!-- Display current rooms -->
-        <mat-label>Current Rooms</mat-label>
-        <mat-list role="list">
-          <mat-list-item *ngIf="rooms[0] == ''">None</mat-list-item>
-          <div *ngIf="rooms[0] != ''">
-            <mat-list-item *ngFor="let room of rooms" role="listitem">{{ room }}</mat-list-item>
-          </div>
-        </mat-list>
-        <br />
-
-        <!-- Room number input with validation -->
+        <!-- Room input -->
         <mat-form-field>
           <mat-label>Room Number</mat-label>
-          <input matInput
-                 type="number"
-                 formControlName="selected_room"
-                 placeholder="Ex. 101"
-                 min="1"
-                 pattern="^[1-9]\\d*$"
-                 required
+          <input matInput type="number" formControlName="selected_room" placeholder="Ex. 101" min="1" pattern="^[1-9]\d*$" required
                  [ngClass]="{'invalid-input': editFloorForm.controls['selected_room'].invalid && editFloorForm.controls['selected_room'].touched}" />
           <mat-error *ngIf="editFloorForm.controls['selected_room'].hasError('pattern') || editFloorForm.controls['selected_room'].hasError('min')">
             Only positive whole numbers are allowed.
@@ -73,6 +48,20 @@
         <button type="submit" mat-flat-button [disabled]="editFloorForm.invalid">Add Room</button>
       </form>
     </section>
+
+    <!-- Display current rooms -->
+    <section id="products" *ngIf="rooms && rooms.length > 0 && rooms[0] !== ''">
+      <h3>Rooms in Floor: {{ selected_floor }}</h3>
+      <div class="product-grid">
+        <div *ngFor="let room of rooms" class="product">
+          <h3>Room: {{ room }}</h3>
+          <div class="button-group">
+            <button class="main-content-button" (click)="removeRoom(room)">Remove Room</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <footer class="footer">
