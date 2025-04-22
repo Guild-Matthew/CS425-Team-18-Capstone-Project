@@ -137,7 +137,7 @@ def Reportitems():
         lostAndFoundLocation = request.form.get('location')  
         floor_number = request.form.get('floor')
         room_number = request.form.get('room')
-
+        subcategory = request.form.get('subcategory')
         if not all([item_type, location_found, description, lostAndFoundLocation]):
             return jsonify({"error": "Missing fields"}), 400
 
@@ -147,10 +147,9 @@ def Reportitems():
 
         upload_folder = os.path.join(current_app.root_path, 'static', 'uploads')
         os.makedirs(upload_folder, exist_ok=True)
-
         db_queries.insert_item(
             item_type, location_found, description, date_found,
-            bid, fid, rid
+            bid, subcategory, fid, rid
         )
 
         return jsonify({"message": "Item added successfully"}), 200

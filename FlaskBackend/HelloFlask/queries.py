@@ -26,12 +26,13 @@ class Queries:
             INSERT INTO items (itemType, LocationFound, itemDescription, dateFound, LFlocation, subcategory, fid, rid)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
         """
+        print(itemType, LocationFound, itemDescription, dateFound, LFlocation, subcategory, fid, rid)
         self.cursor.execute(insert_query, (itemType, LocationFound, itemDescription, dateFound, LFlocation, subcategory, fid, rid))
         self.conn.commit()
 
         log_query = """
             INSERT INTO operationslogitems (actiontype, itemtype, locationfound, description, datefound, performedby, lflocation, subcategory)
-            VALUES ('INSERT', %s, %s, %s, %s, %s, %s)
+            VALUES ('INSERT', %s, %s, %s, %s, %s, %s, %s)
         """
         self.cursor.execute(log_query, (itemType, LocationFound, itemDescription, dateFound, performed_by, LFlocation, subcategory))
         self.conn.commit()
