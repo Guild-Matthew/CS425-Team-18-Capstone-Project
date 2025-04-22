@@ -181,12 +181,16 @@ export class AddItemComponent implements OnInit {
     this.item = {
       worker: '',
       location: '',
+      floor: '',
+      room: '',
       dateFound: '',
       locationFound: '',
       itemType: '',
+      subcategory: '',
       description: '',
       imagePhoto: null
     };
+
     this.floors = [];
   }
 
