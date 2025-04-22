@@ -24,7 +24,6 @@ export class AddItemComponent implements OnInit {
     itemType: '',
     subcategory: '',
     description: '',
-    imagePhoto: null
   };
   
   subcategories: { [key: string]: string[] } = {
@@ -161,10 +160,6 @@ export class AddItemComponent implements OnInit {
     formData.append('room', this.item.room);
     formData.append('subcategory', this.item.subcategory);
 
-    if (this.item.imagePhoto) {
-      formData.append('imagePhoto', this.item.imagePhoto);
-    }
-
     this.http.post(`${flask_URL}/Items`, formData, { withCredentials: true }).subscribe({
       next: response => {
         alert('Item successfully added!');
@@ -188,16 +183,9 @@ export class AddItemComponent implements OnInit {
       itemType: '',
       subcategory: '',
       description: '',
-      imagePhoto: null
     };
 
     this.floors = [];
   }
 
-  onFileSelected(event: any): void {
-    const file = event.target.files?.[0];
-    if (file) {
-      this.item.imagePhoto = file;
-    }
-  }
 }

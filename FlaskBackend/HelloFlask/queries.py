@@ -21,17 +21,17 @@ class Queries:
         self.conn.close()
 
     # Query to insert an item into the "items" table
-    def insert_item(self, itemType, LocationFound, itemDescription, dateFound, LFlocation, image_path, subcategory, fid=None, rid=None, performed_by="system"):
+    def insert_item(self, itemType, LocationFound, itemDescription, dateFound, LFlocation, subcategory, fid=None, rid=None, performed_by="system"):
         insert_query = """
-            INSERT INTO items (itemType, LocationFound, itemDescription, dateFound, LFlocation, image_path, subcategory, fid, rid)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO items (itemType, LocationFound, itemDescription, dateFound, LFlocation, subcategory, fid, rid)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
         """
-        self.cursor.execute(insert_query, (itemType, LocationFound, itemDescription, dateFound, LFlocation, image_path, subcategory, fid, rid))
+        self.cursor.execute(insert_query, (itemType, LocationFound, itemDescription, dateFound, LFlocation, subcategory, fid, rid))
         self.conn.commit()
 
         log_query = """
             INSERT INTO operationslogitems (actiontype, itemtype, locationfound, description, datefound, performedby, lflocation, subcategory)
-            VALUES ('INSERT', %s, %s, %s, %s, %s, %s, %s)
+            VALUES ('INSERT', %s, %s, %s, %s, %s, %s)
         """
         self.cursor.execute(log_query, (itemType, LocationFound, itemDescription, dateFound, performed_by, LFlocation, subcategory))
         self.conn.commit()
@@ -49,7 +49,7 @@ class Queries:
     # Query to get items from the "items" table
     def get_items(self, LFlocation, order, floor=None, room=None):
         query = """
-            SELECT i.itemType, i.subcategory, i.LocationFound, i.itemDescription, i.dateFound, i.image_path, r.roomnumber
+            SELECT i.itemType, i.subcategory, i.LocationFound, i.itemDescription, i.dateFound, r.roomnumber
             FROM items i
             LEFT JOIN rooms r ON i.rid = r.rid
             WHERE i.LFlocation = %s
@@ -73,7 +73,7 @@ class Queries:
     # Query to get filtered items from the "items" table
     def get_items_by_type(self, item_type, building, order, floor=None, room=None):
         query = f"""
-            SELECT i.itemType, i.subcategory, i.LocationFound, i.itemDescription, i.dateFound, i.image_path, r.roomnumber
+            SELECT i.itemType, i.subcategory, i.LocationFound, i.itemDescription, i.dateFound, r.roomnumber
             FROM items i
             LEFT JOIN rooms r ON i.rid = r.rid
             WHERE i.itemType = %s AND i.LFlocation = %s

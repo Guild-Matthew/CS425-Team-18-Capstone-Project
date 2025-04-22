@@ -148,20 +148,9 @@ def Reportitems():
         upload_folder = os.path.join(current_app.root_path, 'static', 'uploads')
         os.makedirs(upload_folder, exist_ok=True)
 
-        image_file = request.files.get('imagePhoto')
-        relative_path = None
-        if image_file and image_file.filename:
-            filename = secure_filename(image_file.filename)
-            file_path = os.path.join(upload_folder, filename)
-            try:
-                image_file.save(file_path)
-                relative_path = os.path.join('uploads', filename).replace('\\', '/')
-            except Exception as e:
-                print(f"Error saving file: {e}")
-
         db_queries.insert_item(
             item_type, location_found, description, date_found,
-            bid, fid, rid, relative_path
+            bid, fid, rid
         )
 
         return jsonify({"message": "Item added successfully"}), 200
