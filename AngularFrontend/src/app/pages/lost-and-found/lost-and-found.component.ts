@@ -15,9 +15,7 @@ interface Item {
   location: string;
   dateFound: string;
   description: string;
-  imageUrl?: string;
   roomNumber?: string;
-  imageVisible: boolean;
   claimed?: boolean;
 }
 
@@ -72,9 +70,7 @@ export class LostAndFoundComponent implements OnInit {
           location: item[1],
           description: item[2],
           dateFound: item[3],
-          imageUrl: item[4],
           roomNumber: item[5],
-          imageVisible: false,
           claimed: item.claimed || false
         }));
         this.buildings = data.buildings;
@@ -138,10 +134,6 @@ export class LostAndFoundComponent implements OnInit {
         ? new Date(b.dateFound).getTime() - new Date(a.dateFound).getTime()
         : new Date(a.dateFound).getTime() - new Date(b.dateFound).getTime()
     );
-  }
-
-  toggleImage(item: Item): void {
-    item.imageVisible = !item.imageVisible;
   }
 
   trackByFn(index: number, item: Item): any {
