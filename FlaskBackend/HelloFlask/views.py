@@ -3,6 +3,7 @@
 from flask import render_template, request, redirect, url_for, Blueprint, jsonify, session, current_app, Flask
 from HelloFlask.queries import Queries
 from datetime import datetime 
+import pytz
 import os
 import numpy as np
 from werkzeug.utils import secure_filename
@@ -22,8 +23,6 @@ def get_operation_logs():
     role = request.args.get('role')
     token = request.args.get('token')
     filter_type = request.args.get('filterType', None)
-    print("ROLE: ", role)
-    print("USERID: ", user_id)
     # Verify token
     uidauthtoken = db_queries.getTokenByUID(user_id)
     uidauthtoken = uidauthtoken[0] if isinstance(uidauthtoken, list) and uidauthtoken else None
@@ -64,6 +63,7 @@ def get_buildings():
 
 @main_bp.route('/L&F', methods=['GET'])
 def info():
+    pacific = pytz.timezone('America/Los_Angeles')
     filter_type = request.args.get('filterType', 'all')
     subtype_filter = request.args.get('subtype', 'all')
     building = request.args.get('building')
@@ -113,7 +113,6 @@ def info():
         items = db_queries.get_items(building, order, floor, room)
     else:
         items = db_queries.get_items_by_type(filter_type, building, order, floor, room, subtype_filter)
-
     return jsonify({
         "items": items,
         "buildings": all_buildings,
@@ -137,7 +136,8 @@ def Reportitems():
 
         item_type = request.form.get('itemType')
         location_found = request.form.get('locationFound')
-        date_found = datetime.now()
+        pacific = pytz.timezone('America/Los_Angeles')
+        date_found = datetime.now(pacific)
         description = request.form.get('description')
         lostAndFoundLocation = request.form.get('location')  
         floor_number = request.form.get('floor')
@@ -149,13 +149,12 @@ def Reportitems():
         bid = db_queries.getBuildingID(lostAndFoundLocation)
         fid = db_queries.get_fid(bid, floor_number)
         rid = db_queries.get_rid(bid, room_number, floor_number) if room_number or floor_number else None
-
+        netID = db_queries.getUserNetID(user_id)
         upload_folder = os.path.join(current_app.root_path, 'static', 'uploads')
         os.makedirs(upload_folder, exist_ok=True)
-
         db_queries.insert_item(
             item_type, location_found, description, date_found,
-            lostAndFoundLocation, subcategory, fid, rid
+            lostAndFoundLocation, subcategory, netID, fid, rid, 
         )
 
         return jsonify({"message": "Item added successfully"}), 200
@@ -189,26 +188,25 @@ def remove_items():
         location_found = data.get('locationFound')
         date_found = data.get('dateFound')
         description = data.get('description')
-        dateClaimed = datetime.now().strftime('%Y-%m-%d %H:%M')
+        pacific = pytz.timezone('America/Los_Angeles')
+        dateClaimed = datetime.now(pacific)
         lostAndFoundLocation = data.get('lfLocation')
         floor = data.get('floor')
         room = data.get('room')
         subcategory = data.get('subcategory')
         if not all([item_type, location_found, date_found, description]):
             return jsonify({"error": "Missing fields"}), 400
-        print("FLOOR: ", floor)
-        print("ROOM:", room)
+
         bid = db_queries.getBuildingID(lostAndFoundLocation)
-        print("BID: ", bid)
+
         fid = db_queries.get_fid(bid, floor) if floor else None
         rid = db_queries.get_rid(bid, room, floor) if room and floor else None
-        print("RID, FID", rid, fid)
-        print("ITEM THINGS: ", item_type, location_found, description, date_found, dateClaimed, lostAndFoundLocation, subcategory, fid, rid)
+        netID = db_queries.getUserNetID(user_id)
         db_queries.insert_Claimed_item(
             item_type, location_found, description, date_found,
             dateClaimed, lostAndFoundLocation,subcategory, fid, rid
         )
-        db_queries.deleteItem(item_type, location_found, description, date_found, bid)
+        db_queries.deleteItem(item_type, location_found, description, date_found, lostAndFoundLocation, netID)
 
         return jsonify({"message": "Item removed successfully"}), 200
 

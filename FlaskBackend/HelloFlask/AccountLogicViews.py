@@ -36,13 +36,14 @@ def login():
     # If user exists and is still active
     if user:
         # If they've failed 3+ times already, lock them out
-        if failed_attempts[username] >= 3:
-            if user['active']:  # only deactivate once
-                db_queries.deactivateUser(user['uid'], user['email'], user['role'])
-            return jsonify({'success': False, 'error': "Account has been locked due to multiple failed login attempts."}), 403
+        # if failed_attempts[username] >= 3:
+        #     if user['active']:  # only deactivate once
+        #         db_queries.deactivateUser(user['uid'], user['email'], user['role'])
+        #     return jsonify({'success': False, 'error': "Account has been locked due to multiple failed login attempts."}), 403
 
         # Successful login
-        if user['active'] and check_password_hash(user['password'], password):
+        failed_attempts[username]
+        if user['active'] and failed_attempts[username] < 3 and check_password_hash(user['password'], password):
             failed_attempts[username] = 0  # Reset counter on success
 
             session['user_id'] = user['uid']
@@ -65,7 +66,6 @@ def login():
 
             # If this was the third failed attempt, deactivate
             if failed_attempts[username] >= 3:
-                db_queries.deactivateUser(user['uid'], user['email'], user['role'])
                 return jsonify({'success': False, 'error': "Account has been locked due to multiple failed login attempts."}), 403
 
     # Fallback case: unknown user or wrong credentials

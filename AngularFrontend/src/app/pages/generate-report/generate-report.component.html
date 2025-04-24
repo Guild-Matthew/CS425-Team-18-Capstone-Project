@@ -75,9 +75,9 @@
                 <td>{{ log.itemtype }}</td>
                 <td>{{ log.locationfound }}</td>
                 <td>{{ log.description }}</td>
-                <td>{{ log.datefound }}</td>
+                <td>{{ log.datefound | date:'short'}}</td>
                 <td>{{ log.performedby }}</td>
-                <td>{{ log.dateperformed }}</td>
+                <td>{{ log.dateperformed | date:'short'}}</td>
                 <td>{{ log.lflocation }}</td>
               </tr>
             </tbody>
@@ -97,7 +97,7 @@
                 <td>{{ log.actiontype }}</td>
                 <td>{{ log.email }}</td>
                 <td>{{ log.role }}</td>
-                <td>{{ log.dateperformed }}</td>
+                <td>{{ log.dateperformed | date:'short' }}</td>
               </tr>
             </tbody>
           </table>
