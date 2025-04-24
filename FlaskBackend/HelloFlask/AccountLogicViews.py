@@ -83,7 +83,7 @@ def logout():
     session.clear()
     return redirect(url_for('main.home'))
 
-# checks if the user account exists, not needed? DELETE IF NOT USED
+# checks if the user account exists
 @account_bp.route('/checkuser', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def checkUser():
@@ -146,11 +146,11 @@ def checkUser():
 
         else:
             return jsonify({"error": "Unauthorized"}), 401
-        # formAuthToken = request.form.get('authToken')
         
     else:
         return jsonify({"error": "Unauthorized"}), 401
 
+# lets the user change their password if theit auth_code from their email is correct
 @account_bp.route('/forgotpassword', methods=['GET', 'POST'])
 @cross_origin(supports_credentials=True)
 def forgotPassword():
