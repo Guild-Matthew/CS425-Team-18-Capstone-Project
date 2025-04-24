@@ -1,14 +1,21 @@
-# Guilherme Cassiano
+# Guilherme Cassiano, Shane Petree
+
 import psycopg2
 from psycopg2 import sql
 from werkzeug.security import generate_password_hash, check_password_hash
+from os import getenv
+from dotenv import load_dotenv
+
+# load env variables
+load_dotenv('.env')
+
 class Queries:
     def __init__(self):
         # Initialize the connection to the database
         self.conn = psycopg2.connect(
             dbname="testdb", 
             user="postgres",
-            password="#aH6TR5fkcdx99",
+            password=getenv("DATABASE_PASSWORD"),
             host="localhost",
             port="5432"
         )
@@ -168,7 +175,30 @@ class Queries:
             return {"uid": row[0], "username": row[1], "password": row[2], "role": row[3], "active": row[4]}  
         return None
 
-        # Query to get all users for the "void" user page
+    # query to get all values of a user
+    def getUserAll(self, username):
+        self.cursor.execute("""
+        SELECT uid, username, password, email, role, active, authtoken
+        FROM users 
+        WHERE username = %s
+        """, (username,))
+        row = self.cursor.fetchone()
+        if row:
+            # Convert rows to a list of dictionaries
+            return {"uid": row[0], "username": row[1], "password": row[2], "email": row[3], "role": row[4], "active": row[5], "authtoken": row[6]}
+        return None
+
+    # query lets the user change/reset their password
+    def updateUserPassword(self, uid, password):
+        query = """
+            UPDATE users
+            SET password = %s
+            WHERE uid = %s
+        """
+        self.cursor.execute(query, (password, uid))
+        self.conn.commit()
+
+    # Query to get all users for the "void" user page
     def getUserVoid(self, role, active): #*
         self.cursor.execute("""
         SELECT username, email
@@ -654,9 +684,6 @@ class Queries:
 if __name__ == "__main__":
     # Create an instance of Queries
     db_queries = Queries()
-    
-    
-
     
     # Close the database connection
     db_queries.close()
