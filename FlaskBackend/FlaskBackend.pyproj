@@ -34,6 +34,7 @@
     <Compile Include="HelloFlask\createTables.py" />
     <Compile Include="HelloFlask\db.py" />
     <Compile Include="HelloFlask\init_db.py" />
+    <Compile Include="HelloFlask\init_mail.py" />
     <Compile Include="HelloFlask\module1.py" />
     <Compile Include="HelloFlask\queries.py" />
     <Compile Include="HelloFlask\runserver.py" />

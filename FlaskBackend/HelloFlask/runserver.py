@@ -1,4 +1,5 @@
-# Shane Petree and Guilherme Cassiano
+# Shane Petree, Guilherme Cassiano
+
 import os
 from HelloFlask import app    # Imports the code from HelloFlask/__init__.py
 
