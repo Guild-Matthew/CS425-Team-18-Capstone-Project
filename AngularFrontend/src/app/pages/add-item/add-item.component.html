@@ -7,6 +7,7 @@
         <div class="top-links">
           <a class="nav-link" routerLink="/map" routerLinkActive="active">Map</a>
           <a class="nav-link" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+          <a class="nav-link" routerLink="/lost-and-found">Lost & Found</a>
           <a class="login-button" routerLink="/logout" routerLinkActive="active">Logout</a>
         </div>
       </div>
@@ -38,8 +39,20 @@
             <option value="clothing">Clothing</option>
             <option value="technology">Technology</option>
             <option value="medical_health">Medical/Health</option>
+            <option value="bags">Bags, Backpacks, and Purses</option>
+            <option value="school">School Supplies</option>
+            <option value="sports_rec">Sports and Recreaction</option>
+            <option value="Keys_IDs">Keys, Cards, and ID's</option>
             <option value="miscellaneous">Miscellaneous</option>
           </select>
+          
+          <!-- Subcategory -->
+          <label for="subcategory">Subcategory:</label>
+          <select id="subcategory" name="subcategory" [(ngModel)]="item.subcategory" required>
+            <option value="" disabled selected>Select subcategory</option>
+            <option *ngFor="let sub of subcategories[item.itemType] || []" [value]="sub">{{ sub }}</option>
+          </select>
+          
 
           <!-- Description -->
           <label for="image">Item description:</label>
@@ -60,19 +73,27 @@
             <option *ngFor="let building of buildings" [value]="building">{{ building }}</option>
           </select>
 
-          <!-- Select Floor -->
-          <label for="floor">Floor:</label>
-          <select id="floor" name="floor" [(ngModel)]="item.floor" (change)="fetchRooms()" required>
-            <option value="" disabled selected>Select floor</option>
-            <option *ngFor="let floor of floors" [value]="floor">{{ floor }}</option>
-          </select>
+        <!-- Select Floor -->
+        <label *ngIf="floors.length > 0" for="floor">Floor:</label>
+        <select *ngIf="floors.length > 0"
+                id="floor"
+                name="floor"
+                [(ngModel)]="item.floor"
+                (change)="fetchRooms()">
+          <option value="" disabled selected>Select floor</option>
+          <option *ngFor="let floor of floors" [value]="floor">{{ floor }}</option>
+        </select>
 
-          <!-- Select Room -->
-          <label for="room">Room:</label>
-          <select id="room" name="room" [(ngModel)]="item.room" required>
-            <option value="" disabled selected>Select room</option>
-            <option *ngFor="let room of rooms" [value]="room">{{ room }}</option>
-          </select>
+        <!-- Select Room -->
+        <label *ngIf="rooms.length > 0" for="room">Room:</label>
+        <select *ngIf="rooms.length > 0"
+                id="room"
+                name="room"
+                [(ngModel)]="item.room">
+          <option value="" disabled selected>Select room</option>
+          <option *ngFor="let room of rooms" [value]="room">{{ room }}</option>
+        </select>
+
 
           <label for="image">Location found:</label>
           <input type="text"
@@ -81,15 +102,6 @@
                  [(ngModel)]="item.locationFound"
                  placeholder="Ex: 3rd floor men's restroom"
                  required />
-
-          <div>
-            <label for="image">Upload Image:</label>
-            <input type="file"
-                   id="image"
-                   name="image"
-                   (change)="onFileSelected($event)"
-                   accept="image/*" />
-          </div>
 
           <div class="add-item-button-wrapper">
             <button type="submit" class="add-item-button">Submit</button>

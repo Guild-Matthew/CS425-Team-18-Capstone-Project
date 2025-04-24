@@ -1,0 +1,63 @@
+<!-- Guilherme Cassiano -->
+<div class="page-wrapper">
+  <!-- HEADER -->
+  <header class="header">
+    <div class="top-bar">
+      <div class="top-links">
+        <a class="nav-link" routerLink="/map">Map</a>
+        <a class="nav-link" routerLink="/dashboard">Dashboard</a>
+        <a class="nav-link" routerLink="/lost-and-found">Lost & Found</a>
+        <a class="login-button" routerLink="/logout">Logout</a>
+      </div>
+    </div>
+
+    <div class="branding-bar">
+      <img class="university-logo-large-img align-image-bottom" alt="University of Nevada, Reno"
+           src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg" width="65" height="65">
+      <h1>University of Nevada, Reno</h1>
+      <p>Inspiring Excellence Since 1874</p>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <div class="form-card">
+      <h2>Edit User Permissions</h2>
+
+      <!-- Select User -->
+      <div>
+        <label for="userSelect">Select User:</label>
+        <select id="userSelect" [(ngModel)]="selectedUserId" (change)="loadUserPermissions()">
+          <option value="" disabled selected>Select a user</option>
+          <option *ngFor="let user of users" [value]="user.id">{{ user.email }}</option>
+        </select>
+      </div>
+
+      <!-- Permission List -->
+      <div *ngIf="selectedUserId">
+        <h3>Permissions for: {{ getUserDisplayName() }}</h3>
+
+        <div class="user-card-grid">
+          <div class="user-card checkbox-style" *ngFor="let building of allBuildings; trackBy: trackByBuilding">
+            <label>
+              <input type="checkbox"
+                     [value]="building"
+                     [checked]="userBuildings.has(building)"
+                     (change)="toggleBuilding(building, $event)" />
+              {{ building }}
+            </label>
+          </div>
+        </div>
+
+        <div class="add-item-button-wrapper">
+          <button class="add-item-button" (click)="submitPermissions()">Update Permissions</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>&copy; 2025 University of Nevada, Reno. Lost and Found Service.</p>
+  </footer>
+</div>

@@ -3,22 +3,6 @@
 <div class="lost-and-found">
   <div class="page-wrapper">
     <!-- HEADER -->
-    <!--<header class="header">
-    <div class="top-bar">
-      <div class="top-links">
-        <a class="nav-link" routerLink="/map">Map</a>
-        <a class="nav-link" routerLink="/dashboard">Dashboard</a>
-        <a class="nav-link" routerLink="/lost-and-found">Lost & Found</a>
-        <a class="login-button" routerLink="/logout">Logout</a>
-      </div>
-    </div>
-
-    <div class="branding-bar">
-      <img src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg" alt="University Logo" />
-      <h1>University of Nevada, Reno</h1>
-      <p>Inspiring Excellence Since 1874</p>
-    </div>
-  </header>-->
     <app-nav-bar class="header"></app-nav-bar>
     <div class="main-content">
       <!-- Sidebar for Sort and Filter -->
@@ -33,7 +17,7 @@
         </div>
 
         <div class="filter-section">
-          <label for="filterType">Filter by Type:</label>
+          <label for="filterType">Filter by Category:</label>
           <select id="filterType" (change)="onFilterChange($event)">
             <option value="all">All</option>
             <option value="clothing">Clothing and Accessories</option>
@@ -42,6 +26,14 @@
             <option value="id">ID's/Wallets/Personal Documents</option>
             <option value="medical">Medical/Health</option>
             <option value="other">Other/Misc</option>
+          </select>
+        </div>
+
+        <div class="filter-section" *ngIf="subtypes.length > 0">
+          <label for="subcategory">Filter by Subcategory:</label>
+          <select id="subcategory" [(ngModel)]="selectedSubtype" (change)="onSubtypeChange()">
+            <option value="all">All</option>
+            <option *ngFor="let sub of subtypes" [value]="sub">{{ sub }}</option>
           </select>
         </div>
 
@@ -54,7 +46,7 @@
         </div>
 
         <!-- Floor Filter -->
-        <div class="filter-section" *ngIf="floors.length > 0">
+        <div class="filter-section" *ngIf="selectedBuilding && floors.length > 0">
           <label for="floor">Floor:</label>
           <select id="floor" [(ngModel)]="selectedFloor" (change)="onFloorChange()">
             <option value="">All Floors</option>
@@ -63,7 +55,7 @@
         </div>
 
         <!-- Room Filter -->
-        <div class="filter-section" *ngIf="rooms.length > 0">
+        <div class="filter-section" *ngIf="selectedFloor && rooms.length > 0">
           <label for="room">Room:</label>
           <select id="room" [(ngModel)]="selectedRoom" (change)="onRoomChange()">
             <option value="">All Rooms</option>
@@ -71,15 +63,16 @@
           </select>
         </div>
 
+
       </aside>
 
       <!-- Products Section -->
       <section id="products">
         <h2>Items will be kept until December 29th, 2024</h2>
-        <h2>Found Items in Building: {{ selectedBuilding }}</h2>
+        <h2>Items located in Building: {{ selectedBuilding }}</h2>
 
         <!-- Add Item Button -->
-        <div class="add-item-section">
+        <div class="add-item-section" *ngIf="role === 'student' || role === 'admin' || role === 'superadmin'">
           <button class="main-content-button" [routerLink]="'/add-item'">Add Item</button>
         </div>
 
@@ -89,15 +82,13 @@
         </div>
 
         <div class="product-grid" *ngIf="!errorMessage">
-          <div *ngFor="let item of filteredItems; trackBy: trackByFn" class="product" (click)="toggleImage(item)">
-            <h3><strong>Item type: </strong> <span>{{ item.type }}</span></h3>
+          <div *ngFor="let item of filteredItems; trackBy: trackByFn" class="product">
+            <h3><strong>Item category: </strong> <span>{{ item.type }}</span></h3>
+            <h3><strong>Item type: </strong> <span>{{ item.subcategory }}</span></h3>
             <h3><strong>Location found: </strong> <span>{{ item.location }}</span></h3>
             <h3><strong>Date found: </strong> <span>{{ item.dateFound }}</span></h3>
             <h3><strong>Description: </strong> <span>{{ item.description }}</span></h3>
             <h3 *ngIf="item.roomNumber"><strong>Room: </strong> <span>{{ item.roomNumber }}</span></h3>
-            <div *ngIf="item.imageUrl">
-              <img [src]="item.imageUrl" alt="Photo of {{ item.type }}" style="max-width: 200px;">
-            </div>
 
             <!-- Mark as Claimed Button -->
             <div class="claim-button-section" *ngIf="role === 'student' || role === 'admin' || role === 'superadmin'">

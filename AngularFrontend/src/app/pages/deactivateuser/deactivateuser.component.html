@@ -47,23 +47,44 @@
               Select All
             </label>
           </div>
-        </div> <!-- Close filter-section div here -->
-      </div> <!-- Close sidebar div here -->
+        </div>
+        <div class="filter-section" style="margin-top: 1rem;">
+          <label for="accountFilter">Account Status:</label>
+          <select id="accountFilter" [(ngModel)]="accountFilter">
+            <option value="active">Active Accounts</option>
+            <option value="inactive">Deactivated Accounts</option>
+          </select>
+        </div>
+      </div> 
       <!-- Users Section -->
       <div class="user-section">
         <div class="user-header">
           <h2 class="students-header">Students Working in Selected Building</h2>
           <button class="main-content-button" [routerLink]="'/add-user'">Add User</button>
+          <button class="main-content-button" (click)="navigateToEditPermissions()">Change User Permissions</button>
         </div>
 
-        <!-- Cards -->
-        <div class="user-card-grid">
+        <!-- Activated Users -->
+        <div class="user-card-grid" *ngIf="accountFilter === 'active'">
+          <h2>Active Users</h2>
           <div class="user-card" *ngFor="let user of filteredUsers">
             <p><strong>Name:</strong> {{ user.name }}</p>
             <p><strong>Email:</strong> {{ user.email }}</p>
             <p><strong>Role:</strong> {{ user.role }}</p>
             <p><strong>Buildings:</strong> {{ user.buildings.join(', ') }}</p>
             <button (click)="deactivateUser(user.id)">Deactivate</button>
+          </div>
+        </div>
+
+        <!-- Deactivated Users -->
+        <div class="user-card-grid" *ngIf="accountFilter === 'inactive' && filteredDeactivatedUsers.length > 0">
+          <h2>Deactivated Users</h2>
+          <div class="user-card" *ngFor="let user of filteredDeactivatedUsers">
+            <p><strong>Name:</strong> {{ user.name }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Role:</strong> {{ user.role }}</p>
+            <p><strong>Buildings:</strong> {{ user.buildings.join(', ') }}</p>
+            <button (click)="reactivateUser(user.id)">Reactivate</button>
           </div>
         </div>
       </div>

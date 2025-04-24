@@ -28,35 +28,36 @@ class Queries:
         self.conn.close()
 
     # Query to insert an item into the "items" table
-    def insert_item(self, itemType, LocationFound, itemDescription, dateFound, LFlocation, image_path, fid=None, rid=None, performed_by="system"):
+    def insert_item(self, itemType, LocationFound, itemDescription, dateFound, LFlocation, subcategory, fid=None, rid=None, performed_by="system"):
         insert_query = """
-            INSERT INTO items (itemType, LocationFound, itemDescription, dateFound, LFlocation, image_path, fid, rid)
+            INSERT INTO items (itemType, LocationFound, itemDescription, dateFound, LFlocation, subcategory, fid, rid)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
         """
-        self.cursor.execute(insert_query, (itemType, LocationFound, itemDescription, dateFound, LFlocation, image_path, fid, rid))
+        print(itemType, LocationFound, itemDescription, dateFound, LFlocation, subcategory, fid, rid)
+        self.cursor.execute(insert_query, (itemType, LocationFound, itemDescription, dateFound, LFlocation, subcategory, fid, rid))
         self.conn.commit()
 
         log_query = """
-            INSERT INTO operationslogitems (actiontype, itemtype, locationfound, description, datefound, performedby, lflocation)
-            VALUES ('INSERT', %s, %s, %s, %s, %s, %s)
+            INSERT INTO operationslogitems (actiontype, itemtype, locationfound, description, datefound, performedby, lflocation, subcategory)
+            VALUES ('INSERT', %s, %s, %s, %s, %s, %s, %s)
         """
-        self.cursor.execute(log_query, (itemType, LocationFound, itemDescription, dateFound, performed_by, LFlocation))
+        self.cursor.execute(log_query, (itemType, LocationFound, itemDescription, dateFound, performed_by, LFlocation, subcategory))
         self.conn.commit()
 
     # Query to insert an item into the "Claimed items" table
-    def insert_Claimed_item(self, itemType, LocationFound, itemDescription, dateFound, dateClaimed, LFlocation, fid=None, rid=None):
+    def insert_Claimed_item(self, itemType, LocationFound, itemDescription, dateFound, dateClaimed, LFlocation, subcategory, fid=None, rid=None):
         query = """
             INSERT INTO claimedItems 
-            (itemType, LocationFound, itemDescription, dateFound, dateClaimed, LFlocation, fid, rid)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            (itemType, LocationFound, itemDescription, dateFound, dateClaimed, LFlocation, subcategory, fid, rid)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
             """
-        self.cursor.execute(query, (itemType, LocationFound, itemDescription, dateFound, dateClaimed, LFlocation, fid, rid))
+        self.cursor.execute(query, (itemType, LocationFound, itemDescription, dateFound, dateClaimed, LFlocation, subcategory, fid, rid))
         self.conn.commit()
 
     # Query to get items from the "items" table
     def get_items(self, LFlocation, order, floor=None, room=None):
         query = """
-            SELECT i.itemType, i.LocationFound, i.itemDescription, i.dateFound, i.image_path, r.roomnumber
+            SELECT i.itemType, i.subcategory, i.LocationFound, i.itemDescription, i.dateFound, r.roomnumber, r.floornumber
             FROM items i
             LEFT JOIN rooms r ON i.rid = r.rid
             WHERE i.LFlocation = %s
@@ -69,24 +70,27 @@ class Queries:
                     WHERE floornumber = %s AND bid = (SELECT bid FROM building WHERE buildingcode = %s)
                 )
             """
-            params.extend([floor, LFlocation])  
+            params.extend([floor, LFlocation])
         if room:
             query += " AND r.roomnumber = %s"
-            params.append(room)  
+            params.append(room)
         query += f" ORDER BY i.dateFound {order}"
         self.cursor.execute(query, params)
         return self.cursor.fetchall()
 
-
     # Query to get filtered items from the "items" table
-    def get_items_by_type(self, item_type, building, order, floor=None, room=None):
-        query = f"""
-            SELECT i.itemType, i.LocationFound, i.itemDescription, i.dateFound, i.image_path, r.roomnumber
+    def get_items_by_type(self, item_type, building, order, floor=None, room=None, subtype=None):
+        query = """
+            SELECT i.itemType, i.subcategory, i.LocationFound, i.itemDescription, i.dateFound, r.roomnumber, r.floornumber
             FROM items i
             LEFT JOIN rooms r ON i.rid = r.rid
             WHERE i.itemType = %s AND i.LFlocation = %s
         """
         params = [item_type, building]
+
+        if subtype and subtype != 'all':
+            query += " AND i.subcategory = %s"
+            params.append(subtype)
 
         if floor:
             query += """
@@ -108,13 +112,12 @@ class Queries:
     # Query to get items from the "Claimed items" table
     def get_Claimed_items(self, LFlocation, order, floor=None, room=None):
         query = f"""
-            SELECT i.itemType, i.LocationFound, i.itemDescription, i.dateFound, i.dateClaimed, r.roomnumber
+            SELECT i.itemType, i.subcategory, i.LocationFound, i.itemDescription, i.dateFound, i.dateClaimed, r.roomnumber, r.floornumber
             FROM claimedItems i
             LEFT JOIN rooms r ON i.rid = r.rid
             WHERE i.lflocation = %s
         """
         params = [LFlocation]
-
         if floor:
             query += """
                 AND i.fid = (
@@ -123,24 +126,27 @@ class Queries:
                 )
             """
             params.extend([floor, LFlocation])
-
         if room:
             query += " AND r.roomnumber = %s"
             params.append(room)
-
         query += f" ORDER BY i.dateClaimed {order}"
         self.cursor.execute(query, params)
         return self.cursor.fetchall()
 
     # Query to get filtered items from the "Claimed items" table
-    def get_Claimed_items_by_type(self, item_type, LFlocation, order, floor=None, room=None):
+    def get_Claimed_items_by_type(self, item_type, LFlocation, order, floor=None, room=None, subtype=None):
         query = f"""
-            SELECT i.itemType, i.LocationFound, i.itemDescription, i.dateFound, i.dateClaimed, r.roomnumber
+            SELECT i.itemType, i.subcategory, i.LocationFound, i.itemDescription, i.dateFound, i.dateClaimed, r.roomnumber, r.floornumber
             FROM claimedItems i
             LEFT JOIN rooms r ON i.rid = r.rid
             WHERE i.lflocation = %s AND i.itemType = %s
         """
         params = [LFlocation, item_type]
+
+        if subtype and subtype != 'all':
+            query += " AND i.subcategory = %s"
+            params.append(subtype)
+
         if floor:
             query += """
                 AND i.fid = (
@@ -155,31 +161,6 @@ class Queries:
         query += f" ORDER BY i.dateClaimed {order}"
         self.cursor.execute(query, params)
         return self.cursor.fetchall()
-
-    # Query to create an account (admin or user)
-    def createAccount(self, username, password, email, role):
-        query = """
-            INSERT INTO users (username, password, email, role)
-            VALUES (%s, %s, %s, %s)
-        """
-        self.cursor.execute(query, (username, password, email, role))
-    
-    # Log the VALIDATE action
-        log_query = """
-            INSERT INTO accountlogs (actiontype, email, role)
-            VALUES ('VALIDATE', %s, %s)
-        """
-        self.cursor.execute(log_query, (email, role,))
-        self.conn.commit()
-
-    def updateUserToken(self, uid, token):
-        query = """
-            UPDATE users
-            SET authtoken = %s
-            WHERE uid = %s
-        """
-        self.cursor.execute(query, (token, uid))
-        self.conn.commit()
 
     # Query to check if user exists when logging in 
     def getUser(self, username): # Only use username, remove email
@@ -194,7 +175,7 @@ class Queries:
             return {"uid": row[0], "username": row[1], "password": row[2], "role": row[3], "active": row[4]}  
         return None
 
-    # get all values of a user to check if that user exists
+    # query to get all values of a user
     def getUserAll(self, username):
         self.cursor.execute("""
         SELECT uid, username, password, email, role, active, authtoken
@@ -238,25 +219,36 @@ class Queries:
         return [{"username": row[0], "email": row[1], "active": row[2], "role": row[3]} for row in rows] 
 
 
-    def getUserVoidFiltered(self, uid_list, role, active):  
-        if not uid_list: 
-            return "none"  
-    
-        placeholders = ', '.join(['%s'] * len(uid_list))  
-        query = f"""
-            SELECT uid, username, email, active, role
-            FROM users 
-            WHERE uid IN ({placeholders}) AND role = %s AND active = %s
-        """
-        self.cursor.execute(query, tuple(uid_list) + (role,) + (active,))  
-        rows = self.cursor.fetchall()
-    
+    def getUserVoidFiltered(self, uid_list, roles, active):  
+        if not uid_list:
+            return "none"
+
+        placeholders = ', '.join(['%s'] * len(uid_list))
+
+        if isinstance(roles, list):
+            role_placeholders = ', '.join(['%s'] * len(roles))
+            query = f"""
+                SELECT uid, username, email, active, role
+                FROM users 
+                WHERE uid IN ({placeholders}) AND role IN ({role_placeholders}) AND active = %s
+            """
+            self.cursor.execute(query, tuple(uid_list) + tuple(roles) + (active,))
+        else:
+            query = f"""
+                SELECT uid, username, email, active, role
+                FROM users 
+                WHERE uid IN ({placeholders}) AND role = %s AND active = %s
+            """
+            self.cursor.execute(query, tuple(uid_list) + (roles,) + (active,))
+            rows = self.cursor.fetchall()
+
         if not rows: 
             return "none"
-    
-        return [{"id": row[0], "username": row[1], "email": row[2], "active": row[3], "role": row[4]} for row in rows]
 
-
+        return [
+            {"id": row[0], "username": row[1], "email": row[2], "active": row[3], "role": row[4]}
+            for row in rows
+        ]
 
     #task this function throws an error when changing the building in the dropdown on super admin deactivate account page
     def getUserVoidFilteredSuper(self, uid_list, role, role2, active):  
@@ -273,16 +265,30 @@ class Queries:
         if not rows: 
             return "none"
         return [{"username": row[0], "email": row[1], "active": row[2], "role": row[3]} for row in rows] 
- 
+
+    # Query to create an account (admin or user)
+    def createAccount(self, username, password, email, role):
+        query = """
+            INSERT INTO users (username, password, email, role)
+            VALUES (%s, %s, %s, %s)
+        """
+        self.cursor.execute(query, (username, password, email, role))
+
+        self.cursor.execute("""
+        INSERT INTO accountlogs (actiontype, email, role)
+        VALUES ('VALIDATE', %s, %s)
+        """, (email,role,))
+        self.conn.commit()
+
     # Query to deactivate an account 
     def deactivateUser(self, uid, email, role):
-        # First get username
         self.cursor.execute("SELECT username FROM users WHERE uid = %s", (uid,))
         result = self.cursor.fetchone()
         username = result[0] if result else 'unknown'
 
+
         self.cursor.execute("UPDATE users SET active = FALSE WHERE uid = %s", (uid,))
-    
+
         self.cursor.execute("""
         INSERT INTO accountlogs (actiontype, email, role)
         VALUES ('INVALIDATE', %s, %s)
@@ -290,13 +296,21 @@ class Queries:
         self.conn.commit()
 
     # Query to reactivate an account that already exists 
-    def activateUser(self, email, username):
-        query = """
-        UPDATE users
-        SET active = TRUE
-        WHERE email = %s AND username = %s
-        """
-        self.cursor.execute(query, (email, username))  
+    def activateUser(self, uid, email, role):
+        # Get the username for logging (optional but consistent)
+        self.cursor.execute("SELECT username FROM users WHERE uid = %s", (uid,))
+        result = self.cursor.fetchone()
+        username = result[0] if result else 'unknown'
+
+        # Reactivate user
+        self.cursor.execute("UPDATE users SET active = TRUE WHERE uid = %s", (uid,))
+
+        # Log the VALIDATE action
+        self.cursor.execute("""
+            INSERT INTO accountlogs (actiontype, email, role)
+            VALUES ('REVALIDATE', %s, %s)
+        """, (email, role))
+
         self.conn.commit()
 
     # Query to remove an item from the "items" table (removing an item from the L&F)
@@ -316,6 +330,14 @@ class Queries:
         self.cursor.execute(log_query, (itemType, LocationFound, itemDescription, dateFound, performed_by, LFlocation))
         self.conn.commit()
 
+    def updateUserToken(self, uid, token):
+        query = """
+            UPDATE users
+            SET authtoken = %s
+            WHERE uid = %s
+        """
+        self.cursor.execute(query, (token, uid))
+        self.conn.commit()
 
     # Query to create a new building to be displayed on the map
     def createBuilding(self, buildingCode, latitude, longitude):#*
@@ -538,14 +560,22 @@ class Queries:
         row = self.cursor.fetchone()
         return row[0] if row else None
 
-    def get_rid(self, bid, roomnumber, floornumber):
-        query = """
-            SELECT rid FROM rooms
-            WHERE bid = %s AND roomnumber = %s AND floornumber = %s
-        """
-        self.cursor.execute(query, (bid, roomnumber, floornumber))
-        row = self.cursor.fetchone()
-        return row[0] if row else None
+    def get_rid(self, bid, roomnumber=None, floornumber=None):
+        query = "SELECT rid FROM rooms WHERE bid = %s"
+        params = [bid]
+
+        if roomnumber:
+            query += " AND roomnumber = %s"
+            params.append(int(roomnumber))
+
+        if floornumber:
+            query += " AND floornumber = %s"
+            params.append(int(floornumber))
+
+        self.cursor.execute(query, tuple(params))
+        result = self.cursor.fetchone()
+        return result[0] if result else None
+
 
     def getFloorID(self, buildingcode, floor):
         query = """
@@ -579,17 +609,17 @@ class Queries:
         columns = [desc[0] for desc in self.cursor.description]
         return [dict(zip(columns, row)) for row in rows]
 
-    def getEmailFromUID(self, uid): # Only use username, remove email
-        self.cursor.execute("""
-        SELECT email
-        FROM users 
-        WHERE uid = %s
-        """, (uid,))
-        row = self.cursor.fetchone()
-        if row:
-            # Convert rows to a list of dictionaries
-            return {"email": row[0]}  
-        return None
+    def get_account_logsADM(self):
+        query = """
+            SELECT actiontype, email, dateperformed, role
+            FROM accountlogs
+            WHERE role = 'student'
+            ORDER BY dateperformed DESC
+        """
+        self.cursor.execute(query)
+        rows = self.cursor.fetchall()
+        columns = [desc[0] for desc in self.cursor.description]
+        return [dict(zip(columns, row)) for row in rows]
 
     def getRoleFromUID(self, uid):
         self.cursor.execute("""
@@ -603,6 +633,43 @@ class Queries:
             return {"role": row[0]}  
         return None
 
+    def getAllUserIDs(self):
+        self.cursor.execute("SELECT uid FROM users WHERE active = 'TRUE'")
+        return [row[0] for row in self.cursor.fetchall()]
+
+    def getAllStudentIDs(self):
+        self.cursor.execute("SELECT uid FROM users WHERE role = 'student' AND active = 'TRUE'")
+        return [row[0] for row in self.cursor.fetchall()]
+
+    def getEmailFromUID(self, uid):
+        try:
+            uid = int(uid)
+            self.cursor.execute("SELECT email FROM users WHERE uid = %s", (uid,))
+            row = self.cursor.fetchone()
+            return {"email": row[0]} if row else None
+        except Exception as e:
+            print(f"Error in getEmailFromUID for uid={uid}: {e}")
+            return None
+
+    def getBuildingNameFromBID(self, bid):
+        self.cursor.execute("""
+            SELECT buildingcode FROM building WHERE bid = %s
+        """, (bid,))
+        row = self.cursor.fetchone()
+        return row[0] if row else None
+
+    def clearPermissionsForUser(self, uid):
+        self.cursor.execute("""
+            DELETE FROM permissions WHERE uid = %s
+        """, (uid,))
+        self.conn.commit()
+
+    def getUsernameByUID(self, uid):
+        self.cursor.execute("""
+            SELECT username FROM users WHERE uid = %s
+        """, (uid,))
+        result = self.cursor.fetchone()
+        return result[0] if result else 'unknown'
 
 
 if __name__ == "__main__":

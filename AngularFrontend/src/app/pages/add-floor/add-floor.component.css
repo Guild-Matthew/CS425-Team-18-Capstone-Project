@@ -1,38 +1,57 @@
 /* Mary Cottier, Matthew Guild */
+
+/* Custom Additions */
+.button-flex-group {
+  display: flex;
+  gap: 1rem; 
+  margin-bottom: 1.5rem; 
+  flex-wrap: wrap;
+}
+
+.invalid-input {
+  border: 1px solid red !important;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.85em;
+  margin-top: 4px;
+}
+
 /* Styling */
 * {
-    box-sizing: border-box;
-  }
-  
-  body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f3f4f6;
-    color: #000000;
-  }
-  
-  /* HEADER */
-  header {
-    background-color: #041E42;
-    color: white;
-    width: 100%;
-  }
-  
-  .top-bar {
-    background-color: #041E42;
-    padding: 0.5rem 1rem;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-  }
-  
-  .top-links {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-  }
-  
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f3f4f6;
+  color: #000000;
+}
+
+/* HEADER */
+header {
+  background-color: #041E42;
+  color: white;
+  width: 100%;
+}
+
+.top-bar {
+  background-color: #041E42;
+  padding: 0.5rem 1rem;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.top-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
   .top-links .nav-link {
     color: white;
     text-transform: uppercase;
@@ -43,11 +62,11 @@
     border-radius: 4px;
     transition: background-color 0.2s ease-in-out;
   }
-  
-  .top-links .nav-link:hover {
-    background-color: rgba(255, 255, 255, 0.15);
-  }
-  
+
+    .top-links .nav-link:hover {
+      background-color: rgba(255, 255, 255, 0.15);
+    }
+
   .top-links .login-button {
     background-color: #78be20;
     color: black;
@@ -59,63 +78,63 @@
     text-transform: uppercase;
     transition: background-color 0.2s ease;
   }
-  
-  .top-links .login-button:hover {
-    background-color: #65a718;
-  }
-  
-  .branding-bar {
-    background-color: #041E42;
-    text-align: center;
-    padding: 1.5rem 1rem;
-    color: white;
-  }
-  
+
+    .top-links .login-button:hover {
+      background-color: #65a718;
+    }
+
+.branding-bar {
+  background-color: #041E42;
+  text-align: center;
+  padding: 1.5rem 1rem;
+  color: white;
+}
+
   .branding-bar img {
     height: 60px;
     margin-bottom: 0.5rem;
   }
-  
+
   .branding-bar h1 {
     margin: 0;
     font-size: 1.8rem;
   }
-  
+
   .branding-bar p {
     margin: 0;
     font-size: 0.95rem;
     color: #ccc;
   }
-  
-  /* MAIN CONTENT */
-  .main-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 40px auto;
-    max-width: 900px;
-    padding: 0 20px;
-  }
-  
-  /* Card Form Layout */
-  .form-card {
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 30px;
-    width: 100%;
-    max-width: 500px;
-    text-align: center;
-    margin-bottom: 40px;
-  }
-  
+
+/* MAIN CONTENT */
+.main-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 40px auto;
+  max-width: 900px;
+  padding: 0 20px;
+}
+
+/* Card Form Layout */
+.form-card {
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
   .form-card label {
     display: block;
     text-align: left;
     margin-bottom: 8px;
     font-weight: bold;
   }
-  
+
   .form-card input,
   .form-card select {
     width: 100%;
@@ -125,97 +144,116 @@
     border: 1px solid #ccc;
     font-size: 1rem;
   }
-  
-  /* Submit Button */
-  .add-item-button-wrapper {
-    display: flex;
-    justify-content: center;
-  }
-  
-  .add-item-button {
-    background-color: #041E42;
-    color: white;
-    font-weight: bold;
-    text-transform: uppercase;
-    padding: 0.5rem 1.2rem;
-    border-radius: 5px;
-    border: none;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-  }
-  
+
+/* Submit Button */
+.add-item-button-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.add-item-button {
+  background-color: #041E42;
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding: 0.5rem 1.2rem;
+  border-radius: 5px;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
   .add-item-button:hover {
     background-color: #023267;
     transform: translateY(-2px);
   }
-  
+
   .add-item-button:focus {
     outline: none;
   }
-  
-  /* Product/Floor List */
-  #products {
-    width: 100%;
-    max-width: 900px;
-  }
-  
+
+/* Product/Floor List */
+#products {
+  width: 100%;
+  max-width: 900px;
+}
+
   #products h3 {
     margin-bottom: 20px;
     text-align: center;
   }
-  
-  .product-grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-  }
-  
-  .product {
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    text-align: left;
-    transition: transform 0.3s ease;
-    width: 100%;
-    max-width: 300px;
-  }
-  
+
+.product-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.product {
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: left;
+  transition: transform 0.3s ease;
+  width: 100%;
+  max-width: 300px;
+}
+
   .product:hover {
     transform: translateY(-5px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
-  
-  /* Footer */
-  footer {
+
+/* Add User Button */
+.main-content-button {
+  background-color: #041E42;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+  .main-content-button:hover {
     background-color: #041E42;
-    color: white;
-    text-align: center;
-    padding: 1.5rem 1rem;
-    font-size: 0.9em;
-    background-image: url("/assets/site-footer-bg.jpg");
-    background-size: cover;
-    background-position: center;
-    position: relative;
-    bottom: 0;
-    width: 100%;
   }
-  
-  /* Responsive */
-  @media (max-width: 768px) {
-    .form-card {
-      padding: 20px;
-    }
-  
-    .branding-bar h1 {
-      font-size: 1.4rem;
-    }
-  
-    .top-links {
-      flex-direction: column;
-      gap: 0.8rem;
-    }
+
+.button-group {
+  display: flex;
+  gap: 10px; /* Adjust this value to control spacing */
+}
+
+/* Footer */
+footer {
+  background-color: #041E42;
+  color: white;
+  text-align: center;
+  padding: 1.5rem 1rem;
+  font-size: 0.9em;
+  background-image: url("/assets/site-footer-bg.jpg");
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  bottom: 0;
+  width: 100%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .form-card {
+    padding: 20px;
   }
-  
+
+  .branding-bar h1 {
+    font-size: 1.4rem;
+  }
+
+  .top-links {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+}

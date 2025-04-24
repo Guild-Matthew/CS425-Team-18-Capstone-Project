@@ -18,20 +18,57 @@ export class AddItemComponent implements OnInit {
     worker: '',
     location: '',
     floor: '',
-    room: '', 
+    room: '',
     dateFound: '',
     locationFound: '',
     itemType: '',
+    subcategory: '',
     description: '',
-    imagePhoto: null
   };
-
+  
+  subcategories: { [key: string]: string[] } = {
+    clothing: [
+      'Jackets & Coats', 'Hoodies & Sweatshirts', 'Shirts & Blouses',
+      'Pants & Shorts', 'Hats & Beanies', 'Scarves & Gloves',
+      'Footwear', 'Uniforms', 'Other Clothing Items'
+    ],
+    technology: [
+      'Phones', 'Laptops & Tablets', 'Headphones & Earbuds',
+      'Chargers & Cables', 'Calculators', 'USB Drives',
+      'Smartwatches & Wearables', 'Cameras', 'Other Electronics'
+    ],
+    medical_health: [
+      'Prescription Medications', 'Inhalers', 'Glasses & Contacts',
+      'First Aid Items', 'Medical Devices', 'Hand Sanitizer',
+      'Toiletry Bag', 'Other Health Items'
+    ],
+    bags: [
+      'Backpacks', 'Purses', 'Tote Bags', 'Laptop Bags',
+      'Gym Bags', 'Lunch Bags', 'Wallets', 'Other Bags'
+    ],
+    school: [
+      'Notebooks', 'Textbooks', 'Binders & Folders', 'Pens & Pencils',
+      'Index Cards', 'Art Supplies', 'Stationery Sets', 'Other School Supplies'
+    ],
+    sports_rec: [
+      'Water Bottles', 'Balls', 'Rackets & Bats', 'Protective Gear',
+      'Workout Equipment', 'Fitness Trackers', 'Skateboards/Scooters', 'Other Recreational Items'
+    ],
+    Keys_IDs: [
+      'House Keys', 'Car Keys', 'Student ID', 'Driver’s License',
+      'Credit/Debit Cards', 'Keychains', 'Fobs or Access Cards', 'Other IDs or Keys'
+    ],
+    miscellaneous: [
+      'Jewelry', 'Sunglasses', 'Books & Novels', 'Toys & Games',
+      'Umbrellas', 'Tools', 'Earplugs', 'Misc. Personal Items'
+    ]
+  };
+  
   authToken: string | null = null;
   buildings: string[] = [];
   floors: string[] = [];
   rooms: string[] = []; 
   selectedBuilding: string = '';
-
   constructor(private http: HttpClient, private router: Router) { }
 
   ngOnInit(): void {
@@ -64,9 +101,9 @@ export class AddItemComponent implements OnInit {
     const userId = localStorage.getItem('user_id');
     const role = localStorage.getItem('role');
     if (!this.item.location) return;
-
+  
     const url = `${flask_URL}/editFloor?token=${this.authToken}&user_id=${userId}&role=${role}&selected_building=${this.item.location}`;
-
+  
     this.http.get<any>(url, { withCredentials: true }).subscribe({
       next: data => {
         this.floors = data.floors || [];
@@ -79,14 +116,14 @@ export class AddItemComponent implements OnInit {
       }
     });
   }
-
+  
   fetchRooms(): void {
     const userId = localStorage.getItem('user_id');
     const role = localStorage.getItem('role');
     if (!this.item.location || !this.item.floor) return;
-
+  
     const url = `${flask_URL}/editFloor?token=${this.authToken}&user_id=${userId}&role=${role}&selected_building=${this.item.location}&selected_floor=${this.item.floor}`;
-
+  
     this.http.get<any>(url, { withCredentials: true }).subscribe({
       next: data => {
         this.rooms = data.rooms || [];
@@ -96,7 +133,7 @@ export class AddItemComponent implements OnInit {
         console.error('Error fetching rooms:', err);
       }
     });
-  }
+  }  
 
   onSubmit(): void {
     const userId = localStorage.getItem('user_id');
@@ -120,10 +157,7 @@ export class AddItemComponent implements OnInit {
     formData.append('description', this.item.description);
     formData.append('floor', this.item.floor);
     formData.append('room', this.item.room);
-
-    if (this.item.imagePhoto) {
-      formData.append('imagePhoto', this.item.imagePhoto);
-    }
+    formData.append('subcategory', this.item.subcategory);
 
     this.http.post(`${flask_URL}/Items`, formData, { withCredentials: true }).subscribe({
       next: response => {
@@ -141,19 +175,16 @@ export class AddItemComponent implements OnInit {
     this.item = {
       worker: '',
       location: '',
+      floor: '',
+      room: '',
       dateFound: '',
       locationFound: '',
       itemType: '',
+      subcategory: '',
       description: '',
-      imagePhoto: null
     };
+
     this.floors = [];
   }
 
-  onFileSelected(event: any): void {
-    const file = event.target.files?.[0];
-    if (file) {
-      this.item.imagePhoto = file;
-    }
-  }
 }

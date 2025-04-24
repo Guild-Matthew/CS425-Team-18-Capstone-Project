@@ -12,12 +12,12 @@ import { NavBarComponent } from '../../nav-bar/nav-bar.component';
 interface Item {
   id: number;
   type: string;
+  subcategory: string;
   location: string;
   dateFound: string;
   description: string;
-  imageUrl?: string;
   roomNumber?: string;
-  imageVisible: boolean;
+  floorNumber?: string;
   claimed?: boolean;
 }
 
@@ -42,7 +42,45 @@ export class LostAndFoundComponent implements OnInit {
   errorMessage: string = '';
   closestSuggestedBuilding: string = '';
   role: string | null = null;
-
+  selectedSubtype: string = 'all';
+  subtypes: string[] = [];
+  subcategories: { [key: string]: string[] } = {
+    clothing: [
+      'Jackets & Coats', 'Hoodies & Sweatshirts', 'Shirts & Blouses',
+      'Pants & Shorts', 'Hats & Beanies', 'Scarves & Gloves',
+      'Footwear', 'Uniforms', 'Other Clothing Items'
+    ],
+    technology: [
+      'Phones', 'Laptops & Tablets', 'Headphones & Earbuds',
+      'Chargers & Cables', 'Calculators', 'USB Drives',
+      'Smartwatches & Wearables', 'Cameras', 'Other Electronics'
+    ],
+    medical_health: [
+      'Prescription Medications', 'Inhalers', 'Glasses & Contacts',
+      'First Aid Items', 'Medical Devices', 'Hand Sanitizer',
+      'Toiletry Bag', 'Other Health Items'
+    ],
+    bags: [
+      'Backpacks', 'Purses', 'Tote Bags', 'Laptop Bags',
+      'Gym Bags', 'Lunch Bags', 'Wallets', 'Other Bags'
+    ],
+    school: [
+      'Notebooks', 'Textbooks', 'Binders & Folders', 'Pens & Pencils',
+      'Index Cards', 'Art Supplies', 'Stationery Sets', 'Other School Supplies'
+    ],
+    sports_rec: [
+      'Water Bottles', 'Balls', 'Rackets & Bats', 'Protective Gear',
+      'Workout Equipment', 'Fitness Trackers', 'Skateboards/Scooters', 'Other Recreational Items'
+    ],
+    Keys_IDs: [
+      'House Keys', 'Car Keys', 'Student ID', 'Driver’s License',
+      'Credit/Debit Cards', 'Keychains', 'Fobs or Access Cards', 'Other IDs or Keys'
+    ],
+    miscellaneous: [
+      'Jewelry', 'Sunglasses', 'Books & Novels', 'Toys & Games',
+      'Umbrellas', 'Tools', 'Earplugs', 'Misc. Personal Items'
+    ]
+  };
   constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
@@ -62,19 +100,20 @@ export class LostAndFoundComponent implements OnInit {
 
   fetchItems(): void {
     this.errorMessage = '';
-    const url = `${flask_URL}/L&F?building=${this.selectedBuilding}&filterType=${this.filterType}&sort=${this.sortOrder}&floor=${this.selectedFloor}&room=${this.selectedRoom}`;
+    const url = `${flask_URL}/L&F?building=${encodeURIComponent(this.selectedBuilding)}&filterType=${encodeURIComponent(this.filterType)}&subtype=${encodeURIComponent(this.selectedSubtype)}&sort=${encodeURIComponent(this.sortOrder)}&floor=${encodeURIComponent(this.selectedFloor)}&room=${encodeURIComponent(this.selectedRoom)}`;
+
 
     this.http.get<any>(url).subscribe(
       data => {
         this.items = data.items.map((item: any) => ({
           id: item.id,
           type: item[0],
-          location: item[1],
-          description: item[2],
-          dateFound: item[3],
-          imageUrl: item[4],
+          subcategory: item[1],
+          location: item[2],
+          description: item[3],
+          dateFound: item[4],
           roomNumber: item[5],
-          imageVisible: false,
+          floorNumber: item[6],
           claimed: item.claimed || false
         }));
         this.buildings = data.buildings;
@@ -109,6 +148,11 @@ export class LostAndFoundComponent implements OnInit {
     this.fetchItems();
   }
 
+  onFloorChange(): void {
+    this.selectedRoom = '';
+    this.fetchItems();
+  }
+
   onSortChange(event: Event): void {
     this.sortOrder = (event.target as HTMLSelectElement).value;
     this.applyFilters();
@@ -116,16 +160,21 @@ export class LostAndFoundComponent implements OnInit {
 
   onFilterChange(event: Event): void {
     this.filterType = (event.target as HTMLSelectElement).value;
-    this.applyFilters();
-  }
-
-  onFloorChange(): void {
-    this.selectedRoom = '';
+    this.selectedSubtype = 'all';
+    this.fetchSubtypes();        
     this.fetchItems();
   }
 
+  fetchSubtypes(): void {
+    if (this.filterType === 'all') {
+      this.subtypes = [];
+    } else {
+      this.subtypes = this.subcategories[this.filterType] || [];
+    }
+  }
+
   onRoomChange(): void {
-    this.fetchItems(); 
+    this.fetchItems();
   }
 
   applyFilters(): void {
@@ -140,8 +189,8 @@ export class LostAndFoundComponent implements OnInit {
     );
   }
 
-  toggleImage(item: Item): void {
-    item.imageVisible = !item.imageVisible;
+  onSubtypeChange(): void {
+    this.fetchItems();
   }
 
   trackByFn(index: number, item: Item): any {
@@ -161,7 +210,8 @@ export class LostAndFoundComponent implements OnInit {
     }
 
     const dateClaimed = new Date().toISOString().split('T')[0];
-
+    console.log("floor:", this.selectedFloor)
+    console.log("room:", this.selectedRoom)
     const url = `${flask_URL}/remove_item`;
     const body = {
       user_id: userId,
@@ -172,8 +222,9 @@ export class LostAndFoundComponent implements OnInit {
       dateFound: item.dateFound,
       description: item.description,
       lfLocation: this.selectedBuilding,
-      floor: this.selectedFloor,
-      room: this.selectedRoom
+      floor: item.floorNumber,
+      room: item.roomNumber,
+      subcategory: item.subcategory
     };
 
     const headers = { 'Content-Type': 'application/json' };

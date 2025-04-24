@@ -83,6 +83,7 @@ export class RemoveItemComponent implements OnInit {
       locationFound: item.location,
       dateFound: item.dateFound,
       description: item.description,
+      subcategory: item.subcategory,
       lfLocation: item.lfLocation
     };
 

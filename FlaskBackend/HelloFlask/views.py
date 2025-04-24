@@ -65,6 +65,7 @@ def get_buildings():
 @main_bp.route('/L&F', methods=['GET'])
 def info():
     filter_type = request.args.get('filterType', 'all')
+    subtype_filter = request.args.get('subtype', 'all')
     building = request.args.get('building')
     floor = request.args.get('floor')
     room = request.args.get('room')
@@ -108,10 +109,10 @@ def info():
             "buildings": all_buildings
         }), 400
 
-    if filter_type == 'all':
+    if filter_type == 'all' and subtype_filter == 'all':
         items = db_queries.get_items(building, order, floor, room)
     else:
-        items = db_queries.get_items_by_type(filter_type, building, order, floor, room)
+        items = db_queries.get_items_by_type(filter_type, building, order, floor, room, subtype_filter)
 
     return jsonify({
         "items": items,
@@ -120,7 +121,6 @@ def info():
         "floors": floors,
         "rooms": rooms
     })
-
 
 @main_bp.route('/Items', methods=['GET', 'POST'])
 @cross_origin(supports_credentials=True)
@@ -139,36 +139,23 @@ def Reportitems():
         location_found = request.form.get('locationFound')
         date_found = datetime.now()
         description = request.form.get('description')
-        lostAndFindLocation = request.form.get('location')  
+        lostAndFoundLocation = request.form.get('location')  
         floor_number = request.form.get('floor')
         room_number = request.form.get('room')
-
-        # Make sure all fields are filled
-        if not all([item_type, location_found, description, lostAndFindLocation, floor_number, room_number]):
+        subcategory = request.form.get('subcategory')
+        if not all([item_type, location_found, description, lostAndFoundLocation]):
             return jsonify({"error": "Missing fields"}), 400
 
-        bid = db_queries.getBuildingID(lostAndFindLocation)
+        bid = db_queries.getBuildingID(lostAndFoundLocation)
         fid = db_queries.get_fid(bid, floor_number)
-        rid = db_queries.get_rid(bid, room_number, floor_number)
+        rid = db_queries.get_rid(bid, room_number, floor_number) if room_number or floor_number else None
 
-        # Handle image upload
         upload_folder = os.path.join(current_app.root_path, 'static', 'uploads')
         os.makedirs(upload_folder, exist_ok=True)
 
-        image_file = request.files.get('imagePhoto')
-        relative_path = None  
-        if image_file and image_file.filename:
-            filename = secure_filename(image_file.filename)
-            file_path = os.path.join(upload_folder, filename)
-            try:
-                image_file.save(file_path)
-                relative_path = os.path.join('uploads', filename).replace('\\', '/')
-            except Exception as e:
-                print(f"Error saving file: {e}")
-
         db_queries.insert_item(
             item_type, location_found, description, date_found,
-            lostAndFindLocation, relative_path, fid=fid, rid=rid
+            lostAndFoundLocation, subcategory, fid, rid
         )
 
         return jsonify({"message": "Item added successfully"}), 200
@@ -178,10 +165,11 @@ def Reportitems():
         return jsonify({"error TWO": "Unauthorized - Missing User ID"}), 401
     role = request.args.get('role')
     if role == 'superadmin':
-            buildings = db_queries.getAllBuildings()
+        buildings = db_queries.getAllBuildings()
     else:
-            buildings = db_queries.getBuildingsFromPermissions(user_id)
+        buildings = db_queries.getBuildingsFromPermissions(user_id)
     return jsonify({"buildings": buildings})
+
 
 @main_bp.route('/remove_item', methods=['GET', 'POST'])
 @cross_origin(supports_credentials=True)
@@ -202,19 +190,25 @@ def remove_items():
         date_found = data.get('dateFound')
         description = data.get('description')
         dateClaimed = datetime.now().strftime('%Y-%m-%d %H:%M')
-        lostAndFindLocation = data.get('lfLocation')
+        lostAndFoundLocation = data.get('lfLocation')
         floor = data.get('floor')
         room = data.get('room')
-
+        subcategory = data.get('subcategory')
         if not all([item_type, location_found, date_found, description]):
             return jsonify({"error": "Missing fields"}), 400
-
-        # Get FID and RID (if floor/room provided)
-        fid = db_queries.getFloorID(lostAndFindLocation, floor) if floor else None
-        rid = db_queries.getRoomID(lostAndFindLocation, floor, room) if room and floor else None
-
-        db_queries.insert_Claimed_item(item_type, location_found, description, date_found, dateClaimed, lostAndFindLocation, fid, rid)
-        db_queries.deleteItem(item_type, location_found, description, date_found, lostAndFindLocation)
+        print("FLOOR: ", floor)
+        print("ROOM:", room)
+        bid = db_queries.getBuildingID(lostAndFoundLocation)
+        print("BID: ", bid)
+        fid = db_queries.get_fid(bid, floor) if floor else None
+        rid = db_queries.get_rid(bid, room, floor) if room and floor else None
+        print("RID, FID", rid, fid)
+        print("ITEM THINGS: ", item_type, location_found, description, date_found, dateClaimed, lostAndFoundLocation, subcategory, fid, rid)
+        db_queries.insert_Claimed_item(
+            item_type, location_found, description, date_found,
+            dateClaimed, lostAndFoundLocation,subcategory, fid, rid
+        )
+        db_queries.deleteItem(item_type, location_found, description, date_found, bid)
 
         return jsonify({"message": "Item removed successfully"}), 200
 
@@ -230,10 +224,12 @@ def remove_items():
     order = "ASC" if sort_order == "oldest" else "DESC"
     filter_type = request.args.get('filterType', 'all')
 
+    bid = db_queries.getBuildingID(selected_building)
+
     if filter_type == 'all':
-        items = db_queries.get_items(selected_building, order)
+        items = db_queries.get_items(bid, order)
     else:
-        items = db_queries.get_items_by_type(filter_type, selected_building, order)
+        items = db_queries.get_items_by_type(filter_type, bid, order)
 
     response = {
         "items": [{"type": item[0], "location": item[1], "description": item[2], "dateFound": item[3], "lfLocation": selected_building} for item in items],
@@ -244,6 +240,7 @@ def remove_items():
     }
     return jsonify(response)
 
+
 @main_bp.route('/claimedItems', methods=['GET'])
 @cross_origin(supports_credentials=True)
 def ClaimedItems():
@@ -252,7 +249,6 @@ def ClaimedItems():
     formAuthToken = request.args.get('token')
     floor = request.args.get("floor")
     room = request.args.get("room")
-
     uidauthtoken = db_queries.getTokenByUID(user_id)
     uidauthtoken = uidauthtoken[0] if isinstance(uidauthtoken, list) and uidauthtoken else None
 
@@ -260,31 +256,32 @@ def ClaimedItems():
         return jsonify({"error": "Unauthorized"}), 401
 
     if role == 'superadmin':
-            buildings = db_queries.getAllBuildings()
+        buildings = db_queries.getAllBuildings()
     else:
-            buildings = db_queries.getBuildingsFromPermissions(user_id)
+        buildings = db_queries.getBuildingsFromPermissions(user_id)
     selected_building = request.args.get('building', buildings[0] if buildings else None)
     sort_order = request.args.get('sort', 'oldest')
     order = "ASC" if sort_order == "oldest" else "DESC"
     filter_type = request.args.get('filterType', 'all')
-
+    subtype_filter = request.args.get('subtype', 'all')
     bid = db_queries.getBuildingID(selected_building)
     floors = db_queries.getFloors(bid)
     rooms = db_queries.getRooms(bid, floor) if floor else []
 
-    if filter_type == 'all':
+    if filter_type == 'all' and subtype_filter == 'all':
         items = db_queries.get_Claimed_items(selected_building, order, floor, room)
     else:
-        items = db_queries.get_Claimed_items_by_type(filter_type, selected_building, order, floor, room)
-
+        items = db_queries.get_Claimed_items_by_type(filter_type, selected_building, order, floor, room, subtype_filter)
     response = {
         "items": [{
             "type": item[0],
-            "location": item[1],
-            "description": item[2],
-            "dateFound": item[3],
-            "dateClaimed": item[4],
-            "roomNumber": item[5]
+            "subcategory": item[1],
+            "location": item[2],
+            "description": item[3],
+            "dateFound": item[4],
+            "dateClaimed": item[5],
+            "roomNumber": item[6],
+            "floorNumber": item[7]
         } for item in items],
         "sort_order": sort_order,
         "filterType": filter_type,
@@ -467,5 +464,9 @@ def get_account_logs():
     if role not in ['admin', 'superadmin']:
         return jsonify({"error": "Access denied"}), 403
 
-    logs = db_queries.get_account_logs()
+    if role == 'admin':
+        logs = db_queries.get_account_logsADM()
+    if role == 'superadmin':
+        logs = db_queries.get_account_logs()
+
     return jsonify(logs)

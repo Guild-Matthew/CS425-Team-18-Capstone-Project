@@ -1,7 +1,7 @@
-//Guilherme Cassiano, Mary Cottier 
+// Guilherme Cassiano, Mary Cottier
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { flask_URL } from '../../app.config';
@@ -15,11 +15,13 @@ import { flask_URL } from '../../app.config';
 })
 export class DeactivateUserComponent implements OnInit {
   users: any[] = [];
+  deactivatedUsers: any[] = [];
   accessibleBuildings: string[] = [];
   selectedBuildings: Set<string> = new Set();
   role: string = 'student';
+  accountFilter: string = 'active';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   ngOnInit(): void {
     const userId = localStorage.getItem('user_id');
@@ -33,6 +35,7 @@ export class DeactivateUserComponent implements OnInit {
     this.http.get<any>(`${flask_URL}/deactivate_user`, { params }).subscribe(
       response => {
         this.users = response.users;
+        this.deactivatedUsers = response.usersActivate || [];
         this.accessibleBuildings = response.buildings;
         this.selectedBuildings = new Set(response.buildings);
       },
@@ -52,7 +55,7 @@ export class DeactivateUserComponent implements OnInit {
       this.selectedBuildings.delete(building);
     }
 
-    this.filterUsersByBuildings(); 
+    this.filterUsersByBuildings();
   }
 
   toggleSelectAll(event: any): void {
@@ -81,7 +84,11 @@ export class DeactivateUserComponent implements OnInit {
 
     this.http.post(`${flask_URL}/deactivate_user`, body, { headers }).subscribe(
       () => {
-        this.users = this.users.filter(user => user.id !== userId);
+        const deactivatedUser = this.users.find(user => user.id === userId);
+        if (deactivatedUser) {
+          this.users = this.users.filter(user => user.id !== userId);
+          this.deactivatedUsers.push(deactivatedUser);
+        }
         alert(`User with ID ${userId} has been deactivated.`);
       },
       error => {
@@ -95,6 +102,15 @@ export class DeactivateUserComponent implements OnInit {
       return this.users;
     }
     return this.users.filter(user =>
+      user.buildings.some((b: string) => this.selectedBuildings.has(b))
+    );
+  }
+
+  get filteredDeactivatedUsers(): any[] {
+    if (this.selectedBuildings.size === 0) {
+      return this.deactivatedUsers;
+    }
+    return this.deactivatedUsers.filter(user =>
       user.buildings.some((b: string) => this.selectedBuildings.has(b))
     );
   }
@@ -114,6 +130,7 @@ export class DeactivateUserComponent implements OnInit {
     this.http.get<any>(`${flask_URL}/deactivate_user`, { params }).subscribe(
       response => {
         this.users = response.users;
+        this.deactivatedUsers = response.deactivatedUsers || [];
       },
       error => {
         console.error('Error fetching filtered users:', error);
@@ -121,4 +138,46 @@ export class DeactivateUserComponent implements OnInit {
     );
   }
 
+  reactivateUser(userId: number): void {
+    const user_id = localStorage.getItem('user_id');
+    const role = localStorage.getItem('role');
+    const token = localStorage.getItem('authtoken');
+
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const body = {
+      user_id,
+      role,
+      authtoken: token,
+      target_id: userId,
+      reactivate: true
+    };
+
+    this.http.post(`${flask_URL}/deactivate_user`, body, { headers }).subscribe(
+      () => {
+        const reactivatedUser = this.deactivatedUsers.find(user => user.id === userId);
+        if (reactivatedUser) {
+          this.deactivatedUsers = this.deactivatedUsers.filter(user => user.id !== userId);
+          this.users.push(reactivatedUser);
+        }
+        alert(`User with ID ${userId} has been reactivated.`);
+      },
+      error => {
+        console.error('Error reactivating user:', error);
+      }
+    );
+  }
+
+  navigateToEditPermissions(): void {
+    const userId = localStorage.getItem('user_id');
+    const role = localStorage.getItem('role');
+
+    console.log('Navigating to edit-permissions with:', { userId, role });
+
+    if (!userId || !role) {
+      alert('Missing user session info. Please log in again.');
+      return;
+    }
+
+    this.router.navigate(['/edit-permissions']);
+  }
 }

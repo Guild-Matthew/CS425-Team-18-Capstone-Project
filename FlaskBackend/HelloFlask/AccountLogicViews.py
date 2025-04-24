@@ -12,9 +12,12 @@ import uuid
 from collections import defaultdict
 from datetime import datetime
 import random
-
 from flask_mail import Message
 from HelloFlask.init_mail import mail
+from collections import defaultdict
+
+# Keeps track of failed login attempts per user
+failed_attempts = defaultdict(int)
 
 # Instance of Queries for database access
 db_queries = Queries()
@@ -24,30 +27,49 @@ account_bp = Blueprint('account', __name__)
 @account_bp.route('/login', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def login():
-    data = request.get_json() # Get the JSON data from the request
+    data = request.get_json()
     username = data.get('NetId')
     password = data.get('password')
 
-    # Retrieve user data from the database
     user = db_queries.getUser(username)
-    
-    if user and user['active'] == True and check_password_hash(user['password'], password):
-        session['user_id'] = user['uid']
-        session['role'] = user['role']
-        session['username'] = user['username']
-        session.permanent = True 
-        session['last_activity'] = datetime.utcnow().isoformat()  
-        authtoken = str(uuid.uuid4())  
-        db_queries.updateUserToken(user['uid'], authtoken)
-        return jsonify({
-            'success': True,
-            'user_id': user['uid'],
-            'role': user['role'],
-            'username': user['username'],
-            'authtoken': authtoken
-        }), 200
-    else:
-        return jsonify({'success': False, 'error': "Invalid credentials"}), 401
+
+    # If user exists and is still active
+    if user:
+        # If they've failed 3+ times already, lock them out
+        if failed_attempts[username] >= 3:
+            if user['active']:  # only deactivate once
+                db_queries.deactivateUser(user['uid'], user['email'], user['role'])
+            return jsonify({'success': False, 'error': "Account has been locked due to multiple failed login attempts."}), 403
+
+        # Successful login
+        if user['active'] and check_password_hash(user['password'], password):
+            failed_attempts[username] = 0  # Reset counter on success
+
+            session['user_id'] = user['uid']
+            session['role'] = user['role']
+            session['username'] = user['username']
+            session.permanent = True 
+            session['last_activity'] = datetime.utcnow().isoformat()  
+            authtoken = str(uuid.uuid4())  
+            db_queries.updateUserToken(user['uid'], authtoken)
+
+            return jsonify({
+                'success': True,
+                'user_id': user['uid'],
+                'role': user['role'],
+                'username': user['username'],
+                'authtoken': authtoken
+            }), 200
+        else:
+            failed_attempts[username] += 1
+
+            # If this was the third failed attempt, deactivate
+            if failed_attempts[username] >= 3:
+                db_queries.deactivateUser(user['uid'], user['email'], user['role'])
+                return jsonify({'success': False, 'error': "Account has been locked due to multiple failed login attempts."}), 403
+
+    # Fallback case: unknown user or wrong credentials
+    return jsonify({'success': False, 'error': "Invalid credentials. Your account will be locked after 3 failed attempts."}), 401
 
 @account_bp.route('/logout')
 def logout():
@@ -279,22 +301,28 @@ def deactivate_user():
         user_id = data.get('user_id')
         role = data.get('role')
         token = data.get('authtoken')
+        target_id = data.get('target_id')
+        reactivate = data.get('reactivate', False)
 
         uidauthtoken = db_queries.getTokenByUID(user_id)
         uidauthtoken = uidauthtoken[0] if isinstance(uidauthtoken, list) and uidauthtoken else None
         if uidauthtoken != token:
             return jsonify({"error": "Unauthorized"}), 401
 
-        target_id = data.get('target_id')
-        print("ID", target_id)
         if not target_id:
             return jsonify({"error": "Missing target user ID"}), 400
+
         email_data = db_queries.getEmailFromUID(target_id)
-        invalidated_user_role = db_queries.getRoleFromUID(target_id)
+        user_role_data = db_queries.getRoleFromUID(target_id)
         email = email_data['email'] if isinstance(email_data, dict) and 'email' in email_data else 'unknown'
-        user_role = invalidated_user_role['role'] if isinstance(invalidated_user_role, dict) and 'role' in invalidated_user_role else 'unknown'
-        db_queries.deactivateUser(target_id, email, user_role)
-        return jsonify({"message": "Account deactivated"}), 200
+        user_role = user_role_data['role'] if isinstance(user_role_data, dict) and 'role' in user_role_data else 'unknown'
+
+        if reactivate:
+            db_queries.activateUser(target_id, email, user_role)
+            return jsonify({"message": "Account reactivated"}), 200
+        else:
+            db_queries.deactivateUser(target_id, email, user_role)
+            return jsonify({"message": "Account deactivated"}), 200
 
     user_id = request.args.get('user_id')
     role = request.args.get('role')
@@ -311,7 +339,6 @@ def deactivate_user():
     else:
         return jsonify({"error": "Unauthorized role"}), 403
 
-    # Fix: handle 'all' or empty selection
     selected_buildings = buildings_param if buildings_param and buildings_param != ['all'] else all_buildings
 
     # Collect UID list from selected buildings
@@ -322,35 +349,151 @@ def deactivate_user():
         uid_lists.extend(uids)
 
     uid_lists = list(set(uid_lists))  # Remove duplicates
-    users = db_queries.getUserVoidFiltered(uid_lists, 'student', 'true')
+    if role == 'superadmin':
+        users = db_queries.getUserVoidFiltered(uid_lists, ['student', 'admin'], 'true')
+        usersActivate = db_queries.getUserVoidFiltered(uid_lists, ['student', 'admin'], 'false')
+    else:
+        users = db_queries.getUserVoidFiltered(uid_lists, 'student', 'true')
+        usersActivate = db_queries.getUserVoidFiltered(uid_lists, 'student', 'false')
     formatted_users = []
+    formatted_users_false = []
     user_map = {}
+    user_map_false = {}
 
     for b in selected_buildings:
         bid = db_queries.getBuildingID(b)
         uids = db_queries.getUsersFromPermissions(bid)
-        users = db_queries.getUserVoidFiltered(uids, 'student', 'true')
     
+        # Use correct roles based on logged-in user's role
+        role_filter = ['student', 'admin'] if role == 'superadmin' else 'student'
+        users = db_queries.getUserVoidFiltered(uids, role_filter, 'true')
+
         if users != "none":
             for u in users:
                 uid = u.get('id', 0)
                 if uid not in user_map:
                     user_map[uid] = {
-                    "name": u['username'],
-                    "email": u['email'],
-                    "role": u['role'],
-                    "id": uid,
-                    "buildings": [b]
+                        "name": u['username'],
+                        "email": u['email'],
+                        "role": u['role'],
+                        "id": uid,
+                        "buildings": [b]
                     }
                 else:
                     user_map[uid]["buildings"].append(b)
+
+    for b in selected_buildings:
+        bid = db_queries.getBuildingID(b)
+        uids = db_queries.getUsersFromPermissions(bid)
+
+        role_filter = ['student', 'admin'] if role == 'superadmin' else 'student'
+        usersActivate = db_queries.getUserVoidFiltered(uids, role_filter, 'false')
+
+        if usersActivate != "none":
+            for u in usersActivate:
+                uid = u.get('id', 0)
+                if uid not in user_map_false:
+                    user_map_false[uid] = {
+                        "name": u['username'],
+                        "email": u['email'],
+                        "role": u['role'],
+                        "id": uid,
+                        "buildings": [b]
+                    }
+                else:
+                    user_map_false[uid]["buildings"].append(b)
+
+    formatted_users_false = list(user_map_false.values())
     formatted_users = list(user_map.values())
-    print("Formatted users", formatted_users)
     return jsonify({
         "users": formatted_users,
+        "usersActivate": formatted_users_false,
         "buildings": all_buildings,
         "selected_building": selected_buildings
     })
+
+@account_bp.route('/update_user_permissions', methods=['GET', 'POST'])
+@cross_origin(supports_credentials=True)
+def update_user_permissions():
+    if request.method == 'POST':
+        data = request.get_json()
+        user_id = data.get('user_id')
+        token = data.get('authtoken')
+        target_id = data.get('target_id') 
+        buildings = data.get('buildings', [])
+
+        uidauthtoken = db_queries.getTokenByUID(user_id)
+        if isinstance(uidauthtoken, list):
+            uidauthtoken = uidauthtoken[0]
+
+        if uidauthtoken != token:
+            return jsonify({"error": "Unauthorized"}), 401
+
+        db_queries.clearPermissionsForUser(target_id)
+
+        for building_name in buildings:
+            bid = db_queries.getBuildingID(building_name)
+            db_queries.createPermissions(bid, target_id)
+
+        return jsonify({"message": "Permissions updated successfully"}), 200
+
+    query_type = request.args.get('type')
+    role = request.args.get('role')
+    if query_type == 'users':
+        if role == 'superadmin':
+            all_uids = db_queries.getAllUserIDs()
+            print(f"All UIDs: {all_uids}")
+            user_list = []
+            for uid in all_uids:
+                username = db_queries.getUsernameByUID(uid)
+                email = db_queries.getEmailFromUID(uid)
+                print(f"UID: {uid} -> username: {username}, email: {email}")
+                user_list.append({
+                    "id": uid,
+                    "name": username,
+                    "email": email['email'] if email and 'email' in email else 'unknown'
+                })
+            return jsonify({"users": user_list})
+        elif role == 'admin':
+            all_uids = db_queries.getAllStudentIDs()
+            print(f"All UIDs: {all_uids}")
+            user_list = []
+            for uid in all_uids:
+                username = db_queries.getUsernameByUID(uid)
+                email = db_queries.getEmailFromUID(uid)
+                print(f"UID: {uid} -> username: {username}, email: {email}")
+                user_list.append({
+                    "id": uid,
+                    "name": username,
+                    "email": email['email'] if email and 'email' in email else 'unknown'
+                })
+            return jsonify({"users": user_list})
+
+
+    elif query_type == 'buildings':
+        user_id = request.args.get('user_id')
+        role = request.args.get('role')
+
+        if not user_id or not role:
+            return jsonify({"error": "Missing user_id or role"}), 400
+
+        if role == 'superadmin':
+            buildings = db_queries.getAllBuildings()
+        elif role == 'admin':
+            buildings = db_queries.getBuildingsFromPermissions(user_id)
+        else:
+            return jsonify({"error": "Unauthorized role"}), 403
+
+        return jsonify({"buildings": buildings})
+
+    elif query_type == 'permissions':
+        target_uid = request.args.get('uid')
+        if not target_uid:
+            return jsonify({"error": "Missing user ID"}), 400
+        building_codes = db_queries.getBuildingsFromPermissions(target_uid)
+        return jsonify({"buildings": building_codes})
+
+    return jsonify({"error": "Invalid query type"}), 400
 
 
 

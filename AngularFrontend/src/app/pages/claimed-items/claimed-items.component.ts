@@ -26,6 +26,45 @@ export class ClaimedItemsComponent implements OnInit {
   floors: string[] = [];
   rooms: string[] = [];
   authToken: string | null = null;
+  subtypes: string[] = [];
+  selectedSubtype: string = 'all';
+  subcategories: { [key: string]: string[] } = {
+    clothing: [
+      'Jackets & Coats', 'Hoodies & Sweatshirts', 'Shirts & Blouses',
+      'Pants & Shorts', 'Hats & Beanies', 'Scarves & Gloves',
+      'Footwear', 'Uniforms', 'Other Clothing Items'
+    ],
+    technology: [
+      'Phones', 'Laptops & Tablets', 'Headphones & Earbuds',
+      'Chargers & Cables', 'Calculators', 'USB Drives',
+      'Smartwatches & Wearables', 'Cameras', 'Other Electronics'
+    ],
+    medical_health: [
+      'Prescription Medications', 'Inhalers', 'Glasses & Contacts',
+      'First Aid Items', 'Medical Devices', 'Hand Sanitizer',
+      'Toiletry Bag', 'Other Health Items'
+    ],
+    bags: [
+      'Backpacks', 'Purses', 'Tote Bags', 'Laptop Bags',
+      'Gym Bags', 'Lunch Bags', 'Wallets', 'Other Bags'
+    ],
+    school: [
+      'Notebooks', 'Textbooks', 'Binders & Folders', 'Pens & Pencils',
+      'Index Cards', 'Art Supplies', 'Stationery Sets', 'Other School Supplies'
+    ],
+    sports_rec: [
+      'Water Bottles', 'Balls', 'Rackets & Bats', 'Protective Gear',
+      'Workout Equipment', 'Fitness Trackers', 'Skateboards/Scooters', 'Other Recreational Items'
+    ],
+    Keys_IDs: [
+      'House Keys', 'Car Keys', 'Student ID', 'Driver’s License',
+      'Credit/Debit Cards', 'Keychains', 'Fobs or Access Cards', 'Other IDs or Keys'
+    ],
+    miscellaneous: [
+      'Jewelry', 'Sunglasses', 'Books & Novels', 'Toys & Games',
+      'Umbrellas', 'Tools', 'Earplugs', 'Misc. Personal Items'
+    ]
+  };
 
   constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router) { }
 
@@ -47,8 +86,7 @@ export class ClaimedItemsComponent implements OnInit {
       return;
     }
 
-    const url = `${flask_URL}/claimedItems?token=${authToken}&user_id=${userId}&role=${role}&building=${this.building}&filterType=${this.filterType}&sort=${this.sortOrder}&floor=${this.selectedFloor}&room=${this.selectedRoom}`;
-
+    const url = `${flask_URL}/claimedItems?token=${encodeURIComponent(authToken)}&user_id=${encodeURIComponent(userId)}&role=${encodeURIComponent(role)}&building=${encodeURIComponent(this.building)}&filterType=${encodeURIComponent(this.filterType)}&sort=${encodeURIComponent(this.sortOrder)}&floor=${encodeURIComponent(this.selectedFloor)}&room=${encodeURIComponent(this.selectedRoom)}&subtype=${encodeURIComponent(this.selectedSubtype)}`;
     this.http.get<any>(url, { withCredentials: true }).subscribe(
       data => {
         this.items = data.items;
@@ -67,6 +105,20 @@ export class ClaimedItemsComponent implements OnInit {
 
   onFilterChange(event: any): void {
     this.filterType = event.target.value;
+    this.selectedSubtype = 'all';
+    this.fetchSubtypes();
+    this.fetchItems();
+  }
+
+  fetchSubtypes(): void {
+    if (this.filterType === 'all') {
+      this.subtypes = [];
+    } else {
+      this.subtypes = this.subcategories[this.filterType] || [];
+    }
+  }
+
+  onSubtypeChange(): void {
     this.fetchItems();
   }
 

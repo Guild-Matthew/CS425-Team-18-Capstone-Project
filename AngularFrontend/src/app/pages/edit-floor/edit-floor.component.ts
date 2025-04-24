@@ -222,6 +222,7 @@ export class EditFloorComponent implements OnInit {
         {
           next: response => {
             console.log(`Room ${this.selected_room} added successfully`, response);
+            alert(`Room ${this.selected_room} added successfully`);
             this.resetForm();
             this.fetchBuildings();
           },
@@ -237,61 +238,37 @@ export class EditFloorComponent implements OnInit {
     }
   }
 
-  removeRoom(): void {
+  removeRoom(roomToRemove: string): void {
     const userId = localStorage.getItem('user_id');
     const role = localStorage.getItem('role');
     const authToken = localStorage.getItem('authtoken');
-    var roomExists: boolean = false;
 
-    this.getFormValues();
-
-    if (this.editFloorForm.valid) {
-
-      if (!userId || !authToken || !this.selected_building || this.selected_floor || this.selected_room === null) {
-        console.error("Missing required data");
-        return;
-      }
-
-      // check if the room exists
-      for (const room of this.rooms) {
-        if (room == this.selected_room) {
-          roomExists = true;
-          break;
-        }
-      }
-
-      if (!roomExists) {
-        console.error(`Room ${this.selected_room} does not exist.`);
-        alert(`Room ${this.selected_room} does not exist.`);
-        return;
-      }
-
-      const formData = new FormData();
-      formData.append('user_id', userId);
-      formData.append('role', role || '');
-      formData.append('token', authToken);
-      formData.append('action', 'remove_room');
-      formData.append('selected_room', this.selected_room.toString());
-      formData.append('selected_floor', this.selected_floor.toString());
-      formData.append('selected_building', this.selected_building);
-
-      this.http.post(`${flask_URL}/editFloor`, formData, { withCredentials: true }).subscribe(
-        {
-          next: response => {
-            console.log(`Room ${this.selected_room} successfully removed`, response);
-            this.resetForm();
-            this.fetchBuildings();
-          },
-          error: error => {
-            console.error(`Error removing room: ${this.selected_room}`, error);
-          }
-        }
-      );
-    }
-
-    else {
+    if (!userId || !authToken || !this.selected_building || !this.selected_floor || !roomToRemove) {
       console.error("Missing required data");
+      return;
     }
+
+    const formData = new FormData();
+    formData.append('user_id', userId);
+    formData.append('role', role || '');
+    formData.append('token', authToken);
+    formData.append('action', 'remove_room');
+    formData.append('selected_room', roomToRemove.toString());
+    formData.append('selected_floor', this.selected_floor.toString());
+    formData.append('selected_building', this.selected_building);
+
+    this.http.post(`${flask_URL}/editFloor`, formData, { withCredentials: true }).subscribe(
+      {
+        next: response => {
+          console.log(`Room ${roomToRemove} successfully removed`, response);
+          alert(`Room ${roomToRemove} successfully removed`);
+          this.fetchRooms(null); 
+        },
+        error: error => {
+          console.error(`Error removing room: ${roomToRemove}`, error);
+        }
+      }
+    );
   }
 
   getFormValues(): void {

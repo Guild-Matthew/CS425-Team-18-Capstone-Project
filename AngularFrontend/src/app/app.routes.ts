@@ -19,6 +19,7 @@ import { LogoutComponent } from './pages/logout/logout.component';
 import { AddFloorComponent } from './pages/add-floor/add-floor.component';
 import { EditFloorComponent } from './pages/edit-floor/edit-floor.component';
 import { GenerateReportComponent } from './pages/generate-report/generate-report.component';
+import { EditPermissionsComponent } from './pages/edit-permissions/edit-permissions.component';
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 
 export const routes: Routes = [
@@ -37,6 +38,7 @@ export const routes: Routes = [
   { path: 'add-floor', component: AddFloorComponent, canActivate: [AuthGuard] },
   { path: 'edit-floor', component: EditFloorComponent, canActivate: [AuthGuard] },
   { path: 'deactivateuser', component: DeactivateUserComponent, canActivate: [AuthGuard] },
+  { path: 'edit-permissions', component: EditPermissionsComponent, canActivate: [AuthGuard] }, 
   { path: 'generate-report', component: GenerateReportComponent, canActivate: [AuthGuard] },
   { path: '404', component: _404Component },
   { path: '**', redirectTo: '404' } // Handles unknown paths

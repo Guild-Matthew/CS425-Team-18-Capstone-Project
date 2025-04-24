@@ -36,12 +36,20 @@
       </div>
 
       <div class="filter-section">
-        <label for="filterType">Filter by Type:</label>
+        <label for="filterType">Filter by Category:</label>
         <select id="filterType" (change)="onFilterChange($event)">
           <option value="all">All</option>
           <option value="clothing">Clothing</option>
           <option value="technology">Technology</option>
           <option value="misc">Miscellaneous</option>
+        </select>
+      </div>
+
+      <div class="filter-section" *ngIf="subtypes.length > 0">
+        <label for="subcategory">Filter by Type:</label>
+        <select id="subcategory" [(ngModel)]="selectedSubtype" (change)="onSubtypeChange()">
+          <option value="all">All</option>
+          <option *ngFor="let sub of subtypes" [value]="sub">{{ sub }}</option>
         </select>
       </div>
 
@@ -76,12 +84,13 @@
       <h2>Found Claimed Items in Building: {{ building }}</h2>
       <div class="product-grid">
         <div class="product" *ngFor="let item of items">
-          <h3><strong>Item type:</strong> <span>{{ item.type }}</span></h3>
-          <h3><strong>Location found:</strong> <span>{{ item.location }}</span></h3>
-          <h3><strong>Date found:</strong> <span>{{ item.dateFound }}</span></h3>
-          <h3><strong>Date claimed:</strong> <span>{{ item.dateClaimed }}</span></h3>
-          <h3><strong>Description:</strong> <span>{{ item.description }}</span></h3>
-          <h3 *ngIf="item.roomNumber"><strong>Room:</strong> <span>{{ item.roomNumber }}</span></h3>
+          <h3><strong>Item category: </strong> <span>{{ item.type }}</span></h3>
+          <h3><strong>Item type: </strong> <span>{{ item.subcategory }}</span></h3>
+          <h3><strong>Location found: </strong> <span>{{ item.location }}</span></h3>
+          <h3><strong>Date found: </strong> <span>{{ item.dateFound }}</span></h3>
+          <h3><strong>Date claimed: </strong> <span>{{ item.dateClaimed }}</span></h3>
+          <h3><strong>Description: </strong> <span>{{ item.description }}</span></h3>
+          <h3 *ngIf="item.roomNumber"><strong>Room: </strong> <span>{{ item.roomNumber }}</span></h3>
         </div>
       </div>
       <p *ngIf="items.length === 0">No items found for the selected filter.</p>
