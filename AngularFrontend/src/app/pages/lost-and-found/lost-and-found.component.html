@@ -29,6 +29,14 @@
           </select>
         </div>
 
+        <div class="filter-section" *ngIf="subtypes.length > 0">
+          <label for="subcategory">Filter by Subcategory:</label>
+          <select id="subcategory" [(ngModel)]="selectedSubtype" (change)="onSubtypeChange()">
+            <option value="all">All</option>
+            <option *ngFor="let sub of subtypes" [value]="sub">{{ sub }}</option>
+          </select>
+        </div>
+
         <!-- Building Filter (integrated into sidebar) -->
         <div class="filter-section">
           <label for="building">Lost and Found Location:</label>

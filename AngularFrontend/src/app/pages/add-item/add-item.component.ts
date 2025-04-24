@@ -69,7 +69,6 @@ export class AddItemComponent implements OnInit {
   floors: string[] = [];
   rooms: string[] = []; 
   selectedBuilding: string = '';
-
   constructor(private http: HttpClient, private router: Router) { }
 
   ngOnInit(): void {

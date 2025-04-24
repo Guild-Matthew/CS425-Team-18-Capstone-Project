@@ -61,6 +61,7 @@ def get_buildings():
 @main_bp.route('/L&F', methods=['GET'])
 def info():
     filter_type = request.args.get('filterType', 'all')
+    subtype_filter = request.args.get('subtype', 'all')
     building = request.args.get('building')
     floor = request.args.get('floor')
     room = request.args.get('room')
@@ -104,10 +105,12 @@ def info():
             "buildings": all_buildings
         }), 400
 
-    if filter_type == 'all':
+    if filter_type == 'all' and subtype_filter == 'all':
+        
         items = db_queries.get_items(building, order, floor, room)
     else:
-        items = db_queries.get_items_by_type(filter_type, building, order, floor, room)
+        print("FILTER AND SUBFILTER: ", filter_type, subtype_filter)
+        items = db_queries.get_items_by_type(filter_type, building, order, floor, room, subtype_filter)
 
     return jsonify({
         "items": items,

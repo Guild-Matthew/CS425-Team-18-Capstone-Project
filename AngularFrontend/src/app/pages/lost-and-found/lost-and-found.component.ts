@@ -42,7 +42,45 @@ export class LostAndFoundComponent implements OnInit {
   errorMessage: string = '';
   closestSuggestedBuilding: string = '';
   role: string | null = null;
-
+  selectedSubtype: string = 'all';
+  subtypes: string[] = [];
+  subcategories: { [key: string]: string[] } = {
+    clothing: [
+      'Jackets & Coats', 'Hoodies & Sweatshirts', 'Shirts & Blouses',
+      'Pants & Shorts', 'Hats & Beanies', 'Scarves & Gloves',
+      'Footwear', 'Uniforms', 'Other Clothing Items'
+    ],
+    technology: [
+      'Phones', 'Laptops & Tablets', 'Headphones & Earbuds',
+      'Chargers & Cables', 'Calculators', 'USB Drives',
+      'Smartwatches & Wearables', 'Cameras', 'Other Electronics'
+    ],
+    medical_health: [
+      'Prescription Medications', 'Inhalers', 'Glasses & Contacts',
+      'First Aid Items', 'Medical Devices', 'Hand Sanitizer',
+      'Toiletry Bag', 'Other Health Items'
+    ],
+    bags: [
+      'Backpacks', 'Purses', 'Tote Bags', 'Laptop Bags',
+      'Gym Bags', 'Lunch Bags', 'Wallets', 'Other Bags'
+    ],
+    school: [
+      'Notebooks', 'Textbooks', 'Binders & Folders', 'Pens & Pencils',
+      'Index Cards', 'Art Supplies', 'Stationery Sets', 'Other School Supplies'
+    ],
+    sports_rec: [
+      'Water Bottles', 'Balls', 'Rackets & Bats', 'Protective Gear',
+      'Workout Equipment', 'Fitness Trackers', 'Skateboards/Scooters', 'Other Recreational Items'
+    ],
+    Keys_IDs: [
+      'House Keys', 'Car Keys', 'Student ID', 'Driver’s License',
+      'Credit/Debit Cards', 'Keychains', 'Fobs or Access Cards', 'Other IDs or Keys'
+    ],
+    miscellaneous: [
+      'Jewelry', 'Sunglasses', 'Books & Novels', 'Toys & Games',
+      'Umbrellas', 'Tools', 'Earplugs', 'Misc. Personal Items'
+    ]
+  };
   constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
@@ -62,7 +100,8 @@ export class LostAndFoundComponent implements OnInit {
 
   fetchItems(): void {
     this.errorMessage = '';
-    const url = `${flask_URL}/L&F?building=${this.selectedBuilding}&filterType=${this.filterType}&sort=${this.sortOrder}&floor=${this.selectedFloor}&room=${this.selectedRoom}`;
+    const url = `${flask_URL}/L&F?building=${encodeURIComponent(this.selectedBuilding)}&filterType=${encodeURIComponent(this.filterType)}&subtype=${encodeURIComponent(this.selectedSubtype)}&sort=${encodeURIComponent(this.sortOrder)}&floor=${encodeURIComponent(this.selectedFloor)}&room=${encodeURIComponent(this.selectedRoom)}`;
+
 
     this.http.get<any>(url).subscribe(
       data => {
@@ -121,7 +160,17 @@ export class LostAndFoundComponent implements OnInit {
 
   onFilterChange(event: Event): void {
     this.filterType = (event.target as HTMLSelectElement).value;
-    this.applyFilters();
+    this.selectedSubtype = 'all';
+    this.fetchSubtypes();        
+    this.fetchItems();
+  }
+
+  fetchSubtypes(): void {
+    if (this.filterType === 'all') {
+      this.subtypes = [];
+    } else {
+      this.subtypes = this.subcategories[this.filterType] || [];
+    }
   }
 
   onRoomChange(): void {
@@ -138,6 +187,10 @@ export class LostAndFoundComponent implements OnInit {
         ? new Date(b.dateFound).getTime() - new Date(a.dateFound).getTime()
         : new Date(a.dateFound).getTime() - new Date(b.dateFound).getTime()
     );
+  }
+
+  onSubtypeChange(): void {
+    this.fetchItems();
   }
 
   trackByFn(index: number, item: Item): any {

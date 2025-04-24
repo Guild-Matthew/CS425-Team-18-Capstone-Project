@@ -72,14 +72,19 @@ class Queries:
         return self.cursor.fetchall()
 
     # Query to get filtered items from the "items" table
-    def get_items_by_type(self, item_type, building, order, floor=None, room=None):
-        query = f"""
-            SELECT i.itemType, i.subcategory, i.LocationFound, i.itemDescription, i.dateFound, r.roomnumber
+    def get_items_by_type(self, item_type, building, order, floor=None, room=None, subtype=None):
+        query = """
+            SELECT i.itemType, i.subcategory, i.LocationFound, i.itemDescription, i.dateFound, r.roomnumber, r.floornumber
             FROM items i
             LEFT JOIN rooms r ON i.rid = r.rid
             WHERE i.itemType = %s AND i.LFlocation = %s
         """
         params = [item_type, building]
+
+        if subtype and subtype != 'all':
+            query += " AND i.subcategory = %s"
+            params.append(subtype)
+
         if floor:
             query += """
                 AND i.fid = (
@@ -88,9 +93,11 @@ class Queries:
                 )
             """
             params.extend([floor, building])
+
         if room:
             query += " AND r.roomnumber = %s"
             params.append(room)
+
         query += f" ORDER BY i.dateFound {order}"
         self.cursor.execute(query, params)
         return self.cursor.fetchall()
