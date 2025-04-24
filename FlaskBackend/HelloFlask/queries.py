@@ -50,7 +50,7 @@ class Queries:
     # Query to get items from the "items" table
     def get_items(self, LFlocation, order, floor=None, room=None):
         query = """
-            SELECT i.itemType, i.subcategory, i.LocationFound, i.itemDescription, i.dateFound, r.roomnumber
+            SELECT i.itemType, i.subcategory, i.LocationFound, i.itemDescription, i.dateFound, r.roomnumber, r.floornumber
             FROM items i
             LEFT JOIN rooms r ON i.rid = r.rid
             WHERE i.LFlocation = %s
@@ -98,7 +98,7 @@ class Queries:
     # Query to get items from the "Claimed items" table
     def get_Claimed_items(self, LFlocation, order, floor=None, room=None):
         query = f"""
-            SELECT i.itemType, i.subcategory, i.LocationFound, i.itemDescription, i.dateFound, i.dateClaimed, r.roomnumber
+            SELECT i.itemType, i.subcategory, i.LocationFound, i.itemDescription, i.dateFound, i.dateClaimed, r.roomnumber, r.floornumber
             FROM claimedItems i
             LEFT JOIN rooms r ON i.rid = r.rid
             WHERE i.lflocation = %s

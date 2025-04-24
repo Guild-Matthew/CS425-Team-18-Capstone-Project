@@ -17,6 +17,7 @@ interface Item {
   dateFound: string;
   description: string;
   roomNumber?: string;
+  floorNumber?: string;
   claimed?: boolean;
 }
 
@@ -68,11 +69,12 @@ export class LostAndFoundComponent implements OnInit {
         this.items = data.items.map((item: any) => ({
           id: item.id,
           type: item[0],
-          subcategory: item[5],
-          location: item[4],
-          description: item[2],
-          dateFound: item[3],
-          roomNumber: item[7],
+          subcategory: item[1],
+          location: item[2],
+          description: item[3],
+          dateFound: item[4],
+          roomNumber: item[5],
+          floorNumber: item[6],
           claimed: item.claimed || false
         }));
         this.buildings = data.buildings;
@@ -111,7 +113,7 @@ export class LostAndFoundComponent implements OnInit {
     this.selectedRoom = '';
     this.fetchItems();
   }
-  
+
   onSortChange(event: Event): void {
     this.sortOrder = (event.target as HTMLSelectElement).value;
     this.applyFilters();
@@ -123,7 +125,7 @@ export class LostAndFoundComponent implements OnInit {
   }
 
   onRoomChange(): void {
-    this.fetchItems(); 
+    this.fetchItems();
   }
 
   applyFilters(): void {
@@ -155,7 +157,8 @@ export class LostAndFoundComponent implements OnInit {
     }
 
     const dateClaimed = new Date().toISOString().split('T')[0];
-
+    console.log("floor:", this.selectedFloor)
+    console.log("room:", this.selectedRoom)
     const url = `${flask_URL}/remove_item`;
     const body = {
       user_id: userId,
@@ -166,8 +169,9 @@ export class LostAndFoundComponent implements OnInit {
       dateFound: item.dateFound,
       description: item.description,
       lfLocation: this.selectedBuilding,
-      floor: this.selectedFloor,
-      room: this.selectedRoom
+      floor: item.floorNumber,
+      room: item.roomNumber,
+      subcategory: item.subcategory
     };
 
     const headers = { 'Content-Type': 'application/json' };

@@ -188,17 +188,20 @@ def remove_items():
         lostAndFoundLocation = data.get('lfLocation')
         floor = data.get('floor')
         room = data.get('room')
-
+        subcategory = data.get('subcategory')
         if not all([item_type, location_found, date_found, description]):
             return jsonify({"error": "Missing fields"}), 400
-
+        print("FLOOR: ", floor)
+        print("ROOM:", room)
         bid = db_queries.getBuildingID(lostAndFoundLocation)
+        print("BID: ", bid)
         fid = db_queries.get_fid(bid, floor) if floor else None
         rid = db_queries.get_rid(bid, room, floor) if room and floor else None
-
+        print("RID, FID", rid, fid)
+        print("ITEM THINGS: ", item_type, location_found, description, date_found, dateClaimed, lostAndFoundLocation, subcategory, fid, rid)
         db_queries.insert_Claimed_item(
             item_type, location_found, description, date_found,
-            dateClaimed, bid, fid, rid
+            dateClaimed, lostAndFoundLocation,subcategory, fid, rid
         )
         db_queries.deleteItem(item_type, location_found, description, date_found, bid)
 
@@ -262,18 +265,20 @@ def ClaimedItems():
     rooms = db_queries.getRooms(bid, floor) if floor else []
 
     if filter_type == 'all':
-        items = db_queries.get_Claimed_items(bid, order, floor, room)
+        items = db_queries.get_Claimed_items(selected_building, order, floor, room)
     else:
-        items = db_queries.get_Claimed_items_by_type(filter_type, bid, order, floor, room)
+        items = db_queries.get_Claimed_items_by_type(filter_type, selected_building, order, floor, room)
 
     response = {
         "items": [{
             "type": item[0],
-            "location": item[1],
-            "description": item[2],
-            "dateFound": item[3],
-            "dateClaimed": item[4],
-            "roomNumber": item[5]
+            "subcategory": item[1],
+            "location": item[2],
+            "description": item[3],
+            "dateFound": item[4],
+            "dateClaimed": item[5],
+            "roomNumber": item[6],
+            "floorNumber": item[7]
         } for item in items],
         "sort_order": sort_order,
         "filterType": filter_type,
