@@ -1,4 +1,5 @@
 # Guilherme Cassiano, Shane Petree, Mary Cottier
+
 from pickle import TRUE
 from flask import Blueprint, jsonify, render_template, request, redirect, url_for, flash, session, make_response
 from HelloFlask.queries import Queries  
@@ -10,13 +11,18 @@ import json
 import uuid
 from collections import defaultdict
 from datetime import datetime
+import random
+
+from flask_mail import Message
+from HelloFlask.init_mail import mail
+
 # Instance of Queries for database access
 db_queries = Queries()
 account_bp = Blueprint('account', __name__)
 
 # handles the login http request from angular
 @account_bp.route('/login', methods=['POST'])
-@cross_origin(supports_credentials=True) 
+@cross_origin(supports_credentials=True)
 def login():
     data = request.get_json() # Get the JSON data from the request
     username = data.get('NetId')
@@ -54,6 +60,126 @@ def logout():
     db_queries.updateUserToken(session['user_id'])
     session.clear()
     return redirect(url_for('main.home'))
+
+# checks if the user account exists, not needed? DELETE IF NOT USED
+@account_bp.route('/checkuser', methods=['POST'])
+@cross_origin(supports_credentials=True)
+def checkUser():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        email = request.form.get('email')
+
+        # TEST PRINT
+        # print(username)
+        # print(email)
+
+        # get user from NetID
+        user = db_queries.getUserAll(username)
+
+        # TEST PRINT
+        # print(f'usernames match: ', {(user['username'] == username)})
+        # print(f'emails match: ', {(user['email'] == email)})
+
+        # if the user exists, then the reset password email can be sent
+        if user and user['active'] == True and user['username'] == username and user['email'] == email:
+            
+            # create the n (6) digit temp code
+            n = 6
+            range_start = 10**(n-1)
+            range_end = (10**n)-1
+            auth_code = str(random.randint(range_start, range_end))
+
+            # TEST PRINT
+            # print(f'auth_code: {auth_code}')
+
+            # update user's auth token with temp auth code
+            # db_queries.updateUserToken(user['uid'], )
+            db_queries.updateUserToken(user['uid'], auth_code)
+
+            # check if the user's authtoken was updated
+            user = db_queries.getUserAll(username)
+
+            # TEST PRINT
+            # print(f'authtokens match: ', {(user['authtoken'] == auth_code)})
+
+            if user and user['authtoken'] == auth_code:
+
+                # send password reset email
+                msg = Message(
+                    subject = "Your one-time password reset code",
+                    sender = os.getenv("EMAIL"),
+                    # recipients = [os.getenv("TEMP_EMAIL")],
+                    recipients = [email],
+
+                )
+                msg.body = f'Your one-time password reset code \n\n {auth_code}'
+                mail.send(msg)
+            
+                return jsonify({
+                    'success': True,
+                }), 200
+            else:
+                # change this message after it works
+                jsonify({"error": "Authoken was not updated"}), 401
+
+        else:
+            return jsonify({"error": "Unauthorized"}), 401
+        # formAuthToken = request.form.get('authToken')
+        
+    else:
+        return jsonify({"error": "Unauthorized"}), 401
+
+@account_bp.route('/forgotpassword', methods=['GET', 'POST'])
+@cross_origin(supports_credentials=True)
+def forgotPassword():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        email = request.form.get('email')
+        new_password = request.form.get('new_password')
+        auth_code = request.form.get('auth_code')
+        action = request.form.get('action')
+
+        # get user from NetID
+        user = db_queries.getUserAll(username)
+        
+        # change the password if the passwords match and the auth_code matches db/email
+        if action == 'change_password':
+
+            # if the user exists, and sent the correct auth code, then the user's password can be reset
+            if user and user['active'] == True and user['username'] == username and user['email'] == email and user['authtoken'] == auth_code:
+            
+                hashed_password = generate_password_hash(new_password)
+                db_queries.updateUserPassword(user['uid'], hashed_password)
+
+                # check if the password was updated in DB
+                user = db_queries.getUserAll(username)
+
+                if user and user['password'] == hashed_password:
+                    return jsonify({
+                        'success': True,
+                    }), 200
+                else:
+                    # change this message after it works
+                    return jsonify({"error": "Password was not updated"}), 401
+
+            else:
+                return jsonify({"error": "Unauthorized"}), 401
+    
+        # check if the auth_code is valid
+        if action == 'check_auth_code':
+            if user and user['active'] == True and user['username'] == username and user['email'] == email and user['authtoken'] == auth_code:
+
+                if user and user['authtoken'] == auth_code:
+                    return jsonify({
+                        'success': True,
+                    }), 200
+                else:
+                    # change this message after it works
+                    return jsonify({"error": "Incorrect security code"}), 401
+    
+    else:
+        return jsonify({"error": "Unauthorized"}), 401
+
 
 @account_bp.route('/adduser', methods=['GET', 'POST'])
 @cross_origin(supports_credentials=True) 
@@ -95,7 +221,6 @@ def addUser():
                         print(f"Invalid line format: {line.strip()}")
 
             os.remove(file_path)
-            #return redirect(url_for('account.addUser',buildingsDisplay=buildingsDisplay ))
 
         # Check for single-user form submission
         username = request.form.get('netID')
@@ -113,8 +238,10 @@ def addUser():
 
         if all([username, password, email, buildings]):
             # Validate and process single-user form submission
-            if not email.endswith('@unr.edu'):
-                return jsonify({"error": "Email is not valid"}), 400
+            #! UNCOMMENT AFTER EMAIL WORKS----------------------------------------------------------------------------
+            # if not email.endswith('@unr.edu'):
+            #     return jsonify({"error": "Email is not valid"}), 400
+
             #hash user passowrd
             hashed_password = generate_password_hash(password)
             #create account 
