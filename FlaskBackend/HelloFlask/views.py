@@ -106,10 +106,8 @@ def info():
         }), 400
 
     if filter_type == 'all' and subtype_filter == 'all':
-        
         items = db_queries.get_items(building, order, floor, room)
     else:
-        print("FILTER AND SUBFILTER: ", filter_type, subtype_filter)
         items = db_queries.get_items_by_type(filter_type, building, order, floor, room, subtype_filter)
 
     return jsonify({
@@ -247,7 +245,6 @@ def ClaimedItems():
     formAuthToken = request.args.get('token')
     floor = request.args.get("floor")
     room = request.args.get("room")
-
     uidauthtoken = db_queries.getTokenByUID(user_id)
     uidauthtoken = uidauthtoken[0] if isinstance(uidauthtoken, list) and uidauthtoken else None
 
@@ -262,16 +259,15 @@ def ClaimedItems():
     sort_order = request.args.get('sort', 'oldest')
     order = "ASC" if sort_order == "oldest" else "DESC"
     filter_type = request.args.get('filterType', 'all')
-
+    subtype_filter = request.args.get('subtype', 'all')
     bid = db_queries.getBuildingID(selected_building)
     floors = db_queries.getFloors(bid)
     rooms = db_queries.getRooms(bid, floor) if floor else []
 
-    if filter_type == 'all':
+    if filter_type == 'all' and subtype_filter == 'all':
         items = db_queries.get_Claimed_items(selected_building, order, floor, room)
     else:
-        items = db_queries.get_Claimed_items_by_type(filter_type, selected_building, order, floor, room)
-
+        items = db_queries.get_Claimed_items_by_type(filter_type, selected_building, order, floor, room, subtype_filter)
     response = {
         "items": [{
             "type": item[0],

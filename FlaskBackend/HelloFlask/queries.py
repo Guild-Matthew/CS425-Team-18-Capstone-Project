@@ -127,14 +127,19 @@ class Queries:
         return self.cursor.fetchall()
 
     # Query to get filtered items from the "Claimed items" table
-    def get_Claimed_items_by_type(self, item_type, LFlocation, order, floor=None, room=None):
+    def get_Claimed_items_by_type(self, item_type, LFlocation, order, floor=None, room=None, subtype=None):
         query = f"""
-            SELECT i.itemType, i.subcategory, i.LocationFound, i.itemDescription, i.dateFound, i.dateClaimed, r.roomnumber
+            SELECT i.itemType, i.subcategory, i.LocationFound, i.itemDescription, i.dateFound, i.dateClaimed, r.roomnumber, r.floornumber
             FROM claimedItems i
             LEFT JOIN rooms r ON i.rid = r.rid
             WHERE i.lflocation = %s AND i.itemType = %s
         """
         params = [LFlocation, item_type]
+
+        if subtype and subtype != 'all':
+            query += " AND i.subcategory = %s"
+            params.append(subtype)
+
         if floor:
             query += """
                 AND i.fid = (
