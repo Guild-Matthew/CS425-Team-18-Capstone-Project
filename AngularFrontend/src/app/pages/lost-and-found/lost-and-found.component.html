@@ -75,7 +75,8 @@
 
         <div class="product-grid" *ngIf="!errorMessage">
           <div *ngFor="let item of filteredItems; trackBy: trackByFn" class="product">
-            <h3><strong>Item type: </strong> <span>{{ item.type }}</span></h3>
+            <h3><strong>Item category: </strong> <span>{{ item.type }}</span></h3>
+            <h3><strong>Item type: </strong> <span>{{ item.subcategory }}</span></h3>
             <h3><strong>Location found: </strong> <span>{{ item.location }}</span></h3>
             <h3><strong>Date found: </strong> <span>{{ item.dateFound }}</span></h3>
             <h3><strong>Description: </strong> <span>{{ item.description }}</span></h3>

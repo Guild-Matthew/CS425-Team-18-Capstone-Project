@@ -147,9 +147,10 @@ def Reportitems():
 
         upload_folder = os.path.join(current_app.root_path, 'static', 'uploads')
         os.makedirs(upload_folder, exist_ok=True)
+
         db_queries.insert_item(
             item_type, location_found, description, date_found,
-            bid, subcategory, fid, rid
+            lostAndFoundLocation, subcategory, fid, rid
         )
 
         return jsonify({"message": "Item added successfully"}), 200

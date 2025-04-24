@@ -12,6 +12,7 @@ import { NavBarComponent } from '../../nav-bar/nav-bar.component';
 interface Item {
   id: number;
   type: string;
+  subcategory: string;
   location: string;
   dateFound: string;
   description: string;
@@ -67,10 +68,11 @@ export class LostAndFoundComponent implements OnInit {
         this.items = data.items.map((item: any) => ({
           id: item.id,
           type: item[0],
-          location: item[1],
+          subcategory: item[5],
+          location: item[4],
           description: item[2],
           dateFound: item[3],
-          roomNumber: item[5],
+          roomNumber: item[7],
           claimed: item.claimed || false
         }));
         this.buildings = data.buildings;
