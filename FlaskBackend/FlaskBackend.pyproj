@@ -42,6 +42,7 @@
     <Compile Include="HelloFlask\__init__.py" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include=".env" />
     <Content Include="DB Dumps\TestDB-dump-4-18-2025.backup" />
     <Content Include="HelloFlask\static\css\addUser.css" />
     <Content Include="HelloFlask\static\css\claimedItems.css" />

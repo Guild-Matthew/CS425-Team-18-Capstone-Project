@@ -21,7 +21,7 @@ class Queries:
         self.conn.close()
 
     # Query to insert an item into the "items" table
-    def insert_item(self, itemType, LocationFound, itemDescription, dateFound, LFlocation, subcategory, fid=None, rid=None, performed_by="system"):
+    def insert_item(self, itemType, LocationFound, itemDescription, dateFound, LFlocation, subcategory, performedby, fid=None, rid=None):
         insert_query = """
             INSERT INTO items (itemType, LocationFound, itemDescription, dateFound, LFlocation, subcategory, fid, rid)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
@@ -34,7 +34,7 @@ class Queries:
             INSERT INTO operationslogitems (actiontype, itemtype, locationfound, description, datefound, performedby, lflocation, subcategory)
             VALUES ('INSERT', %s, %s, %s, %s, %s, %s, %s)
         """
-        self.cursor.execute(log_query, (itemType, LocationFound, itemDescription, dateFound, performed_by, LFlocation, subcategory))
+        self.cursor.execute(log_query, (itemType, LocationFound, itemDescription, dateFound, performedby, LFlocation, subcategory))
         self.conn.commit()
 
     # Query to insert an item into the "Claimed items" table
@@ -210,7 +210,7 @@ class Queries:
                 WHERE uid IN ({placeholders}) AND role = %s AND active = %s
             """
             self.cursor.execute(query, tuple(uid_list) + (roles,) + (active,))
-            rows = self.cursor.fetchall()
+        rows = self.cursor.fetchall()
 
         if not rows: 
             return "none"
@@ -284,12 +284,12 @@ class Queries:
         self.conn.commit()
 
     # Query to remove an item from the "items" table (removing an item from the L&F)
-    def deleteItem(self, itemType, LocationFound, itemDescription, dateFound, LFlocation, performed_by="system"):
+    def deleteItem(self, itemType, LocationFound, itemDescription, dateFound, LFlocation, performed_by):
         delete_query = """
             DELETE FROM items
-            WHERE itemType = %s AND LocationFound = %s AND itemDescription = %s AND dateFound = %s
+            WHERE itemType = %s AND LocationFound = %s AND itemDescription = %s AND LFlocation = %s
             """
-        self.cursor.execute(delete_query, (itemType, LocationFound, itemDescription, dateFound))
+        self.cursor.execute(delete_query, (itemType, LocationFound, itemDescription, LFlocation))
         self.conn.commit()
 
         log_query = """
@@ -346,6 +346,15 @@ class Queries:
         FROM users
         WHERE username = %s
         """, (username,))
+        row = self.cursor.fetchone() 
+        return row[0] if row else None  
+
+    def getUserNetID(self, uid):
+        self.cursor.execute("""
+        SELECT email
+        FROM users
+        WHERE uid = %s
+        """, (uid,))
         row = self.cursor.fetchone() 
         return row[0] if row else None  
 
