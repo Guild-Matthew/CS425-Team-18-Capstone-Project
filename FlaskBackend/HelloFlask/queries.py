@@ -240,7 +240,7 @@ class Queries:
                 WHERE uid IN ({placeholders}) AND role = %s AND active = %s
             """
             self.cursor.execute(query, tuple(uid_list) + (roles,) + (active,))
-            rows = self.cursor.fetchall()
+        rows = self.cursor.fetchall()
 
         if not rows: 
             return "none"
