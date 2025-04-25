@@ -105,7 +105,7 @@ export class AddUserComponent implements OnInit {
           console.log("User added successfully:", response);
           alert('User successfully added!');
           this.resetForm();
-          this.router.navigate(['/dashboard']);
+          //this.router.navigate(['/dashboard']);
         },
         error: err => {
           console.error("Error adding user:", err);
