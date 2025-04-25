@@ -680,6 +680,48 @@ class Queries:
         result = self.cursor.fetchone()
         return result[0] if result else 'unknown'
 
+    def removeItemsFromRoom(self, rid):
+        query = """
+            DELETE FROM items 
+            WHERE rid = %s 
+        """
+        self.cursor.execute(query, (rid,))
+        self.conn.commit()
+
+    def removeClaimedItemsFromRoom(self, rid):
+        query = """
+            DELETE FROM claimedItems 
+            WHERE rid = %s 
+        """
+        self.cursor.execute(query, (rid,))
+        self.conn.commit()
+
+    def removeItemsFromFloor(self, fid):
+        query = """
+            DELETE FROM items 
+            WHERE fid = %s 
+        """
+        self.cursor.execute(query, (fid,))
+        self.conn.commit()
+
+    def removeClaimedItemsFromFloor(self, fid):
+        query = """
+            DELETE FROM claimedItems 
+            WHERE fid = %s 
+        """
+        self.cursor.execute(query, (fid,))
+        self.conn.commit()
+
+    def removeRoomsFromFloor(self, bid, floornumber):
+        query = """
+            DELETE FROM rooms 
+            WHERE bid = %s AND floornumber = %s
+        """
+        self.cursor.execute(query, (bid, floornumber,))
+        self.conn.commit()
+
+    
+
 
 if __name__ == "__main__":
     # Create an instance of Queries

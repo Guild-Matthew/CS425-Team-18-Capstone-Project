@@ -20,7 +20,7 @@ export class AddFloorComponent implements OnInit {
   authToken: string | null = null;
   selectedBuilding: string = '';
   floors: string[] = [];
-  newFloorNumber: number | null = null;
+  newFloorNumber: string | null = null;
   role: string | null = null; 
 
   constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router) { }
@@ -84,6 +84,15 @@ export class AddFloorComponent implements OnInit {
     if (!userId || !authToken || !this.selectedBuilding || this.newFloorNumber === null) {
       console.error("Missing required data");
       return;
+    }
+
+    // check if the floor exists
+    for (const floor of this.floors) {
+      if (floor == this.newFloorNumber) {
+        console.error(`Floor ${this.newFloorNumber} already exists.`);
+        alert(`Floor ${this.newFloorNumber} already exists.`);
+        return;
+      }
     }
 
     const formData = new FormData();

@@ -338,7 +338,6 @@ def EditBuilding():
         # Fetch floors for the selected building
         bid = db_queries.getBuildingID(selected_building)
         floors = db_queries.getFloors(bid)  
-
         if request.method == 'POST':
             action = request.form.get('action') 
             if action == 'add_floor':
@@ -351,6 +350,10 @@ def EditBuilding():
                 user_id = request.form.get('user_id')
                 role = request.form.get('role')
                 floor_number = request.form.get('floor_number') 
+                fid = db_queries.getFloorID(selected_building, floor_number)
+                db_queries.removeItemsFromFloor(fid)
+                db_queries.removeClaimedItemsFromFloor(fid)
+                db_queries.removeRoomsFromFloor(bid, floor_number)
                 db_queries.removeFloor(bid, floor_number)
                 floors = db_queries.getFloors(bid)
 
@@ -410,12 +413,15 @@ def EditFloor():
     else:
         selected_room = request.args.get('selected_room', rooms[0] if rooms else None)
 
+    rid = db_queries.getRoomID(selected_building, selected_floor, selected_room)
     if request.method == 'POST':
         action = request.form.get('action')
         if action == 'add_room':
             db_queries.addRoom(bid, selected_room, selected_floor)
             rooms = db_queries.getRooms(bid, selected_floor)
         elif action == 'remove_room':
+            db_queries.removeClaimedItemsFromRoom(rid)
+            db_queries.removeItemsFromRoom(rid)
             db_queries.removeRoom(bid, selected_room)
             rooms = db_queries.getRooms(bid, selected_floor)
 
