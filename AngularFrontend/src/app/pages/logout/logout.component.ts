@@ -28,7 +28,6 @@ export class LogoutComponent implements OnInit {
       alert('Your session has been closed.');
     }
 
-    // Redirect to your desired route
     this.router.navigate(['/map']);
   }
 }

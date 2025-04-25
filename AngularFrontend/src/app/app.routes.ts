@@ -20,6 +20,7 @@ import { AddFloorComponent } from './pages/add-floor/add-floor.component';
 import { EditFloorComponent } from './pages/edit-floor/edit-floor.component';
 import { GenerateReportComponent } from './pages/generate-report/generate-report.component';
 import { EditPermissionsComponent } from './pages/edit-permissions/edit-permissions.component';
+import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 
 export const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
@@ -27,6 +28,7 @@ export const routes: Routes = [
   { path: 'add-user', component: AddUserComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
   { path: 'logout', component: LogoutComponent }, // navigate here to log out and clear localStorage
+  { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'lost-and-found', component: LostAndFoundComponent },
   { path: 'add-item', component: AddItemComponent, canActivate: [AuthGuard] },
   { path: 'claimed-items', component: ClaimedItemsComponent, canActivate: [AuthGuard] },

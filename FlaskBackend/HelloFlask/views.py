@@ -1,5 +1,5 @@
-# This file was implemented by Guilherme Domingues Cassiano
-# A section by Shane Petree
+# Guilherme Domingues Cassiano, Shane Petree
+
 from flask import render_template, request, redirect, url_for, Blueprint, jsonify, session, current_app, Flask
 from HelloFlask.queries import Queries
 from datetime import datetime 
@@ -8,6 +8,10 @@ import os
 import numpy as np
 from werkzeug.utils import secure_filename
 from flask_cors import cross_origin
+
+from flask_mail import Message
+from HelloFlask.init_mail import mail
+
 # Create an instance of the Queries class for database operations
 db_queries = Queries()
 main_bp = Blueprint('main', __name__)

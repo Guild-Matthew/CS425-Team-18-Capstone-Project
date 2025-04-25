@@ -1,13 +1,19 @@
-# File implemented by Guilherme Domingues Cassiano 
+# Guilherme Domingues Cassiano, Shane Petree 
+
 import psycopg2
 from psycopg2 import sql
+from os import getenv
+from dotenv import load_dotenv
+
+# load env variables
+load_dotenv('.env')
 
 def create_tables():
     # Connect to the 'TestDB' database
     conn = psycopg2.connect(
-        dbname="TestDB",
+        dbname="testdb",
         user="postgres",
-        password="#aH6TR5fkcdx99",
+        password=getenv("DATABASE_PASSWORD"),
         host="localhost",
         port="5432"
     )
