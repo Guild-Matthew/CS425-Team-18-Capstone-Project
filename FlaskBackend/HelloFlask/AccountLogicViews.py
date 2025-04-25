@@ -130,8 +130,8 @@ def checkUser():
                 msg = Message(
                     subject = "Your one-time password reset code",
                     sender = os.getenv("EMAIL"),
-                    # recipients = [os.getenv("TEMP_EMAIL")],
-                    recipients = [email],
+                    recipients = [os.getenv("TEMP_EMAIL")],
+                    # recipients = [email],
 
                 )
                 msg.body = f'Your one-time password reset code \n\n {auth_code}'
