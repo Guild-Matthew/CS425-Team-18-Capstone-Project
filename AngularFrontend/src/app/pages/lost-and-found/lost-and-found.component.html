@@ -69,7 +69,6 @@
 
       <!-- Products Section -->
       <section id="products">
-        <h2>Items will be kept until December 29th, 2024</h2>
         <h2>Items located in Building: {{ selectedBuilding }}</h2>
 
         <!-- Add Item Button -->
@@ -92,7 +91,8 @@
             <h3 *ngIf="item.roomNumber"><strong>Room: </strong> <span>{{ item.roomNumber }}</span></h3>
 
             <!-- Mark as Claimed Button -->
-            <div class="claim-button-section" *ngIf="role === 'student' || role === 'admin' || role === 'superadmin'">
+            <div class="claim-button-section"
+                 *ngIf="(role === 'student' || role === 'admin' || role === 'superadmin') && checkPermissions()">
               <button class="main-content-button" (click)="markAsClaimed(item)">Mark as Claimed</button>
             </div>
 

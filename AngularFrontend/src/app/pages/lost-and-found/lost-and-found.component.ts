@@ -42,7 +42,9 @@ export class LostAndFoundComponent implements OnInit {
   errorMessage: string = '';
   closestSuggestedBuilding: string = '';
   role: string | null = null;
+  userid: string | null = null;
   selectedSubtype: string = 'all';
+  buildingpermissions: string[] = [];
   subtypes: string[] = [];
   subcategories: { [key: string]: string[] } = {
     clothing: [
@@ -91,8 +93,18 @@ export class LostAndFoundComponent implements OnInit {
     });
   }
 
+  checkPermissions(): boolean {
+    for (const buildingCheck of this.buildingpermissions) {
+      if (buildingCheck === this.selectedBuilding) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   checkLoginStatus(): void {
     this.role = localStorage.getItem('role');
+    this.userid = localStorage.getItem('user_id');
     if (!this.role || !['student', 'admin', 'superadmin'].includes(this.role)) {
       console.log(`User is logged in as: ${this.role}`);
     }
@@ -100,7 +112,7 @@ export class LostAndFoundComponent implements OnInit {
 
   fetchItems(): void {
     this.errorMessage = '';
-    const url = `${flask_URL}/L&F?building=${encodeURIComponent(this.selectedBuilding)}&filterType=${encodeURIComponent(this.filterType)}&subtype=${encodeURIComponent(this.selectedSubtype)}&sort=${encodeURIComponent(this.sortOrder)}&floor=${encodeURIComponent(this.selectedFloor)}&room=${encodeURIComponent(this.selectedRoom)}`;
+    const url = `${flask_URL}/L&F?building=${encodeURIComponent(this.selectedBuilding)}&filterType=${encodeURIComponent(this.filterType)}&subtype=${encodeURIComponent(this.selectedSubtype)}&sort=${encodeURIComponent(this.sortOrder)}&floor=${encodeURIComponent(this.selectedFloor)}&room=${encodeURIComponent(this.selectedRoom)}&user_id=${encodeURIComponent(this.userid)}`;
 
 
     this.http.get<any>(url).subscribe(
@@ -120,6 +132,7 @@ export class LostAndFoundComponent implements OnInit {
         this.floors = data.floors || [];
         this.rooms = data.rooms || [];
         this.selectedBuilding = data.selected_building;
+        this.buildingpermissions = data.accessbuildings || [];
         this.applyFilters();
       },
       error => {

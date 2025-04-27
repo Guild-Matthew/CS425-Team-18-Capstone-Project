@@ -108,18 +108,35 @@ def info():
             "closest_building": closest_building["buildingcode"],
             "buildings": all_buildings
         }), 400
-
-    if filter_type == 'all' and subtype_filter == 'all':
-        items = db_queries.get_items(building, order, floor, room)
+    user_id = request.args.get('user_id') 
+    if user_id != 'null':
+        buildings = db_queries.getBuildingsFromPermissions(user_id)
+        if filter_type == 'all' and subtype_filter == 'all':
+            items = db_queries.get_items(building, order, floor, room)
+        else:
+            items = db_queries.get_items_by_type(filter_type, building, order, floor, room, subtype_filter)
+        return jsonify({
+            "items": items,
+            "buildings": all_buildings,
+            "selected_building": building,
+            "floors": floors,
+            "rooms": rooms,
+            "accessbuildings": buildings
+        })
     else:
-        items = db_queries.get_items_by_type(filter_type, building, order, floor, room, subtype_filter)
-    return jsonify({
-        "items": items,
-        "buildings": all_buildings,
-        "selected_building": building,
-        "floors": floors,
-        "rooms": rooms
-    })
+        if filter_type == 'all' and subtype_filter == 'all':
+            items = db_queries.get_items(building, order, floor, room)
+        else:
+            items = db_queries.get_items_by_type(filter_type, building, order, floor, room, subtype_filter)
+        return jsonify({
+            "items": items,
+            "buildings": all_buildings,
+            "selected_building": building,
+            "floors": floors,
+            "rooms": rooms
+        })
+
+
 
 @main_bp.route('/Items', methods=['GET', 'POST'])
 @cross_origin(supports_credentials=True)
