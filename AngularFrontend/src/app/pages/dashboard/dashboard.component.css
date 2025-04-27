@@ -1,147 +1,157 @@
-/* Matthew Guild, Shane Petree*/
+/* Reset and Layout */
+* {
+  box-sizing: border-box;
+}
 
-/* Ensure full height and remove margins */
-html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-  }
-  /* Header Styling */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f3f4f6;
+  color: #000000;
+}
+
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Header */
 header {
-    background-color:  #041E42;
-    color: white;
-    padding: 15px 30px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    box-sizing: border-box;
-  }
-  
-  /* Logo Group (Image + Text) */
-  .logo-group {
-    display: flex;
-    align-items: center;
-  }
-  
-  .logo-group img {
-    width: 65px;
-    height: auto;
-    margin-right: 15px;
-  }
-  
-  .logo-group span {
-    font-size: 1.5em;
-    font-weight: bold;
-    white-space: nowrap;
-  }
-  
-  /* Navigation Styling */
-  nav {
-    flex-grow: 1; /* Ensures nav stretches */
-    display: flex;
-    justify-content: flex-end;
-  }
-  
-  nav ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    gap: 20px;
-  }
-  
-  nav ul li {
-    display: inline-block;
-  }
-  
-  nav ul li a {
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 1.1em;
-    padding: 10px 15px;
-  }
-  
-  nav ul li a:hover {
-    text-decoration: underline;
-  }
-  
-  
-  /* Main content fills the screen */
-  .main-container {
-    display: flex;
-    flex-direction: column;
-    height: 100vh; /* Viewport height */
-  }
-  
-  /* Hero section takes full height minus the header/footer */
-  .hero {
-    flex-grow: 1; /* Fills remaining space */
-    position: relative;
-    /* Shane Petree */
-    background-image: url(../../../assets/campus_image.jpg);
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    text-align: center;
-    width: 100%;
-    height: calc(100vh - 150px); /* Adjust for header & footer */
-  }
-  
-  /* Overlay to darken image */
-  .hero-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-  }
-  
-  /* Hero content stays centered */
-  .hero-content {
-    position: relative;
-    z-index: 2;
-  }
-  
-  /* Hero title & text */
-  .hero-content h1 {
-    font-size: 3em;
-    margin: 0;
-  }
-  
-  .hero-content p {
-    font-size: 1.2em;
-    margin-top: 10px;
-  }
-  
-  /* Buttons centered below text */
-  .hero-buttons {
-    margin-top: 20px;
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-  }
-  
-  .hero-button {
-    padding: 12px 24px;
-    background-color: #041E42;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 1.1em;
-    cursor: pointer;
-    text-decoration: none;
-  }
-  
-  .hero-button:hover {
-    background-color:  #041E42;
-  }
+  width: 100%;
+  background-color: #041E42;
+  color: white;
+}
+
+.top-bar {
+  background-color: #041E42;
+  padding: 0.5rem 1rem;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.top-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.top-links .nav-link {
+  color: white;
+  text-transform: uppercase;
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.top-links .nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.top-links .login-button {
+  background-color: #78be20;
+  color: black;
+  font-weight: bold;
+  padding: 0.4rem 1rem;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  transition: background-color 0.2s ease;
+}
+
+.top-links .login-button:hover {
+  background-color: #65a718;
+}
+
+.branding-bar {
+  background-color: #041E42;
+  text-align: center;
+  padding: 1.5rem 1rem;
+  color: white;
+}
+
+.branding-bar img {
+  height: 60px;
+  margin-bottom: 0.5rem;
+}
+
+.branding-bar h1 {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.branding-bar p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #ccc;
+}
+
+/* Hero Section */
+.hero {
+  flex-grow: 1;
+  position: relative;
+  background-image: url('../../../assets/campus_image.jpg');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-align: center;
+  width: 100%;
+  height: calc(100vh - 150px);
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-content h1 {
+  font-size: 3em;
+  margin: 0;
+}
+
+.hero-content p {
+  font-size: 1.2em;
+  margin-top: 10px;
+}
+
+.hero-buttons {
+  margin-top: 20px;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.hero-button {
+  padding: 12px 24px;
+  background-color: #041E42;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.1em;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.hero-button:hover {
+  background-color: #041E42;
+}
 
 /* Footer */
 .footer {
@@ -155,7 +165,23 @@ header {
   font-family: Arial, sans-serif;
 }
 
-  .footer p {
-    margin: 0;
-    font-size: 0.95rem;
+.footer p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero-content h1 {
+    font-size: 2em;
   }
+
+  .hero-content p {
+    font-size: 1em;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+}
