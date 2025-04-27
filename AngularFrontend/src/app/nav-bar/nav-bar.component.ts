@@ -1,3 +1,4 @@
+// Shane Petree, Guilherme Cassiano
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink, NavigationEnd } from '@angular/router';
