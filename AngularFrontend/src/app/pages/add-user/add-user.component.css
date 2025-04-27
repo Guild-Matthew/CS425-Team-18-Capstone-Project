@@ -111,4 +111,30 @@ footer {
   background-size: cover;
   background-position: center;
 }
-  
+
+.checkbox-group {
+  width: 100%;
+}
+
+  .checkbox-group > label {
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .checkbox-group div {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    width: 100%;
+    padding: 8px 0;
+  }
+
+    .checkbox-group div label {
+      display: contents;
+      font-weight: bold;
+    }
+
+      .checkbox-group div label span {
+        text-align: left;
+      }

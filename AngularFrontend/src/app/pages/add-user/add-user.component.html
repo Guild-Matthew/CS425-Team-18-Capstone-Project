@@ -45,8 +45,8 @@
             <label>Building Permissions:</label>
             <div *ngFor="let building of buildings">
               <label>
+                <span>{{ building }}</span>
                 <input type="checkbox" [value]="building" (change)="onCheckboxChange($event)" />
-                {{ building }}
               </label>
             </div>
           </div>
