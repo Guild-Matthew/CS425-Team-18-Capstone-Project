@@ -1,5 +1,4 @@
-//Matthew Guild, Mary Cottier, Shane Petree
-
+//Mary Cottier, Matthew Guild, Shane Petree
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -12,6 +11,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { flask_URL } from '../../app.config';
+import { ToastService } from '../../toast.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
@@ -27,13 +28,14 @@ import { flask_URL } from '../../app.config';
     MatButtonModule,
     RouterLink,
     HttpClientModule,
+    CommonModule,
   ],
 })
 export class LoginComponent {
   netId: string = '';
   password: string = '';
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router, public toastService: ToastService) { }
 
   onSubmit() {
     const loginData = { NetId: this.netId, password: this.password };
@@ -51,24 +53,24 @@ export class LoginComponent {
         } else {
           // Handle known failures with error message from Flask
           if (response.error) {
-            alert(response.error);
+            this.toastService.add(response.error, 3000, 'error'); // Show toast for error
           } else {
-            alert('Login failed. Please try again.');
+            this.toastService.add('Login failed. Please try again.', 3000, 'error'); // Show toast for login failure
           }
           console.error("Login failed: No success flag in response.");
         }
       },
       (error) => {
-        // Backend sent 403 or 401, parse and alert user
+        // Backend sent 403 or 401, parse and show toast message
         if (error.status === 403 && error.error?.error) {
-          alert(error.error.error); // Account locked alert from Flask
+          this.toastService.add(error.error.error, 3000, 'error'); // Account locked toast
         } else if (error.status === 401 && error.error?.error) {
-          alert(error.error.error); // Invalid password warning from Flask
+          this.toastService.add(error.error.error, 3000, 'error'); // Invalid password toast
         } else {
-          alert('Your account has been locked. Please contact your administrator or try again later.');
+          this.toastService.add('Your account has been locked. Please contact your administrator or try again later.', 3000, 'error');
         }
         console.error("Login failed:", error);
       }
     );
   }  
-}  
+}

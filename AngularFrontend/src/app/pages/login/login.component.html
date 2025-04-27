@@ -1,5 +1,5 @@
 <!--Mary Cottier, Matthew Guild, Shane Petree-->
-<!-- HEADER -->
+
 <header class="header">
   <div class="top-bar">
     <div class="top-links">
@@ -22,6 +22,7 @@
       </div>
       <img class="university-logo-large-img align-image-bottom" alt="University of Nevada, Reno" src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg" width="65" height="65">
       <h1>Sign in</h1>
+      
       <form (ngSubmit)="onSubmit()">
         <mat-form-field appearance="fill">
           <mat-label>NetID</mat-label>
@@ -36,13 +37,18 @@
         <button mat-button type="submit">Next</button>
       </form>      
       <div class="signin-options">
-        <!--<button class="signin-option-btn">Sign-in options</button>-->
         <button class="signin-option-btn" routerLink="/forgot-password">Forgot Password?</button>
       </div>
     </div>
   </div>
 </div>
-    <!-- Footer Section -->
-    <footer>
-      <p>&copy; 2025 University of Nevada, Reno. Lost and Found Service.</p>
-    </footer>
+
+<!-- Toast Container: Display toast messages here -->
+<div *ngFor="let toast of toastService.toasts" class="toast" [ngClass]="toast.type">
+  {{ toast.message }}
+</div>
+
+<!-- Footer Section -->
+<footer>
+  <p>&copy; 2025 University of Nevada, Reno. Lost and Found Service.</p>
+</footer>
