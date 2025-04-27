@@ -7,6 +7,7 @@ import { RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { flask_URL } from '../../app.config';
+import { PasswordRequirementsService } from '../../services/password-requirements/password-requirements.service';
 
 @Component({
   selector: 'app-add-user',
@@ -25,11 +26,13 @@ export class AddUserComponent implements OnInit {
   buildings: string[] = [];
   authToken: string | null = null;
   role: string | null = null;
+  pass_min_length: number;
 
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private validatePass: PasswordRequirementsService
   ) {
     this.addUserForm = this.fb.group({
       netID: ['', Validators.required],
@@ -38,6 +41,8 @@ export class AddUserComponent implements OnInit {
       selectedRole: ['', Validators.required],
       buildings: this.fb.array([]) 
     });
+
+    this.pass_min_length = this.validatePass.getMinPasswordLength();
   }
 
   ngOnInit(): void {
@@ -87,6 +92,13 @@ export class AddUserComponent implements OnInit {
     if (!userId || !this.authToken) {
       console.error("Missing user ID or token. Redirecting to login.");
       this.router.navigate(['/login']);
+      return;
+    }
+
+    // if password does not fit the requirements
+    if (!this.validatePass.validatePassword(this.addUserForm.value.password)) {
+      alert(`Passwords must contain at least ${this.pass_min_length} characters, 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character.`);
+      this.addUserForm.patchValue({ 'password': null });
       return;
     }
 

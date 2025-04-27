@@ -1,7 +1,7 @@
 // Shane Petree
 
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { flask_URL } from '../../app.config';
 import { HttpClient } from '@angular/common/http';
@@ -13,6 +13,7 @@ import { MatOption } from '@angular/material/core';
 import { MatListModule } from '@angular/material/list';
 import { MatSelect } from '@angular/material/select';
 import { NavBarComponent } from '../../nav-bar/nav-bar.component';
+import { PasswordRequirementsService } from '../../services/password-requirements/password-requirements.service';
 
 @Component({
   selector: 'app-forgot-password',
@@ -40,8 +41,9 @@ export class ForgotPasswordComponent {
   confirm_password: string | null = null;
   auth_code: number | null = null;
   form_state: string = 'get_credentials';    // 'get_credentials', 'check_auth_code', 'check_passwords_match'
+  pass_min_length: number;
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) {
+  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router, private validatePass: PasswordRequirementsService) {
     this.forgotPasswordForm = this.fb.group({
       NetID: [this.NetID, Validators.required],
       email: [this.email, Validators.required],
@@ -49,6 +51,8 @@ export class ForgotPasswordComponent {
       new_password: [this.new_password, Validators.required],
       confirm_password: [this.confirm_password, Validators.required],
     });
+
+    this.pass_min_length = this.validatePass.getMinPasswordLength();
   }
 
   onSubmit() {
@@ -66,11 +70,18 @@ export class ForgotPasswordComponent {
 
     // checking if the new passwords match
     if (this.form_state == 'check_passwords_match') {
+      // check if the passwords match
       if (this.new_password == this.confirm_password) {
-        this.changePassword();
+        // check if passwords fits the password requirements
+        if (this.validatePass.validatePassword(this.new_password) && this.validatePass.validatePassword(this.new_password)) {
+          this.changePassword();
+        }
+        else {
+          alert(`Passwords must contain at least ${this.pass_min_length} characters, 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character.`);
+          this.clearPasswords();
+        }
       }
-      else
-      {
+      else {
         alert("Passwords do not match.");
         this.clearPasswords();
       }
@@ -164,6 +175,12 @@ export class ForgotPasswordComponent {
         },
       }
     );
+  }
+
+  // using a regular expression: checks if a password has uppercase, lowercase, numbers, special characters, and is at least 8 chars long
+  validatePassword(password: string): boolean {
+    const reg_expr = new RegExp(`^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$`);
+    return reg_expr.test(password);
   }
 
   getFormValues(): void {
