@@ -46,6 +46,8 @@ export class LostAndFoundComponent implements OnInit {
   selectedSubtype: string = 'all';
   buildingpermissions: string[] = [];
   subtypes: string[] = [];
+  currentPage: number = 1;
+  itemsPerPage: number = 4;
   subcategories: { [key: string]: string[] } = {
     clothing: [
       'Jackets & Coats', 'Hoodies & Sweatshirts', 'Shirts & Blouses',
@@ -167,11 +169,13 @@ export class LostAndFoundComponent implements OnInit {
   }
 
   onSortChange(event: Event): void {
+    this.currentPage = 1;
     this.sortOrder = (event.target as HTMLSelectElement).value;
     this.applyFilters();
   }
 
   onFilterChange(event: Event): void {
+    this.currentPage = 1;
     this.filterType = (event.target as HTMLSelectElement).value;
     this.selectedSubtype = 'all';
     this.fetchSubtypes();        
@@ -203,6 +207,7 @@ export class LostAndFoundComponent implements OnInit {
   }
 
   onSubtypeChange(): void {
+    this.currentPage = 1;
     this.fetchItems();
   }
 
@@ -259,5 +264,25 @@ export class LostAndFoundComponent implements OnInit {
         console.error('Error marking item as claimed:', error);
       }
     });
+  }
+  get paginatedItems() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.filteredItems.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  get totalPages() {
+    return Math.ceil(this.filteredItems.length / this.itemsPerPage);
+  }
+
+  previousPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
   }
 }

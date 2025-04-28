@@ -55,7 +55,7 @@
             <option value="inactive">Deactivated Accounts</option>
           </select>
         </div>
-      </div> 
+      </div>
       <!-- Users Section -->
       <div class="user-section">
         <div class="user-header">
@@ -65,26 +65,42 @@
         </div>
 
         <!-- Activated Users -->
-        <div class="user-card-grid" *ngIf="accountFilter === 'active'">
+        <div class="user-content" *ngIf="accountFilter === 'active'">
           <h2>Active Users</h2>
-          <div class="user-card" *ngFor="let user of filteredUsers">
-            <p><strong>Name:</strong> {{ user.name }}</p>
-            <p><strong>Email:</strong> {{ user.email }}</p>
-            <p><strong>Role:</strong> {{ user.role }}</p>
-            <p><strong>Buildings:</strong> {{ user.buildings.join(', ') }}</p>
-            <button (click)="deactivateUser(user.id)">Deactivate</button>
+          <div class="user-card-grid">
+            <div class="user-card" *ngFor="let user of paginatedActiveUsers">
+              <p><strong>Name:</strong> {{ user.name }}</p>
+              <p><strong>Email:</strong> {{ user.email }}</p>
+              <p><strong>Role:</strong> {{ user.role }}</p>
+              <p><strong>Buildings:</strong> {{ user.buildings.join(', ') }}</p>
+              <button (click)="deactivateUser(user.id)">Deactivate</button>
+            </div>
+          </div>
+
+          <div class="pagination-controls" *ngIf="totalPagesActive > 1">
+            <button (click)="previousPage()" [disabled]="currentPage === 1">Previous</button>
+            <span>Page {{ currentPage }} of {{ totalPagesActive }}</span>
+            <button (click)="nextPageActive()" [disabled]="currentPage === totalPagesActive">Next</button>
           </div>
         </div>
 
         <!-- Deactivated Users -->
-        <div class="user-card-grid" *ngIf="accountFilter === 'inactive' && filteredDeactivatedUsers.length > 0">
+        <div class="user-content" *ngIf="accountFilter === 'inactive' && filteredDeactivatedUsers.length > 0">
           <h2>Deactivated Users</h2>
-          <div class="user-card" *ngFor="let user of filteredDeactivatedUsers">
-            <p><strong>Name:</strong> {{ user.name }}</p>
-            <p><strong>Email:</strong> {{ user.email }}</p>
-            <p><strong>Role:</strong> {{ user.role }}</p>
-            <p><strong>Buildings:</strong> {{ user.buildings.join(', ') }}</p>
-            <button (click)="reactivateUser(user.id)">Reactivate</button>
+          <div class="user-card-grid">
+            <div class="user-card" *ngFor="let user of paginatedDeactivatedUsers">
+              <p><strong>Name:</strong> {{ user.name }}</p>
+              <p><strong>Email:</strong> {{ user.email }}</p>
+              <p><strong>Role:</strong> {{ user.role }}</p>
+              <p><strong>Buildings:</strong> {{ user.buildings.join(', ') }}</p>
+              <button (click)="reactivateUser(user.id)">Reactivate</button>
+            </div>
+          </div>
+
+          <div class="pagination-controls" *ngIf="totalPagesDeactivated > 1">
+            <button (click)="previousPage()" [disabled]="currentPage === 1">Previous</button>
+            <span>Page {{ currentPage }} of {{ totalPagesDeactivated }}</span>
+            <button (click)="nextPageDeactivated()" [disabled]="currentPage === totalPagesDeactivated">Next</button>
           </div>
         </div>
       </div>

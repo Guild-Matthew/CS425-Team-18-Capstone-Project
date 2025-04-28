@@ -199,4 +199,26 @@
       text-align: center;
     }
   }
-  
+
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+  .pagination-controls button {
+    padding: 8px 12px;
+    background-color: #041E42;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+    .pagination-controls button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }

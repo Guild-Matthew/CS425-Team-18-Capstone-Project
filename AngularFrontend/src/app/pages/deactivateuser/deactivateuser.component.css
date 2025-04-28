@@ -48,18 +48,16 @@
   margin-bottom: 1.5rem;
 }
 
-.user-card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1.5rem;
-}
-
 .user-card {
   background-color: #fff;
   border: 1px solid #ddd;
   border-radius: 10px;
   padding: 1rem 1.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 250px; 
 }
 
 .user-card p {
@@ -205,10 +203,6 @@
     width: 100%;
   }
 
-  .user-card-grid {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  }
-
   .top-links {
     flex-wrap: wrap;
     gap: 1rem;
@@ -221,4 +215,52 @@
   .branding-bar h1 {
     font-size: 1.5rem;
   }
+}
+
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+  .pagination-controls button {
+    padding: 8px 12px;
+    background-color: #041E42;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+    .pagination-controls button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+.user-content {
+  display: flex;
+  flex-direction: column;
+  min-height: 320px; 
+  flex-grow: 1;
+}
+
+.user-card-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 295px);
+  justify-content: center;
+  gap: 1.5rem;
+  flex-grow: 1;
+  min-height: 250px;
+}
+
+.pagination-controls {
+  margin-top: auto; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding-top: 1rem;
 }

@@ -82,7 +82,7 @@
         </div>
 
         <div class="product-grid" *ngIf="!errorMessage">
-          <div *ngFor="let item of filteredItems; trackBy: trackByFn" class="product">
+          <div *ngFor="let item of paginatedItems; trackBy: trackByFn" class="product">
             <h3><strong>Item category: </strong> <span>{{ item.type }}</span></h3>
             <h3><strong>Item type: </strong> <span>{{ item.subcategory }}</span></h3>
             <h3><strong>Location found: </strong> <span>{{ item.location }}</span></h3>
@@ -97,6 +97,11 @@
             </div>
 
           </div>
+        </div>
+        <div class="pagination-controls" *ngIf="totalPages > 1">
+          <button (click)="previousPage()" [disabled]="currentPage === 1">Previous</button>
+          <span>Page {{ currentPage }} of {{ totalPages }}</span>
+          <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
         </div>
       </section>
 

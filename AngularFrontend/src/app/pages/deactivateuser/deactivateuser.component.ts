@@ -20,7 +20,8 @@ export class DeactivateUserComponent implements OnInit {
   selectedBuildings: Set<string> = new Set();
   role: string = 'student';
   accountFilter: string = 'active';
-
+  currentPage: number = 1;
+  itemsPerPage: number = 4;
   constructor(private http: HttpClient, private router: Router) { }
 
   ngOnInit(): void {
@@ -130,7 +131,7 @@ export class DeactivateUserComponent implements OnInit {
     this.http.get<any>(`${flask_URL}/deactivate_user`, { params }).subscribe(
       response => {
         this.users = response.users;
-        this.deactivatedUsers = response.deactivatedUsers || [];
+        this.deactivatedUsers = response.usersActivate || [];
       },
       error => {
         console.error('Error fetching filtered users:', error);
@@ -180,4 +181,38 @@ export class DeactivateUserComponent implements OnInit {
 
     this.router.navigate(['/edit-permissions']);
   }
+  get paginatedActiveUsers() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.filteredUsers.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  get paginatedDeactivatedUsers() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.filteredDeactivatedUsers.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+  get totalPagesActive() {
+    return Math.ceil(this.filteredUsers.length / this.itemsPerPage);
+  }
+  get totalPagesDeactivated() {
+    return Math.ceil(this.filteredDeactivatedUsers.length / this.itemsPerPage);
+  }
+
+  previousPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  nextPageActive() {
+    if (this.currentPage < this.totalPagesActive) {
+      this.currentPage++;
+    }
+  }
+
+  nextPageDeactivated() {
+    if (this.currentPage < this.totalPagesDeactivated) {
+      this.currentPage++;
+    }
+  }
+
 }

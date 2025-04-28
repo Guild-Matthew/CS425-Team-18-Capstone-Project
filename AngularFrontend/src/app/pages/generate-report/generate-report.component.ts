@@ -21,9 +21,10 @@ export class GenerateReportComponent implements OnInit {
   building: string = '';
   userId: string | null = null;
   role: string | null = null;
-  selectedDate: string = '';  // Format: YYYY-MM-DD
+  selectedDate: string = '';  
   logType: string = 'item';
-
+  currentPage: number = 1;
+  itemsPerPage: number = 5;
   constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
@@ -77,6 +78,7 @@ export class GenerateReportComponent implements OnInit {
   }
 
   onLogTypeChange(): void {
+    this.currentPage = 1;
     this.loadLogs();
   }
 
@@ -122,6 +124,27 @@ export class GenerateReportComponent implements OnInit {
     a.click();
 
     URL.revokeObjectURL(url);
+  }
+
+  get paginatedLogs() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.filteredLogs.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  get totalPages() {
+    return Math.ceil(this.filteredLogs.length / this.itemsPerPage);
+  }
+
+  previousPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
   }
 
 }

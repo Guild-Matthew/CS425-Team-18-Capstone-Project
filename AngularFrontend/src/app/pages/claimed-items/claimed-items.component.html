@@ -84,7 +84,7 @@
     <section id="products">
       <h2>Found Claimed Items in Building: {{ building }}</h2>
       <div class="product-grid">
-        <div class="product" *ngFor="let item of items">
+        <div class="product" *ngFor="let item of paginatedItems">
           <h3><strong>Item category: </strong> <span>{{ item.type }}</span></h3>
           <h3><strong>Item type: </strong> <span>{{ item.subcategory }}</span></h3>
           <h3><strong>Location found: </strong> <span>{{ item.location }}</span></h3>
@@ -93,6 +93,11 @@
           <h3><strong>Description: </strong> <span>{{ item.description }}</span></h3>
           <h3 *ngIf="item.roomNumber"><strong>Room: </strong> <span>{{ item.roomNumber }}</span></h3>
         </div>
+      </div>
+      <div class="pagination-controls" *ngIf="totalPages > 1">
+        <button (click)="previousPage()" [disabled]="currentPage === 1">Previous</button>
+        <span>Page {{ currentPage }} of {{ totalPages }}</span>
+        <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
       </div>
       <p *ngIf="items.length === 0">No items found for the selected filter.</p>
     </section>

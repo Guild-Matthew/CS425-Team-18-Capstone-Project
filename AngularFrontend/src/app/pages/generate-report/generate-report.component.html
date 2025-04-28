@@ -68,7 +68,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let log of filteredLogs">
+              <tr *ngFor="let log of paginatedLogs">
                 <td>{{ log.actiontype }}</td>
                 <td>{{ log.itemtype }}</td>
                 <td>{{ log.locationfound }}</td>
@@ -91,7 +91,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let log of filteredLogs">
+              <tr *ngFor="let log of paginatedLogs">
                 <td>{{ log.actiontype }}</td>
                 <td>{{ log.email }}</td>
                 <td>{{ log.role }}</td>
@@ -99,6 +99,11 @@
               </tr>
             </tbody>
           </table>
+          <div class="pagination-controls" *ngIf="totalPages > 1">
+            <button (click)="previousPage()" [disabled]="currentPage === 1">Previous</button>
+            <span>Page {{ currentPage }} of {{ totalPages }}</span>
+            <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+          </div>
         </div>
       </div>
       <ng-template #noLogs>

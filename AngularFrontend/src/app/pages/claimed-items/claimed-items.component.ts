@@ -28,6 +28,8 @@ export class ClaimedItemsComponent implements OnInit {
   authToken: string | null = null;
   subtypes: string[] = [];
   selectedSubtype: string = 'all';
+  currentPage: number = 1;
+  itemsPerPage: number = 3;
   subcategories: { [key: string]: string[] } = {
     clothing: [
       'Jackets & Coats', 'Hoodies & Sweatshirts', 'Shirts & Blouses',
@@ -93,6 +95,7 @@ export class ClaimedItemsComponent implements OnInit {
         this.buildings = data.buildings;
         this.floors = data.floors || [];
         this.rooms = data.rooms || [];
+        this.currentPage = 1;
       },
       error => console.error("Error fetching items:", error)
     );
@@ -129,6 +132,26 @@ export class ClaimedItemsComponent implements OnInit {
 
   onRoomChange(): void {
     this.fetchItems();
+  }
+  get paginatedItems() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.items.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  get totalPages() {
+    return Math.ceil(this.items.length / this.itemsPerPage);
+  }
+
+  previousPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
   }
 }
 
