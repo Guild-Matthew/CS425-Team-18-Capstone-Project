@@ -60,9 +60,12 @@
       <div class="user-section">
         <div class="user-header">
           <h2 class="students-header">Students Working in Selected Building</h2>
-          <button class="main-content-button" [routerLink]="'/add-user'">Add User</button>
-          <button class="main-content-button" (click)="navigateToEditPermissions()">Change User Permissions</button>
+          <div class="button-group">
+            <button class="main-content-button" [routerLink]="'/add-user'">Add User</button>
+            <button class="main-content-button" (click)="navigateToEditPermissions()">Change User Permissions</button>
+          </div>
         </div>
+        
 
         <!-- Activated Users -->
         <div class="user-content" *ngIf="accountFilter === 'active'">

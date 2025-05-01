@@ -45,7 +45,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
+  flex-wrap: wrap; 
+  gap: 1rem;
+}
+
+.button-group {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .user-card {
@@ -249,8 +256,7 @@
 
 .user-card-grid {
   display: grid;
-  grid-template-columns: repeat(4, 295px);
-  justify-content: center;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 1.5rem;
   flex-grow: 1;
   min-height: 250px;
