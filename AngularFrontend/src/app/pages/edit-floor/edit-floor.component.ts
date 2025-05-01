@@ -45,7 +45,12 @@ export class EditFloorComponent implements OnInit {
   selected_floor: string | null = null;
   selected_room: string | null = null;
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router, public toastService: ToastService) {
+  constructor(
+    private fb: FormBuilder,
+    private http: HttpClient,
+    private router: Router,
+    public toastService: ToastService
+  ) {
     this.editFloorForm = this.fb.group({
       selected_building: ['', Validators.required],
       selected_floor: ['', Validators.required],
@@ -73,12 +78,9 @@ export class EditFloorComponent implements OnInit {
 
     const url = `${flask_URL}/editFloor?token=${authToken}&user_id=${userId}&role=${role}`;
 
-    console.log("Fetching buildings from:", url);
-
     this.http.get<any>(url, { withCredentials: true }).subscribe(
       {
         next: data => {
-          console.log("Buildings received:", data.buildings);
           this.buildings = data.buildings;
         },
         error: error => console.error("Error fetching buildings:", error),
@@ -86,20 +88,14 @@ export class EditFloorComponent implements OnInit {
     );
   }
 
-  // fetch the floors of the selected building, when a building is selected
   fetchFloors(event: any) {
     const userId = localStorage.getItem('user_id');
     const role = localStorage.getItem('role');
     const authToken = localStorage.getItem('authtoken');
 
     this.selected_building = this.editFloorForm.get<string>('selected_building').value;
-
-    // reset the floor and room
     this.selected_floor = null;
     this.clearRooms();
-
-    //! TEST PRINT
-    console.log(`Building Selected: ${this.selected_building}`);
 
     if (!userId) {
       console.error("No user ID found. Redirecting to login.");
@@ -108,19 +104,15 @@ export class EditFloorComponent implements OnInit {
     }
 
     if (!this.selected_building) {
-      //this.selected_building = "Please select a building";
       console.error("No building selected. Aborting Request.");
       return;
     }
 
     const url = `${flask_URL}/editFloor?token=${authToken}&user_id=${userId}&role=${role}&selected_building=${this.selected_building}`;
 
-    console.log("Fetching floors from:", url);
-
     this.http.get<any>(url, { withCredentials: true }).subscribe(
       {
         next: data => {
-          console.log("Data received:", data);
           this.floors = data.floors;
         },
         error: error => console.error("Error fetching floors:", error),
@@ -128,19 +120,13 @@ export class EditFloorComponent implements OnInit {
     );
   }
 
-  // fetch the rooms of the selected floor, when a floor is selected
   fetchRooms(event: any) {
     const userId = localStorage.getItem('user_id');
     const role = localStorage.getItem('role');
     const authToken = localStorage.getItem('authtoken');
 
     this.selected_floor = this.editFloorForm.get<string>('selected_floor').value;
-
-    // reset the rooms
     this.clearRooms();
-
-    //! TEST PRINT
-    console.log(`Floor Selected: ${this.selected_floor}`);
 
     if (!userId) {
       console.error("No user ID found. Redirecting to login.");
@@ -160,12 +146,9 @@ export class EditFloorComponent implements OnInit {
 
     const url = `${flask_URL}/editFloor?token=${authToken}&user_id=${userId}&role=${role}&selected_building=${this.selected_building}&selected_floor=${this.selected_floor}`;
 
-    console.log("Fetching rooms from:", url);
-
     this.http.get<any>(url, { withCredentials: true }).subscribe(
       {
         next: data => {
-          console.log("Data received:", data);
           this.buildings = data.buildings;
           this.floors = data.floors;
           if (data.rooms.length != 0) {
@@ -177,21 +160,12 @@ export class EditFloorComponent implements OnInit {
     );
   }
 
-  //setRoomSelection(event: any): void {
-  //  this.selected_room = this.editFloorForm.get<string>('selected_room').value;
-  //  console.log(`Selected room: ${this.selected_room}`);
-  //}
-
   addRoom(): void {
     const userId = localStorage.getItem('user_id');
     const role = localStorage.getItem('role');
     const authToken = localStorage.getItem('authtoken');
 
-    // get all values from the form
     this.getFormValues();
-
-    //! TEST PRINT
-    //console.log(`Selected Room: ${this.selected_room}`);
 
     if (this.editFloorForm.valid) {
 
@@ -200,11 +174,9 @@ export class EditFloorComponent implements OnInit {
         return;
       }
 
-      // check if the room exists
       for (const room of this.rooms) {
         if (room == this.selected_room) {
-          console.error(`Room ${this.selected_room} already exists.`);
-          alert(`Room ${this.selected_room} already exists.`);
+          this.toastService.add(`Room ${this.selected_room} already exists.`, 3000, 'error');
           return;
         }
       }
@@ -221,12 +193,12 @@ export class EditFloorComponent implements OnInit {
       this.http.post(`${flask_URL}/editFloor`, formData, { withCredentials: true }).subscribe(
         {
           next: response => {
-            console.log(`Room ${this.selected_room} added successfully`, response);
-            alert(`Room ${this.selected_room} added successfully`);
+            this.toastService.add(`Room ${this.selected_room} added successfully`, 3000, 'success');
             this.resetForm();
             this.fetchBuildings();
           },
           error: error => {
+            this.toastService.add(`Error adding room: ${this.selected_room}`, 3000, 'error');
             console.error(`Error adding room: ${this.selected_room}`, error);
           }
         }
@@ -260,11 +232,11 @@ export class EditFloorComponent implements OnInit {
     this.http.post(`${flask_URL}/editFloor`, formData, { withCredentials: true }).subscribe(
       {
         next: response => {
-          console.log(`Room ${roomToRemove} successfully removed`, response);
-          alert(`Room ${roomToRemove} successfully removed`);
+          this.toastService.add(`Room ${roomToRemove} successfully removed`, 3000, 'success');
           this.fetchRooms(null); 
         },
         error: error => {
+          this.toastService.add(`Error removing room: ${roomToRemove}`, 3000, 'error');
           console.error(`Error removing room: ${roomToRemove}`, error);
         }
       }
