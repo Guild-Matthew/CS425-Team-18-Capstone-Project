@@ -40,9 +40,12 @@ export class ForgotPasswordComponent {
   new_password: string | null = null;
   confirm_password: string | null = null;
   auth_code: number | null = null;
-  form_state: string = 'get_credentials';    // 'get_credentials', 'check_auth_code', 'check_passwords_match'
+  form_states: string[] = ['get_credentials', 'check_auth_code', 'check_passwords_match'];
+  form_state: string = this.form_states[0];
   pass_min_length: number;
-
+  submit_button_strings: string[] = ['Check Credentials', 'Check Security Code', 'Change Password'];
+  submit_button_str: string = this.submit_button_strings[0];
+  
   constructor(private fb: FormBuilder, private http: HttpClient, private router: Router, private validatePass: PasswordRequirementsService) {
     this.forgotPasswordForm = this.fb.group({
       NetID: [this.NetID, Validators.required],
@@ -59,17 +62,17 @@ export class ForgotPasswordComponent {
     this.getFormValues();
 
     // getting the NetID and email from the user, and checking if the user exists
-    if (this.form_state == 'get_credentials') {
+    if (this.form_state == this.form_states[0]) {
       this.checkUserRequest();
     }
 
     // checking the security auth_code from the email
-    if (this.form_state == 'check_auth_code') {
+    if (this.form_state == this.form_states[1]) {
       this.checkAuthCode();
     }
 
     // checking if the new passwords match
-    if (this.form_state == 'check_passwords_match') {
+    if (this.form_state == this.form_states[2]) {
       // check if the passwords match
       if (this.new_password == this.confirm_password) {
         // check if passwords fits the password requirements
@@ -104,12 +107,13 @@ export class ForgotPasswordComponent {
         next: data => {
           console.log("Data received:", data);
           alert("A security code was sent to your email.\nPlease enter your one-time security code.");
-          this.form_state = 'check_auth_code';
+          this.form_state = this.form_states[1];
+          this.getSubmitButtonString();
         },
         error: error => {
           console.error("Error: ", error);
           alert(`Error: Invalid credentials.`);
-          this.form_state = 'get_credentials';
+          this.form_state = this.form_states[0];
           this.clearCredentials();
         },
       }
@@ -126,7 +130,6 @@ export class ForgotPasswordComponent {
     const formData = new FormData();
     formData.append('username', this.NetID.toString());
     formData.append('email', this.email.toString());
-    //formData.append('new_password', this.new_password.toString());
     formData.append('auth_code', this.auth_code.toString());
     formData.append('action', 'check_auth_code');
 
@@ -135,13 +138,13 @@ export class ForgotPasswordComponent {
         next: data => {
           console.log("Data received:", data);
           alert("Please enter your new password.");
-          this.form_state = 'check_passwords_match';
+          this.form_state = this.form_states[2];
+          this.getSubmitButtonString();
         },
         error: error => {
           console.error("Error: ", error);
           alert(`Error: Incorrect security code.`);
           this.clearAuthToken();
-          //this.form_state = 0;
         },
       }
     );
@@ -162,7 +165,6 @@ export class ForgotPasswordComponent {
         next: data => {
           console.log("Data received:", data);
           alert("Password successfully changed.");
-          //this.form_state = 0;
 
           // navigate to login
           this.router.navigate(['/login']);
@@ -171,10 +173,22 @@ export class ForgotPasswordComponent {
           console.error("Error: ", error);
           alert(`Error: Failed to update password.`);
           this.clearPasswords();
-          //this.form_state = 0;
         },
       }
     );
+  }
+
+  // change what the submit button says based on the form state
+  getSubmitButtonString(): void {
+    if (this.form_state == this.form_states[0]) {
+      this.submit_button_str = this.submit_button_strings[0];
+    }
+    if (this.form_state == this.form_states[1]) {
+      this.submit_button_str = this.submit_button_strings[1];
+    }
+    if (this.form_state == this.form_states[2]) {
+      this.submit_button_str = this.submit_button_strings[2];
+    }
   }
 
   getFormValues(): void {
@@ -199,7 +213,7 @@ export class ForgotPasswordComponent {
     this.new_password = null;
     this.confirm_password = null;
     // initial state when you open the form
-    this.form_state = 'get_credentials';
+    this.form_state = this.form_states[0];
   }
 
   clearCredentials(): void {
@@ -226,5 +240,4 @@ export class ForgotPasswordComponent {
     this.new_password = null;
     this.confirm_password = null;
   }
-
 }
