@@ -115,7 +115,6 @@ def checkUser():
             # print(f'auth_code: {auth_code}')
 
             # update user's auth token with temp auth code
-            # db_queries.updateUserToken(user['uid'], )
             db_queries.updateUserToken(user['uid'], auth_code)
 
             # check if the user's authtoken was updated
@@ -127,21 +126,33 @@ def checkUser():
             if user and user['authtoken'] == auth_code:
 
                 # send password reset email
-                msg = Message(
-                    subject = "Your one-time password reset code",
-                    sender = os.getenv("EMAIL"),
-                    recipients = [os.getenv("TEMP_EMAIL")],
-                    # recipients = [email],
+                try:
+                    msg = Message(
+                        subject = "Your one-time password reset code",
+                        sender = os.getenv("EMAIL"),
+                        recipients = [
+                            os.getenv("TEMP_EMAIL"),
+                            os.getenv("EMAIL_ALIAS")
+                            ],
+                    )
+                    msg.body = f'Your one-time password reset code \n\n {auth_code}'
+                    mail.send(msg)
+                    # YOU CAN CONTINUE IF YOU GET AN ERROR HERE, ASK ABOUT THE ENV FILE IF YOU GET AN ERROR
 
-                )
-                msg.body = f'Your one-time password reset code \n\n {auth_code}'
-                mail.send(msg)
+                # if the env variables are not updated
+                except:
+                    msg = Message(
+                        subject = "Your one-time password reset code",
+                        sender = os.getenv("EMAIL"),
+                        recipients = [os.getenv("TEMP_EMAIL")],
+                    )
+                    msg.body = f'Your one-time password reset code \n\n {auth_code}'
+                    mail.send(msg)
             
                 return jsonify({
                     'success': True,
                 }), 200
             else:
-                # change this message after it works
                 jsonify({"error": "Authoken was not updated"}), 401
 
         else:
@@ -181,7 +192,6 @@ def forgotPassword():
                         'success': True,
                     }), 200
                 else:
-                    # change this message after it works
                     return jsonify({"error": "Password was not updated"}), 401
 
             else:
@@ -196,7 +206,6 @@ def forgotPassword():
                         'success': True,
                     }), 200
                 else:
-                    # change this message after it works
                     return jsonify({"error": "Incorrect security code"}), 401
     
     else:
