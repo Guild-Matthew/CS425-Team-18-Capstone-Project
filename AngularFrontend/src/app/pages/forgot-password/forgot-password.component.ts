@@ -177,12 +177,6 @@ export class ForgotPasswordComponent {
     );
   }
 
-  // using a regular expression: checks if a password has uppercase, lowercase, numbers, special characters, and is at least 8 chars long
-  validatePassword(password: string): boolean {
-    const reg_expr = new RegExp(`^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$`);
-    return reg_expr.test(password);
-  }
-
   getFormValues(): void {
     this.NetID = this.forgotPasswordForm.get<string>('NetID').value;
     this.email = this.forgotPasswordForm.get<string>('email').value;
