@@ -1,4 +1,4 @@
-/* Matthew Guild */
+/* Matthew Guild, Shane Petree */
 
 .page-wrapper {
     display: flex;
@@ -26,13 +26,23 @@
     font-weight: bold;
     text-decoration: none;
   }
-  .login-button {
-    background-color: #78be20;
-    color: black;
-    padding: 0.4rem 1rem;
-    border-radius: 5px;
-    text-decoration: none;
+
+.top-links .login-button {
+  background-color: #78be20;
+  color: black;
+  font-weight: bold;
+  padding: 0.4rem 1rem;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  transition: background-color 0.2s ease;
+}
+
+  .top-links .login-button:hover {
+    background-color: #65a718;
   }
+
   .branding-bar {
     text-align: center;
     padding: 1.5rem 1rem;

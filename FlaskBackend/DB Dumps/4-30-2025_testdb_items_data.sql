@@ -5,7 +5,7 @@
 -- Dumped from database version 17.3
 -- Dumped by pg_dump version 17.3
 
--- Started on 2025-04-30 13:31:28
+-- Started on 2025-04-30 18:54:58
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -20,7 +20,7 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- TOC entry 4861 (class 0 OID 25802)
+-- TOC entry 4860 (class 0 OID 26515)
 -- Dependencies: 217
 -- Data for Name: accountlogs; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -28,7 +28,7 @@ SET row_security = off;
 
 
 --
--- TOC entry 4863 (class 0 OID 25807)
+-- TOC entry 4862 (class 0 OID 26520)
 -- Dependencies: 219
 -- Data for Name: building; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -43,7 +43,7 @@ INSERT INTO public.building OVERRIDING SYSTEM VALUE VALUES (7, 'WPEB', 39.539863
 
 
 --
--- TOC entry 4867 (class 0 OID 25818)
+-- TOC entry 4866 (class 0 OID 26530)
 -- Dependencies: 223
 -- Data for Name: floors; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -79,7 +79,7 @@ INSERT INTO public.floors OVERRIDING SYSTEM VALUE VALUES (28, 5, 4);
 
 
 --
--- TOC entry 4875 (class 0 OID 25840)
+-- TOC entry 4874 (class 0 OID 26551)
 -- Dependencies: 231
 -- Data for Name: rooms; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -199,7 +199,7 @@ INSERT INTO public.rooms OVERRIDING SYSTEM VALUE VALUES (112, 5, 4, 404);
 
 
 --
--- TOC entry 4865 (class 0 OID 25811)
+-- TOC entry 4864 (class 0 OID 26524)
 -- Dependencies: 221
 -- Data for Name: claimeditems; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -207,7 +207,7 @@ INSERT INTO public.rooms OVERRIDING SYSTEM VALUE VALUES (112, 5, 4, 404);
 
 
 --
--- TOC entry 4869 (class 0 OID 25822)
+-- TOC entry 4868 (class 0 OID 26534)
 -- Dependencies: 225
 -- Data for Name: items; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -285,7 +285,7 @@ INSERT INTO public.items OVERRIDING SYSTEM VALUE VALUES (70, 'technology', 'WFC 
 
 
 --
--- TOC entry 4871 (class 0 OID 25829)
+-- TOC entry 4870 (class 0 OID 26540)
 -- Dependencies: 227
 -- Data for Name: operationslogitems; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -323,7 +323,7 @@ INSERT INTO public.operationslogitems VALUES (30, 'INSERT', 'clothing', 'Found i
 
 
 --
--- TOC entry 4877 (class 0 OID 25844)
+-- TOC entry 4876 (class 0 OID 26555)
 -- Dependencies: 233
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -332,7 +332,7 @@ INSERT INTO public.users OVERRIDING SYSTEM VALUE VALUES (1, 'super', 'scrypt:327
 
 
 --
--- TOC entry 4873 (class 0 OID 25836)
+-- TOC entry 4872 (class 0 OID 26547)
 -- Dependencies: 229
 -- Data for Name: permissions; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -340,7 +340,7 @@ INSERT INTO public.users OVERRIDING SYSTEM VALUE VALUES (1, 'super', 'scrypt:327
 
 
 --
--- TOC entry 4885 (class 0 OID 0)
+-- TOC entry 4883 (class 0 OID 0)
 -- Dependencies: 218
 -- Name: accountlogs_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -349,16 +349,16 @@ SELECT pg_catalog.setval('public.accountlogs_id_seq', 1, false);
 
 
 --
--- TOC entry 4886 (class 0 OID 0)
+-- TOC entry 4884 (class 0 OID 0)
 -- Dependencies: 220
--- Name: building2_BID_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+-- Name: building_BID_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public."building2_BID_seq"', 7, true);
+SELECT pg_catalog.setval('public."building_BID_seq"', 7, true);
 
 
 --
--- TOC entry 4887 (class 0 OID 0)
+-- TOC entry 4885 (class 0 OID 0)
 -- Dependencies: 222
 -- Name: claimeditems_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -367,7 +367,7 @@ SELECT pg_catalog.setval('public.claimeditems_id_seq', 1, false);
 
 
 --
--- TOC entry 4888 (class 0 OID 0)
+-- TOC entry 4886 (class 0 OID 0)
 -- Dependencies: 224
 -- Name: floors_fid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -376,7 +376,7 @@ SELECT pg_catalog.setval('public.floors_fid_seq', 28, true);
 
 
 --
--- TOC entry 4889 (class 0 OID 0)
+-- TOC entry 4887 (class 0 OID 0)
 -- Dependencies: 226
 -- Name: items_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -385,7 +385,7 @@ SELECT pg_catalog.setval('public.items_id_seq', 71, false);
 
 
 --
--- TOC entry 4890 (class 0 OID 0)
+-- TOC entry 4888 (class 0 OID 0)
 -- Dependencies: 228
 -- Name: operationslogitems_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -394,7 +394,7 @@ SELECT pg_catalog.setval('public.operationslogitems_id_seq', 30, true);
 
 
 --
--- TOC entry 4891 (class 0 OID 0)
+-- TOC entry 4889 (class 0 OID 0)
 -- Dependencies: 230
 -- Name: permissions_pid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -403,7 +403,7 @@ SELECT pg_catalog.setval('public.permissions_pid_seq', 1, false);
 
 
 --
--- TOC entry 4892 (class 0 OID 0)
+-- TOC entry 4890 (class 0 OID 0)
 -- Dependencies: 232
 -- Name: rooms_rid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -412,24 +412,15 @@ SELECT pg_catalog.setval('public.rooms_rid_seq', 112, true);
 
 
 --
--- TOC entry 4893 (class 0 OID 0)
+-- TOC entry 4891 (class 0 OID 0)
 -- Dependencies: 234
--- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('public.users_id_seq', 1, false);
-
-
---
--- TOC entry 4894 (class 0 OID 0)
--- Dependencies: 235
 -- Name: users_uid_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.users_uid_seq', 1, false);
+SELECT pg_catalog.setval('public.users_uid_seq', 2, false);
 
 
--- Completed on 2025-04-30 13:31:28
+-- Completed on 2025-04-30 18:54:58
 
 --
 -- PostgreSQL database dump complete

@@ -44,8 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include=".env" />
-    <Content Include="DB Dumps\4-29-2025_testdb_EMPTY_with_buildings.backup" />
-    <Content Include="DB Dumps\4-29-2025_testdb_final_demo.backup" />
+    <Content Include="DB Dumps\4-30-2025_testdb_EMPTY_with_buildings.backup" />
     <Content Include="DB Dumps\4-30-2025_testdb_items_data.sql" />
     <Content Include="DB Dumps\4-30-2025_testdb_items_schema.sql" />
     <Content Include="DB Dumps\4-30-2025_testdb_populated.backup" />
