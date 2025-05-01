@@ -5,6 +5,7 @@ import { flask_URL } from '../../app.config';
 import { CommonModule, NgFor } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
+import { ToastService } from '../../toast.service';
 
 @Component({
   selector: 'app-add-item',
@@ -69,7 +70,7 @@ export class AddItemComponent implements OnInit {
   floors: string[] = [];
   rooms: string[] = []; 
   selectedBuilding: string = '';
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router, public toastService: ToastService) { }
 
   ngOnInit(): void {
     this.authToken = localStorage.getItem('authtoken');
@@ -138,13 +139,13 @@ export class AddItemComponent implements OnInit {
   onSubmit(): void {
     const userId = localStorage.getItem('user_id');
     const role = localStorage.getItem('role');
-
+  
     if (!userId || !role) {
       console.error('Missing authentication data.');
       this.router.navigate(['/login']);
       return;
     }
-
+  
     const formData = new FormData();
     formData.append('user_id', userId);
     formData.append('role', role);
@@ -158,18 +159,18 @@ export class AddItemComponent implements OnInit {
     formData.append('floor', this.item.floor);
     formData.append('room', this.item.room);
     formData.append('subcategory', this.item.subcategory);
-
+  
     this.http.post(`${flask_URL}/Items`, formData, { withCredentials: true }).subscribe({
       next: response => {
-        alert('Item successfully added!');
+        this.toastService.add('Item successfully added!', 3000, 'success');
         this.resetForm();
       },
       error: error => {
         console.error('Error adding item:', error);
-        alert('Error adding item!');
+        this.toastService.add('Error adding item!', 3000, 'error');
       }
     });
-  }
+  }  
 
   resetForm(): void {
     this.item = {

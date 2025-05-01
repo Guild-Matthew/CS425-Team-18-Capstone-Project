@@ -283,7 +283,7 @@ header {
 }
 
 .toast.success {
-  background-color: rgb(4, 132, 4);
+  background-color: rgb(145, 145, 145);
 }
 
 .toast.error {

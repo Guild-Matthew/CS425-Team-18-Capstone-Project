@@ -4,8 +4,9 @@ import { flask_URL } from '../../app.config';
 import { CommonModule } from '@angular/common';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm} from '@angular/forms';
 import { Router } from '@angular/router';
+import { ToastService } from '../../toast.service';
 
 @Component({
   selector: 'add-floor',
@@ -20,10 +21,15 @@ export class AddFloorComponent implements OnInit {
   authToken: string | null = null;
   selectedBuilding: string = '';
   floors: string[] = [];
-  newFloorNumber: string | null = null;
+  newFloorNumber: number | null = null;
   role: string | null = null; 
 
-  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router) { }
+  constructor(
+    private http: HttpClient,
+    private route: ActivatedRoute,
+    private router: Router,
+    public toastService: ToastService
+  ) {}
 
   ngOnInit(): void {
     this.checkLoginStatus();  
@@ -34,11 +40,10 @@ export class AddFloorComponent implements OnInit {
     this.authToken = localStorage.getItem('authtoken');
   }
 
-  // Method to check the user's role
   checkLoginStatus() {
     this.role = localStorage.getItem('role');
     if (this.role !== 'student' && this.role !== 'admin' && this.role !== 'superadmin') {
-      console.error("User is not authorized. Redirecting to login.");
+      this.toastService.add("You are not authorized. Redirecting to login.", 3000, 'error');
       this.router.navigate(['/login']);
     } else {
       console.log(`User is logged in as: ${this.role}`);
@@ -51,7 +56,7 @@ export class AddFloorComponent implements OnInit {
     const authToken = localStorage.getItem('authtoken');
 
     if (!userId) {
-      console.error("No user ID found. Redirecting to login.");
+      this.toastService.add("No user ID found. Redirecting to login.", 3000, 'error');
       this.router.navigate(['/login']);
       return;
     }
@@ -61,39 +66,33 @@ export class AddFloorComponent implements OnInit {
     }
 
     const url = `${flask_URL}/editBuilding?token=${authToken}&user_id=${userId}&role=${role}&selected_building=${this.selectedBuilding}`;
-
-    console.log("Fetching items from:", url);
-
     this.http.get<any>(url, { withCredentials: true }).subscribe(
       data => {
-        console.log("Data received:", data);
         this.items = data.items;
         this.buildings = data.buildings;
         this.floors = data.floors;
         this.selectedBuilding = data.selected_building;
       },
-      error => console.error("Error fetching items:", error)
+      error => this.toastService.add("Error fetching items", 3000, 'error')
     );
   }
 
-  addFloor(): void {
+  addFloor(form: NgForm): void {
     const userId = localStorage.getItem('user_id');
     const role = localStorage.getItem('role');
     const authToken = localStorage.getItem('authtoken');
 
     if (!userId || !authToken || !this.selectedBuilding || this.newFloorNumber === null) {
-      console.error("Missing required data");
+      this.toastService.add("Missing required data", 3000, 'error');
       return;
     }
 
-    // check if the floor exists
     for (const floor of this.floors) {
-      if (floor == this.newFloorNumber) {
-        console.error(`Floor ${this.newFloorNumber} already exists.`);
-        alert(`Floor ${this.newFloorNumber} already exists.`);
+      if (floor === this.newFloorNumber?.toString()) {
+        this.toastService.add(`Floor ${this.newFloorNumber} already exists.`, 3000, 'error');
         return;
       }
-    }
+    }    
 
     const formData = new FormData();
     formData.append('user_id', userId);
@@ -105,15 +104,12 @@ export class AddFloorComponent implements OnInit {
 
     this.http.post(`${flask_URL}/editBuilding`, formData, { withCredentials: true }).subscribe(
       response => {
-        console.log("Floor added successfully", response);
+        this.toastService.add('Floor added successfully', 3000, 'success');
         this.newFloorNumber = null;
-        alert('Floor added successfully');
+        form.resetForm();
         this.fetchItems();
       },
-      error => {
-        console.error("Error adding floor:", error);
-        alert('Error adding floor');
-      }
+      error => this.toastService.add('Error adding floor', 3000, 'error')
     );
   }
 
@@ -123,7 +119,7 @@ export class AddFloorComponent implements OnInit {
     const authToken = localStorage.getItem('authtoken');
 
     if (!userId || !authToken || !this.selectedBuilding) {
-      console.error("Missing required data for removal");
+      this.toastService.add("Missing required data for removal", 3000, 'error');
       return;
     }
 
@@ -137,14 +133,10 @@ export class AddFloorComponent implements OnInit {
 
     this.http.post(`${flask_URL}/editBuilding`, formData, { withCredentials: true }).subscribe(
       response => {
-        console.log(`Floor ${floor} removed successfully`, response);
-        alert('Floor removed succesfully');
+        this.toastService.add(`Floor ${floor} removed successfully`, 3000, 'success');
         this.fetchItems();
       },
-      error => {
-        console.error("Error removing floor:", error);
-        alert('Error removing floor');
-      }
+      error => this.toastService.add('Error removing floor', 3000, 'error')
     );
   }
 }

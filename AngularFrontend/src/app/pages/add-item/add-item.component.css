@@ -179,3 +179,38 @@ footer {
     gap: 0.8rem;
   }
 }
+
+/* Toast styles */
+.toast {
+  position: fixed; /* Fixed position, so it stays at the top */
+  top: 20px; /* Distance from the top of the page */
+  left: 50%; /* Center horizontally */
+  transform: translateX(-50%); /* Adjust the centering */
+  background-color: rgba(0, 0, 0, 0.7); /* Dark background */
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  z-index: 1000; /* Make sure the toast is on top of other elements */
+  opacity: 0; /* Start with zero opacity (for animation) */
+  animation: fadeInOut 5s forwards; /* Fade in and out over 5 seconds */
+ }
+ 
+ 
+ .toast.success {
+  background-color: rgb(145, 145, 145);
+ }
+ 
+ 
+ .toast.error {
+  background-color: rgb(214, 2, 2);
+ }
+ 
+ 
+ /* Toast fade-in and fade-out animation */
+ @keyframes fadeInOut {
+  0% { opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { opacity: 0; }
+ }
+ 

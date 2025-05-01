@@ -49,7 +49,7 @@
         </div>
 
         <!-- Add Floor Form -->
-        <form (ngSubmit)="addFloor()" #addFloorForm="ngForm">
+        <form (ngSubmit)="addFloor(addFloorForm)" #addFloorForm="ngForm">
           <div>
             <label for="floorNumber">Floor Number:</label>
             <input type="number"
@@ -90,6 +90,10 @@
       </section>
     </main>
 
+  <!-- Toast Messages -->
+  <div *ngFor="let toast of toastService.toasts" class="toast" [ngClass]="toast.type">
+    {{ toast.message }}
+  </div>
     <!-- FOOTER -->
     <footer>
       <p>&copy; 2025 University of Nevada, Reno. Building Management Service.</p>

@@ -65,6 +65,10 @@
         </form>
       </section>
     </main>
+    <!-- Toast Messages -->
+    <div *ngFor="let toast of toastService.toasts" class="toast" [ngClass]="toast.type">
+      {{ toast.message }}
+    </div>
 
     <!-- FOOTER -->
     <footer>
