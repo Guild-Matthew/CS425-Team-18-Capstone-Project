@@ -6,6 +6,9 @@ import { Injectable } from '@angular/core';
 })
 export class PasswordRequirementsService {
   private min_length: number;
+  // change this to false to disable password requirements checking
+  private isEnabled: boolean = true;
+
   constructor() {
     // change the minimum length of the password here
     this.setPasswordMinLength(8);
@@ -36,15 +39,26 @@ export class PasswordRequirementsService {
   }
 
   validatePassword(password: string): boolean {
-    const isPasswordValid: boolean = this.checkRequirements(password);
+    // if the password checking is enabled
+    if (this.isEnabled) {
+      const isPasswordValid: boolean = this.checkRequirements(password);
 
-    //! TEST PRINT
-    //console.log(`Valid: ${isPasswordValid}`);
+      //! TEST PRINT
+      //console.log(`Valid: ${isPasswordValid}`);
 
-    return (isPasswordValid);
+      return (isPasswordValid);
+    }
+    // just return true if not checking password
+    else {
+      return true;
+    }
   }
 
   getMinPasswordLength(): number {
     return this.min_length;
+  }
+
+  isActive(): boolean {
+    return this.isEnabled;
   }
 }

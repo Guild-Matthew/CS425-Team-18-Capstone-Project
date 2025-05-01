@@ -27,6 +27,7 @@ export class AddUserComponent implements OnInit {
   authToken: string | null = null;
   role: string | null = null;
   pass_min_length: number;
+  is_pass_req_enabled: boolean;
 
   constructor(
     private fb: FormBuilder,
@@ -43,6 +44,7 @@ export class AddUserComponent implements OnInit {
     });
 
     this.pass_min_length = this.validatePass.getMinPasswordLength();
+    this.is_pass_req_enabled = this.validatePass.isActive();
   }
 
   ngOnInit(): void {
