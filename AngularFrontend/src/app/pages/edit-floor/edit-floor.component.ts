@@ -1,5 +1,4 @@
-// Shane Petree
-
+// Shane Petree, Mary Cottier
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
@@ -12,6 +11,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButton } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list'
 import { NavBarComponent } from '../../nav-bar/nav-bar.component';
+import { ToastService } from '../../toast.service';
 
 @Component({
   selector: 'app-add-room',
@@ -45,7 +45,7 @@ export class EditFloorComponent implements OnInit {
   selected_floor: string | null = null;
   selected_room: string | null = null;
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) {
+  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router, public toastService: ToastService) {
     this.editFloorForm = this.fb.group({
       selected_building: ['', Validators.required],
       selected_floor: ['', Validators.required],
