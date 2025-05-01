@@ -92,7 +92,11 @@
 
             <!-- Mark as Claimed Button -->
             <div class="claim-button-section"
-                 *ngIf="(role === 'student' || role === 'admin' || role === 'superadmin') && checkPermissions()">
+                 *ngIf="(role === 'student' || role === 'admin') && checkPermissions()">
+              <button class="main-content-button" (click)="markAsClaimed(item)">Mark as Claimed</button>
+            </div>
+            <div class="claim-button-section"
+                 *ngIf="(role === 'superadmin')">
               <button class="main-content-button" (click)="markAsClaimed(item)">Mark as Claimed</button>
             </div>
 
