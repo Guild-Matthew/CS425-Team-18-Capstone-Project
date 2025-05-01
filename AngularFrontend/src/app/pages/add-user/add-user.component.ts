@@ -8,6 +8,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { flask_URL } from '../../app.config';
 import { PasswordRequirementsService } from '../../services/password-requirements/password-requirements.service';
+import { ToastService } from '../../toast.service';
 
 @Component({
   selector: 'app-add-user',
@@ -33,7 +34,8 @@ export class AddUserComponent implements OnInit {
     private fb: FormBuilder,
     private http: HttpClient,
     private router: Router,
-    private validatePass: PasswordRequirementsService
+    private validatePass: PasswordRequirementsService,
+    public toastService: ToastService
   ) {
     this.addUserForm = this.fb.group({
       netID: ['', Validators.required],
@@ -90,20 +92,23 @@ export class AddUserComponent implements OnInit {
 
   onSubmit(): void {
     const userId = localStorage.getItem('user_id');
-
+  
     if (!userId || !this.authToken) {
       console.error("Missing user ID or token. Redirecting to login.");
       this.router.navigate(['/login']);
       return;
     }
-
-    // if password does not fit the requirements
+  
     if (!this.validatePass.validatePassword(this.addUserForm.value.password)) {
-      alert(`Passwords must contain at least ${this.pass_min_length} characters, 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character.`);
+      this.toastService.add(
+        `Passwords must contain at least ${this.pass_min_length} characters, 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character.`,
+        5000,
+        'error'
+      );
       this.addUserForm.patchValue({ 'password': null });
       return;
     }
-
+  
     if (this.addUserForm.valid) {
       const formData = new FormData();
       formData.append('user_id', userId);
@@ -113,23 +118,23 @@ export class AddUserComponent implements OnInit {
       formData.append('password', this.addUserForm.value.password);
       formData.append('selectedRole', this.addUserForm.value.selectedRole);
       formData.append('buildings', JSON.stringify(this.addUserForm.value.buildings));
-
+  
       this.http.post(`${flask_URL}/adduser`, formData, { withCredentials: true }).subscribe({
         next: response => {
           console.log("User added successfully:", response);
-          alert('User successfully added!');
+          this.toastService.add('User successfully added!', 3000, 'success');
           this.resetForm();
-          //this.router.navigate(['/dashboard']);
+          // this.router.navigate(['/dashboard']);
         },
         error: err => {
           console.error("Error adding user:", err);
-          alert('Error adding user!');
+          this.toastService.add('Error adding user!', 3000, 'error');
         }
       });
     } else {
-      alert('Please fill out all required fields.');
+      this.toastService.add('Please fill out all required fields.', 3000, 'error');
     }
-  }
+  }  
 
   resetForm(): void {
     this.addUserForm.reset();

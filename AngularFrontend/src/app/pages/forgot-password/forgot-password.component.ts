@@ -1,5 +1,3 @@
-// Shane Petree
-
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
@@ -14,6 +12,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatSelect } from '@angular/material/select';
 import { NavBarComponent } from '../../nav-bar/nav-bar.component';
 import { PasswordRequirementsService } from '../../services/password-requirements/password-requirements.service';
+import { ToastService } from '../../toast.service';
 
 @Component({
   selector: 'app-forgot-password',
@@ -46,7 +45,8 @@ export class ForgotPasswordComponent {
   submit_button_strings: string[] = ['Check Credentials', 'Check Security Code', 'Change Password'];
   submit_button_str: string = this.submit_button_strings[0];
   
-  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router, private validatePass: PasswordRequirementsService) {
+  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router, private validatePass: PasswordRequirementsService, public toastService: ToastService) {
+
     this.forgotPasswordForm = this.fb.group({
       NetID: [this.NetID, Validators.required],
       email: [this.email, Validators.required],
@@ -78,24 +78,18 @@ export class ForgotPasswordComponent {
         // check if passwords fits the password requirements
         if (this.validatePass.validatePassword(this.new_password) && this.validatePass.validatePassword(this.new_password)) {
           this.changePassword();
-        }
-        else {
-          alert(`Passwords must contain at least ${this.pass_min_length} characters, 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character.`);
+        } else {
+          this.toastService.add(`Passwords must contain at least ${this.pass_min_length} characters, 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character.`, 5000, 'error');
           this.clearPasswords();
         }
-      }
-      else {
-        alert("Passwords do not match.");
+      } else {
+        this.toastService.add("Passwords do not match.", 3000, 'error');
         this.clearPasswords();
       }
     }
   }
 
   checkUserRequest() {
-    //! TEST PRINT
-    //console.log(`NetID: ${this.NetID}`);
-    //console.log(`email: ${this.email}`);
-
     const url = `${flask_URL}/checkuser`;
 
     const formData = new FormData();
@@ -106,14 +100,13 @@ export class ForgotPasswordComponent {
       {
         next: data => {
           console.log("Data received:", data);
-          alert("A security code was sent to your email.\nPlease enter your one-time security code.");
-          this.form_state = this.form_states[1];
-          this.getSubmitButtonString();
+          this.toastService.add("A security code was sent to your email. Please enter your one-time security code.", 5000, 'info');
+          this.form_state = 'check_auth_code';
         },
         error: error => {
           console.error("Error: ", error);
-          alert(`Error: Invalid credentials.`);
-          this.form_state = this.form_states[0];
+          this.toastService.add("Error: Invalid credentials.", 5000, 'error');
+          this.form_state = 'get_credentials';
           this.clearCredentials();
         },
       }
@@ -121,10 +114,6 @@ export class ForgotPasswordComponent {
   }
 
   checkAuthCode() {
-    //! TEST PRINT
-    //console.log(`NetID: ${this.NetID}`);
-    //console.log(`email: ${this.email}`);
-
     const url = `${flask_URL}/forgotpassword`;
 
     const formData = new FormData();
@@ -137,13 +126,12 @@ export class ForgotPasswordComponent {
       {
         next: data => {
           console.log("Data received:", data);
-          alert("Please enter your new password.");
-          this.form_state = this.form_states[2];
-          this.getSubmitButtonString();
+          this.toastService.add("Please enter your new password.", 5000, 'info');
+          this.form_state = 'check_passwords_match';
         },
         error: error => {
           console.error("Error: ", error);
-          alert(`Error: Incorrect security code.`);
+          this.toastService.add("Error: Incorrect security code.", 5000, 'error');
           this.clearAuthToken();
         },
       }
@@ -164,14 +152,13 @@ export class ForgotPasswordComponent {
       {
         next: data => {
           console.log("Data received:", data);
-          alert("Password successfully changed.");
-
+          this.toastService.add("Password successfully changed.", 5000, 'success');
           // navigate to login
           this.router.navigate(['/login']);
         },
         error: error => {
           console.error("Error: ", error);
-          alert(`Error: Failed to update password.`);
+          this.toastService.add("Error: Failed to update password.", 5000, 'error');
           this.clearPasswords();
         },
       }

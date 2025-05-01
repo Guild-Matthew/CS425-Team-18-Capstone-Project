@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { ToastService } from '../../toast.service';
 
 @Component({
   selector: 'edit-permissions',
@@ -20,14 +21,14 @@ export class EditPermissionsComponent implements OnInit {
 
   selectedUserId: string = '';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, public toastService: ToastService) {}
 
   ngOnInit(): void {
     const userId = localStorage.getItem('user_id');
     const role = localStorage.getItem('role');
 
     if (!userId || !role) {
-      console.warn('Missing credentials for fetching buildings');
+      this.toastService.add('Session expired or missing credentials. Please log in again.', 3000, 'error');
       return;
     }
 
@@ -42,13 +43,15 @@ export class EditPermissionsComponent implements OnInit {
     const role = localStorage.getItem('role') || '';
     const params = new HttpParams()
       .set('type', 'users')
-      .set('role', role); 
+      .set('role', role);
+
     this.http.get<any>(`${flask_URL}/update_user_permissions`, { params }).subscribe(
       res => {
         this.users = res.users || [];
       },
       err => {
         console.error('Error fetching users:', err);
+        this.toastService.add('Failed to fetch user list.', 3000, 'error');
       }
     );
   }
@@ -67,6 +70,8 @@ export class EditPermissionsComponent implements OnInit {
         console.error(`Error fetching buildings (attempt ${attempt}):`, err);
         if (attempt < 3) {
           setTimeout(() => this.fetchAllBuildings(userId, role, attempt + 1), 300);
+        } else {
+          this.toastService.add('Unable to load building list after multiple attempts.', 3000, 'error');
         }
       }
     );
@@ -84,6 +89,7 @@ export class EditPermissionsComponent implements OnInit {
       },
       err => {
         console.error('Error loading user permissions:', err);
+        this.toastService.add('Failed to load user permissions.', 3000, 'error');
       }
     );
   }
@@ -101,6 +107,16 @@ export class EditPermissionsComponent implements OnInit {
     const authtoken = localStorage.getItem('authtoken');
     const user_id = localStorage.getItem('user_id');
 
+    if (!this.selectedUserId) {
+      this.toastService.add('Please select a user before submitting changes.', 3000, 'info');
+      return;
+    }
+
+    if (this.userBuildings.size === 0) {
+      this.toastService.add('No buildings selected. Please assign at least one building.', 3000, 'info');
+      return;
+    }
+
     const body = {
       user_id,
       authtoken,
@@ -112,7 +128,7 @@ export class EditPermissionsComponent implements OnInit {
 
     this.http.post(`${flask_URL}/update_user_permissions`, body, { headers }).subscribe(
       () => {
-        alert('Permissions updated successfully!');
+        this.toastService.add('Permissions updated successfully!', 3000, 'success');
         this.selectedUserId = '';
         this.userBuildings.clear();
 
@@ -123,7 +139,7 @@ export class EditPermissionsComponent implements OnInit {
       },
       err => {
         console.error('Error updating permissions:', err);
-        alert('Failed to update permissions.');
+        this.toastService.add('Failed to update permissions.', 3000, 'error');
       }
     );
   }
@@ -136,5 +152,4 @@ export class EditPermissionsComponent implements OnInit {
   trackByBuilding(index: number, building: string): string {
     return building;
   }
-
 }
