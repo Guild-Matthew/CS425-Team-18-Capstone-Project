@@ -17,31 +17,43 @@
     display: flex;
     justify-content: flex-end;
   }
-  .top-links {
-    display: flex;
-    gap: 1.5rem;
-  }
-  .nav-link {
-    color: white;
-    font-weight: bold;
-    text-decoration: none;
-  }
 
-.top-links .login-button {
-  background-color: #78be20;
-  color: black;
-  font-weight: bold;
-  padding: 0.4rem 1rem;
-  border-radius: 5px;
-  text-decoration: none;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  transition: background-color 0.2s ease;
+.top-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
 }
 
-  .top-links .login-button:hover {
-    background-color: #65a718;
+  .top-links .nav-link {
+    color: white;
+    text-transform: uppercase;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    transition: background-color 0.2s ease-in-out;
   }
+
+    .top-links .nav-link:hover {
+      background-color: rgba(255, 255, 255, 0.15);
+    }
+
+  .top-links .login-button {
+    background-color: #78be20;
+    color: black;
+    font-weight: bold;
+    padding: 0.4rem 1rem;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    transition: background-color 0.2s ease;
+  }
+
+    .top-links .login-button:hover {
+      background-color: #65a718;
+    }
 
   .branding-bar {
     text-align: center;
@@ -176,4 +188,3 @@ footer {
   90% { opacity: 1; }
   100% { opacity: 0; }
  }
- 
