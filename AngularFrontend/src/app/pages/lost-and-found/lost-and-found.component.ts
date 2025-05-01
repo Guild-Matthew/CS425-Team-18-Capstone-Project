@@ -8,6 +8,7 @@ import { flask_URL } from '../../app.config';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { NavBarComponent } from '../../nav-bar/nav-bar.component';
+import { ToastService } from '../../toast.service';
 
 interface Item {
   id: number;
@@ -85,7 +86,7 @@ export class LostAndFoundComponent implements OnInit {
       'Umbrellas', 'Tools', 'Earplugs', 'Misc. Personal Items'
     ]
   };
-  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router) { }
+  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router, public toastService: ToastService) { }
 
   ngOnInit(): void {
     this.checkLoginStatus();
@@ -250,7 +251,7 @@ export class LostAndFoundComponent implements OnInit {
     this.http.post(url, body, { headers, withCredentials: true }).subscribe({
       next: () => {
         console.log(`Item "${item.description}" marked as claimed.`);
-        alert('Item marked as claimed.');
+        this.toastService.add('Item marked as claimed.', 3000, 'success');
         item.claimed = true;
         this.items = this.items.filter(i =>
           !(i.type === item.type &&
