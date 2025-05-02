@@ -77,6 +77,7 @@ export class DeactivateUserComponent implements OnInit {
   }
 
   deactivateUser(userId: number): void {
+    this.currentPage = 1;
     const user_id = localStorage.getItem('user_id');
     const role = localStorage.getItem('role');
     const token = localStorage.getItem('authtoken');
@@ -106,6 +107,7 @@ export class DeactivateUserComponent implements OnInit {
   }
 
   reactivateUser(userId: number): void {
+    this.currentPage = 1;
     const user_id = localStorage.getItem('user_id');
     const role = localStorage.getItem('role');
     const token = localStorage.getItem('authtoken');
@@ -224,4 +226,9 @@ export class DeactivateUserComponent implements OnInit {
       this.currentPage++;
     }
   }
+
+  onAccountFilterChange(): void {
+    this.currentPage = 1;
+  }
+
 }

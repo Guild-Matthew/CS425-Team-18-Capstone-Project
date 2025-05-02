@@ -50,7 +50,7 @@
         </div>
         <div class="filter-section" style="margin-top: 1rem;">
           <label for="accountFilter">Account Status:</label>
-          <select id="accountFilter" [(ngModel)]="accountFilter">
+          <select id="accountFilter" [(ngModel)]="accountFilter" (change)="onAccountFilterChange()">
             <option value="active">Active Accounts</option>
             <option value="inactive">Deactivated Accounts</option>
           </select>
