@@ -33,7 +33,7 @@ export class DeactivateUserComponent implements OnInit {
   ngOnInit(): void {
     const userId = localStorage.getItem('user_id');
     const role = localStorage.getItem('role');
-
+    this.currentPage = 1;
     const params = new HttpParams()
       .set('user_id', userId || '')
       .set('role', role || '')
@@ -168,7 +168,7 @@ export class DeactivateUserComponent implements OnInit {
   filterUsersByBuildings(): void {
     const userId = localStorage.getItem('user_id');
     const role = localStorage.getItem('role');
-
+    this.currentPage = 1;
     let params = new HttpParams()
       .set('user_id', userId || '')
       .set('role', role || '');

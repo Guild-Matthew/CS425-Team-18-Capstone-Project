@@ -82,7 +82,7 @@ export class ClaimedItemsComponent implements OnInit {
     const userId = localStorage.getItem('user_id');
     const role = localStorage.getItem('role');
     const authToken = localStorage.getItem('authtoken');
-
+    this.currentPage = 1;
     if (!userId) {
       this.router.navigate(['/login']);
       return;

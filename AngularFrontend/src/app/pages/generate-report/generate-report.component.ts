@@ -35,7 +35,7 @@ export class GenerateReportComponent implements OnInit {
     this.userId = localStorage.getItem('user_id');
     this.role = localStorage.getItem('role');
     this.authToken = localStorage.getItem('authtoken');
-
+    this.currentPage = 1;
     if (!this.userId || !this.authToken || !this.role) {
       console.error("Missing authentication data.");
       return;

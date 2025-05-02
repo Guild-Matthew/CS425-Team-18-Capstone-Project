@@ -114,6 +114,7 @@ export class LostAndFoundComponent implements OnInit {
   }
 
   fetchItems(): void {
+    this.currentPage = 1;
     this.errorMessage = '';
     const url = `${flask_URL}/L&F?building=${encodeURIComponent(this.selectedBuilding)}&filterType=${encodeURIComponent(this.filterType)}&subtype=${encodeURIComponent(this.selectedSubtype)}&sort=${encodeURIComponent(this.sortOrder)}&floor=${encodeURIComponent(this.selectedFloor)}&room=${encodeURIComponent(this.selectedRoom)}&user_id=${encodeURIComponent(this.userid)}`;
 
