@@ -61,7 +61,7 @@ export class GenerateReportComponent implements OnInit {
 
   filterLogs(): void {
     console.log("Filtering logs. Type:", this.logType, "Filter:", this.filterType);
-
+    this.currentPage = 1;
     if (this.filterType === 'all') {
       this.filteredLogs = this.logs;
       return;
